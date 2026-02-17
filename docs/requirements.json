@@ -1,0 +1,173 @@
+{
+  "schema": "bridge.v2",
+  "project": {
+    "name": "BRIDGE v2.1 Toolkit",
+    "description": "Distributable methodology toolkit for AI-assisted software development. Provides structured workflows (Brainstorm → Requirements → Implementation Design → Develop → Gate → Evaluate) across multiple AI coding platforms.",
+    "type": "developer-tooling",
+    "version": "2.1"
+  },
+  "scope": {
+    "in_scope": [
+      "4 distributable packs: RooCode Full, RooCode Standalone, Claude Code, Codex",
+      "16 slash commands consistent across all packs",
+      "8 procedure skills per pack (adapted to pack architecture)",
+      "Interactive setup.sh for project initialization",
+      "reference/BRIDGE-v2.1-methodology.md comprehensive methodology doc",
+      "README.md with installation and usage instructions",
+      "Packaging script (package.sh) for rebuilding tar.gz from source folders",
+      "docs/ templates: requirements.json, context.json, decisions.md, human-playbook.md"
+    ],
+    "out_of_scope": [
+      "GUI or web interface",
+      "Package manager distribution (npm, pip, brew)",
+      "Auto-update mechanism",
+      "IDE plugins or extensions beyond supported platforms"
+    ],
+    "non_goals": [
+      "Replace the AI coding agent itself — BRIDGE is a methodology layer, not an agent",
+      "Support every possible AI coding tool — focus on RooCode, Claude Code, Codex"
+    ]
+  },
+  "constraints": {
+    "technical": [
+      "Shell scripts must be POSIX-compatible (bash)",
+      "No runtime dependencies beyond tar, gzip, sed, bash",
+      "All packs self-contained after setup.sh runs",
+      "{{PROJECT_NAME}} placeholder replaced at init time by setup.sh",
+      "Distribution via tar.gz only (no zip)"
+    ],
+    "conventions": [
+      "Stable IDs: Fxx (features), ATxx (acceptance tests), Sxx (slices), UFxx (user flows), Rxx (risks)",
+      "requirements.json uses bridge.v2 schema",
+      "context.json uses context.v1 schema",
+      ".roomodes uses YAML format with emoji mode names",
+      "All packs include Human Handoff Protocol (HUMAN: blocks)"
+    ]
+  },
+  "features": {
+    "F01": {
+      "title": "RooCode Full Pack",
+      "priority": "must",
+      "description": ".roo/ structure with .roomodes (YAML), rules/, rules-{mode}/, skills/, commands/, and docs/ templates. Thin commands that delegate to rules and skills.",
+      "status": "done"
+    },
+    "F02": {
+      "title": "RooCode Standalone Pack",
+      "priority": "must",
+      "description": ".roo/commands/ with 16 self-contained command files embedding full prompts. No external rules or skills dependencies. docs/ templates included.",
+      "status": "done"
+    },
+    "F03": {
+      "title": "Claude Code Pack",
+      "priority": "must",
+      "description": "CLAUDE.md (global rules + delegation model), .claude/agents/ (5 subagents), .claude/skills/ (8 procedures), .claude/commands/ (16 commands), .claude/hooks/README.md, docs/ templates.",
+      "status": "done"
+    },
+    "F04": {
+      "title": "Codex Pack",
+      "priority": "must",
+      "description": "AGENTS.md (global rules + role modes), .agents/skills/ (24 skills = 8 procedures + 16 commands-as-skills), .codex/config.toml, docs/ templates.",
+      "status": "done"
+    },
+    "F05": {
+      "title": "Interactive Setup Script",
+      "priority": "must",
+      "description": "setup.sh supporting --name, --pack, -o flags. Extracts chosen pack tar.gz, replaces {{PROJECT_NAME}}, creates docs/ with templates.",
+      "status": "done"
+    },
+    "F06": {
+      "title": "Methodology Reference Document",
+      "priority": "must",
+      "description": "reference/BRIDGE-v2.1-methodology.md — comprehensive methodology documentation covering all phases, schemas, and workflows.",
+      "status": "done"
+    },
+    "F07": {
+      "title": "16 Consistent Commands",
+      "priority": "must",
+      "description": "All packs implement the same 16 commands: brainstorm, scope, requirements, requirements-only, feature, migrate, start, resume, end, gate, eval, feedback, offload, reintegrate, context-create, context-update.",
+      "status": "done"
+    },
+    "F08": {
+      "title": "Existing Project Support",
+      "priority": "must",
+      "description": "bridge-scope (analyze existing codebase, scope feature/fix) and bridge-feature (incremental requirements appending to existing requirements.json).",
+      "status": "done"
+    },
+    "F09": {
+      "title": "Post-Delivery Feedback Loop",
+      "priority": "must",
+      "description": "Orchestrator correctly classifies user responses after slice delivery: ISSUES REPORTED (default) → fix loop on current slice, APPROVED → proceed to gate/eval/next, STOP → wrap up. Prevents premature advancement to next slice when user reports issues.",
+      "status": "in-progress"
+    },
+    "F10": {
+      "title": "Packaging Script",
+      "priority": "should",
+      "description": "package.sh that rebuilds all 4 tar.gz files from source folders for easy iteration on individual files.",
+      "status": "done"
+    }
+  },
+  "acceptance_tests": {
+    "AT01": "setup.sh --pack full --name TestProject creates working project with .roo/ structure and {{PROJECT_NAME}} replaced",
+    "AT02": "setup.sh --pack standalone --name TestProject creates project with self-contained commands",
+    "AT03": "setup.sh --pack claude-code --name TestProject creates project with CLAUDE.md and .claude/ structure",
+    "AT04": "setup.sh --pack codex --name TestProject creates project with AGENTS.md and .agents/ structure",
+    "AT05": "All 16 commands present and functional in each pack",
+    "AT06": "bridge-scope and bridge-feature commands work against an existing codebase with existing requirements.json",
+    "AT07": "Orchestrator stays in current slice fix loop when user reports issues after slice delivery (does not ask about next slice)",
+    "AT08": "Orchestrator advances to next slice only on explicit user approval",
+    "AT09": "Post-delivery feedback loop present in: orchestrator rules, slice-plan skill, CLAUDE.md, AGENTS.md, standalone start/resume commands",
+    "AT10": "package.sh rebuilds all 4 tar.gz files from source folders"
+  },
+  "user_flows": {
+    "UF01": {
+      "title": "Greenfield Project",
+      "steps": ["brainstorm → requirements → start → (slice loop) → gate → eval → feedback"]
+    },
+    "UF02": {
+      "title": "Existing Project Feature",
+      "steps": ["scope → feature → start → (slice loop) → gate → eval → feedback"]
+    },
+    "UF03": {
+      "title": "Session Continuity",
+      "steps": ["resume → (reviews brief) → continue → (slice loop)"]
+    },
+    "UF04": {
+      "title": "Slice Fix Loop",
+      "steps": ["slice delivered → user reports issues → orchestrator fixes → re-presents → user approves → gate"]
+    }
+  },
+  "risks": {
+    "R01": {
+      "description": "Orchestrator ignores fix feedback and advances to next slice",
+      "likelihood": "high",
+      "impact": "high",
+      "mitigation": "Post-Delivery Feedback Loop with explicit classification rules and ISSUES REPORTED as default"
+    },
+    "R02": {
+      "description": "Pack divergence — commands/skills drift out of sync across 4 packs",
+      "likelihood": "medium",
+      "impact": "medium",
+      "mitigation": "Single source of truth for command list; package.sh for consistent rebuilds"
+    }
+  },
+  "execution": {
+    "recommended_slices": [
+      {
+        "id": "S01",
+        "goal": "Apply Post-Delivery Feedback Loop edits to all packs",
+        "features": ["F09"],
+        "acceptance_tests": ["AT07", "AT08", "AT09"]
+      },
+      {
+        "id": "S02",
+        "goal": "Verify all packs are consistent and commands match across packs",
+        "features": ["F07"],
+        "acceptance_tests": ["AT05"]
+      }
+    ],
+    "open_questions": [
+      "Should the feedback loop classification be configurable per-project (e.g., in human-playbook.md)?",
+      "Should package.sh also run validation (e.g., check all 16 commands exist in each pack)?"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": "bridge.v2",
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "one_liner": "",
+    "mission": "",
+    "target_users": [],
+    "success_metrics": []
+  },
+  "scope": {
+    "in_scope": [],
+    "out_of_scope": [],
+    "non_goals": [],
+    "assumptions": []
+  },
+  "constraints": {
+    "languages": [],
+    "platforms": [],
+    "must_use": [],
+    "must_not_use": [],
+    "compliance_security_notes": []
+  },
+  "domain_model": {
+    "core_entities": [],
+    "state_machine_notes": []
+  },
+  "features": [],
+  "user_flows": [],
+  "nfr": {
+    "performance_budgets": [],
+    "reliability": [],
+    "security": [],
+    "observability": [],
+    "scalability": []
+  },
+  "interfaces": {
+    "apis": [],
+    "external_services": []
+  },
+  "quality_gates": {
+    "ci_required": true,
+    "tests": {
+      "unit": true,
+      "integration": true,
+      "e2e": "optional",
+      "coverage_target": "80%"
+    },
+    "linters_typechecks": [],
+    "security_checks": [],
+    "performance_budgets": {
+      "bundle_size": "",
+      "api_response": "",
+      "page_load": ""
+    }
+  },
+  "execution": {
+    "recommended_slices": [],
+    "open_questions": [],
+    "risks": []
+  }
+}

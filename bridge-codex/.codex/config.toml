@@ -1,0 +1,5 @@
+# BRIDGE v2.1 Project Configuration for Codex
+# Place this in .codex/config.toml at your project root
+
+# Allow AGENTS.md to provide full project context
+project_doc_max_bytes = 65536

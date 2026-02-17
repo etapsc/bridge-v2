@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build pack archives
+        run: bash package.sh
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            bridge-full.tar.gz
+            bridge-standalone.tar.gz
+            bridge-claude-code.tar.gz
+            bridge-codex.tar.gz
+            setup.sh

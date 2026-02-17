@@ -1,0 +1,53 @@
+{
+  "schema": "context.v1",
+  "project": "BRIDGE v2.1 Toolkit",
+  "last_updated": "2026-02-16",
+  "feature_status": {
+    "F01": "done",
+    "F02": "done",
+    "F03": "done",
+    "F04": "done",
+    "F05": "done",
+    "F06": "done",
+    "F07": "done",
+    "F08": "done",
+    "F09": "in-progress",
+    "F10": "done"
+  },
+  "slice_history": [
+    {
+      "id": "S00",
+      "goal": "Initial build — all 4 packs, setup.sh, README, methodology doc",
+      "status": "done",
+      "notes": "Built across multiple claude.ai sessions. Full pack first, then standalone, claude-code, codex."
+    }
+  ],
+  "current_slice": {
+    "id": "S01",
+    "goal": "Apply Post-Delivery Feedback Loop edits to all packs",
+    "features": ["F09"],
+    "acceptance_tests": ["AT07", "AT08", "AT09"],
+    "status": "in-progress",
+    "notes": "Edits designed and reviewed in claude.ai session. Not yet applied to files."
+  },
+  "handoff": {
+    "stopped_at": "S01 — Feedback Loop edits designed but not yet applied to source files",
+    "next_immediate": "Apply the 6 file edits for Post-Delivery Feedback Loop (see decisions.md for exact changes)",
+    "watch_out": [
+      "bridge-slice-plan/SKILL.md exists in 3 packs (full, claude-code, codex) — must update all 3",
+      "Standalone pack has logic embedded in command files, not skills",
+      "After edits, rebuild tars with package.sh and verify"
+    ]
+  },
+  "next_slice": "S01",
+  "quality_gates": {
+    "last_run": null,
+    "status": null
+  },
+  "commands_to_run": {
+    "package": "./package.sh",
+    "verify_commands": "for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex; do echo \"=== $pack ===\"; find $pack -name '*.md' | grep -c command; done",
+    "verify_feedback_loop": "grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ | sort"
+  },
+  "discrepancies": []
+}
