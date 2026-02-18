@@ -60,6 +60,7 @@ The script auto-detects its source:
 | `/bridge-requirements-only` | any | Phase 1: generate requirements (skip brainstorm) |
 | `/bridge-scope` | orchestrator | Phase 0: scope a feature/fix for an existing project |
 | `/bridge-feature` | orchestrator | Phase 1: incremental requirements for existing project |
+| `/bridge-design` | orchestrator | Integrate a design document, PRD, or version spec |
 | `/bridge-migrate` | orchestrator | Migrate existing BRIDGE v1 project to v2.1 |
 | `/bridge-start` | orchestrator | Start implementation from requirements |
 | `/bridge-context-create` | orchestrator | Create context.json from codebase |

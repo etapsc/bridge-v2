@@ -99,6 +99,7 @@ Invoke skills with `$skill-name` in your prompt. Key skills:
 - `$bridge-requirements` — Phase 1: generate requirements from brainstorm
 - `$bridge-requirements-only` — Phase 1: requirements from description (skip brainstorm)
 - `$bridge-feature` — Phase 1: incremental requirements for existing project
+- `$bridge-design` — Integrate a design document, PRD, or version spec
 - `$bridge-migrate` — Migrate BRIDGE v1 project to v2.1
 - `$bridge-start` — Start implementation
 - `$bridge-resume` — Resume in fresh session
