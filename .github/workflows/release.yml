@@ -27,4 +27,5 @@ jobs:
             bridge-standalone.tar.gz
             bridge-claude-code.tar.gz
             bridge-codex.tar.gz
+            bridge-opencode.tar.gz
             setup.sh

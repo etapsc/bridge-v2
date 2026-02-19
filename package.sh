@@ -8,7 +8,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKS=("bridge-full" "bridge-standalone" "bridge-claude-code" "bridge-codex")
+PACKS=("bridge-full" "bridge-standalone" "bridge-claude-code" "bridge-codex" "bridge-opencode")
 
 for pack in "${PACKS[@]}"; do
   if [ ! -d "${SCRIPT_DIR}/$pack" ]; then

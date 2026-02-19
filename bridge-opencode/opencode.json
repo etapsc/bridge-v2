@@ -1,0 +1,36 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "bridge-architect": {
+      "mode": "subagent",
+      "description": "Design contracts and architecture for the current BRIDGE slice",
+      "tools": {
+        "bash": false
+      }
+    },
+    "bridge-coder": {
+      "mode": "subagent",
+      "description": "Implement the current BRIDGE slice with tests"
+    },
+    "bridge-debugger": {
+      "mode": "subagent",
+      "description": "Diagnose and fix test failures or bugs in the current BRIDGE slice"
+    },
+    "bridge-auditor": {
+      "mode": "subagent",
+      "description": "Run quality gate checks and produce a structured gate report. Never fixes code.",
+      "tools": {
+        "write": false
+      },
+      "permission": {
+        "bash": {
+          "*": "ask"
+        }
+      }
+    },
+    "bridge-evaluator": {
+      "mode": "subagent",
+      "description": "Generate user-facing test scenarios, E2E tests, and feedback templates"
+    }
+  }
+}

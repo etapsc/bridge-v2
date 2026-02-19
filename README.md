@@ -12,6 +12,7 @@ A methodology and tooling kit for solo-preneur software development with AI codi
 | `standalone/` | Self-contained slash commands with full prompts for **RooCode**. No rules or skills. | Quick RooCode setup, portability, or if you prefer all instructions in prompts. |
 | `claude-code/` | CLAUDE.md + subagent definitions + skills + commands for **Claude Code CLI**. | Use with the `claude` CLI. Leverages subagents for isolated context per role. |
 | `codex/` | AGENTS.md + skills for **OpenAI Codex CLI**. | Use with the `codex` CLI. Single-agent with skill invocation via `$skill-name`. |
+| `opencode/` | AGENTS.md + agents + skills + commands for **OpenCode CLI**. | Use with the `opencode` CLI. Subagents via `@mention`, native skill discovery. |
 
 ## Quick Start (remote install)
 
@@ -43,6 +44,7 @@ cd bridge-v2
 ./setup.sh --name "My Project" --pack standalone    # RooCode (self-contained)
 ./setup.sh --name "My Project" --pack claude-code   # Claude Code CLI
 ./setup.sh --name "My Project" --pack codex         # OpenAI Codex CLI
+./setup.sh --name "My Project" --pack opencode      # OpenCode CLI
 ```
 
 The script auto-detects its source:
@@ -110,10 +112,10 @@ External: /bridge-offload · /bridge-reintegrate
 
 | Role | Mode | Model | Reasoning |
 |------|------|-------|-----------|
-| Orchestrator | `orchestrator` | Gemini 3 Pro | Standard |
+| Orchestrator | `orchestrator` | Gemini 3.1 Pro | Standard |
 | Architect | `architect` | Opus 4.6 | Reasoning |
 | Developer | `code` | Opus 4.6 | Reasoning |
-| Debugger | `debug` | GPT-5.2 Codex | Medium |
-| Auditor | `audit` | GPT-5.2 Codex | Medium |
+| Debugger | `debug` | GPT-5.3 Codex | Medium |
+| Auditor | `audit` | GPT-5.3 Codex | Medium |
 | Evaluator | `evaluate` | Opus 4.6 | Standard |
 | Ask | `ask` | GPT 5.2 | Low |

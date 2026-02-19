@@ -45,6 +45,7 @@ Examples:
   $(basename "$0") --name "My Project" --pack standalone    # RooCode (self-contained)
   $(basename "$0") --name "My Project" --pack claude-code   # Claude Code CLI
   $(basename "$0") --name "My Project" --pack codex         # OpenAI Codex CLI
+  $(basename "$0") --name "My Project" --pack opencode      # OpenCode CLI
   $(basename "$0")                                          # interactive mode
 EOF
     exit 0
@@ -71,6 +72,7 @@ if [[ -z "$PACK" ]]; then
     echo "  2) standalone  - Self-contained slash commands for RooCode (no rules/skills)"
     echo "  3) claude-code - CLAUDE.md + agents + skills + commands for Claude Code CLI"
     echo "  4) codex       - AGENTS.md + skills for OpenAI Codex CLI"
+    echo "  5) opencode    - AGENTS.md + agents + skills + commands for OpenCode CLI"
     echo ""
     read -rp "Select pack [1]: " pack_choice
     case "${pack_choice:-1}" in
@@ -78,13 +80,14 @@ if [[ -z "$PACK" ]]; then
         2|standalone)  PACK="standalone" ;;
         3|claude-code) PACK="claude-code" ;;
         4|codex)       PACK="codex" ;;
+        5|opencode)    PACK="opencode" ;;
         *)             echo "Error: Invalid choice."; exit 1 ;;
     esac
 fi
 
 # --- Pack validation ---
-if [[ "$PACK" != "full" && "$PACK" != "standalone" && "$PACK" != "claude-code" && "$PACK" != "codex" ]]; then
-    echo "Error: Pack must be 'full', 'standalone', 'claude-code', or 'codex'. Got: $PACK"
+if [[ "$PACK" != "full" && "$PACK" != "standalone" && "$PACK" != "claude-code" && "$PACK" != "codex" && "$PACK" != "opencode" ]]; then
+    echo "Error: Pack must be 'full', 'standalone', 'claude-code', 'codex', or 'opencode'. Got: $PACK"
     exit 1
 fi
 
@@ -226,6 +229,9 @@ if [[ "$PACK" == "claude-code" ]]; then
 elif [[ "$PACK" == "codex" ]]; then
     echo "  2. Open terminal and run: codex"
     echo "  3. Invoke \$bridge-brainstorm or \$bridge-requirements-only to start"
+elif [[ "$PACK" == "opencode" ]]; then
+    echo "  2. Open terminal and run: opencode"
+    echo "  3. Run /bridge-brainstorm or /bridge-requirements-only to start"
 elif [[ "$PACK" == "full" ]]; then
     echo "  2. Open in VS Code with RooCode extension"
     echo "  3. Configure model assignments for each mode (see reference/BRIDGE-v2.1-methodology.md)"
