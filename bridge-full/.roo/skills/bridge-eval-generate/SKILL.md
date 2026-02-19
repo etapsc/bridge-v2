@@ -1,7 +1,6 @@
 ---
-name: Bridge Eval Generate
+name: bridge-eval-generate
 description: Generate user test scenarios, E2E tests, and feedback template
-mode: ["evaluate"]
 ---
 
 # Evaluation Pack Generation

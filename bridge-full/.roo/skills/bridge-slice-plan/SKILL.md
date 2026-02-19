@@ -1,7 +1,6 @@
 ---
-name: Bridge Slice Plan
+name: bridge-slice-plan
 description: Plan and execute a thin vertical slice from requirements
-mode: ["orchestrator"]
 ---
 
 # Slice Planning & Execution

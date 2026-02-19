@@ -16,7 +16,12 @@
 - Unknowns → execution.open_questions. Do not invent.
 - No secrets in code. No sensitive data in production logs. OWASP Top 10 awareness.
 
+## Terminal Commands
+
+- Always format terminal commands as a single line. Do not use backslashes (`\`) for line continuation, even for long git messages or complex commands. Multi-line commands break auto-approve.
+
 ## Discrepancy Protocol
+
 - Code ≠ context.json → update context.json.
 - Code ≠ requirements.json → record discrepancy in context.json, propose fix, do NOT silently rescope.
 

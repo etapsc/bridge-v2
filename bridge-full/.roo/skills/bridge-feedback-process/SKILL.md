@@ -1,7 +1,6 @@
 ---
-name: Bridge Feedback Process
+name: bridge-feedback-process
 description: Triage evaluation feedback and determine iterate vs launch
-mode: ["orchestrator"]
 ---
 
 # Feedback Processing

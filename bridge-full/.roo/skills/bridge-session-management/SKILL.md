@@ -1,7 +1,6 @@
 ---
-name: Bridge Session Management
+name: bridge-session-management
 description: Session start (re-entry brief) and end (wrap-up) procedures
-mode: ["orchestrator"]
 ---
 
 # Session Management

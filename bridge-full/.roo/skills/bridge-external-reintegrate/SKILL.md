@@ -1,7 +1,6 @@
 ---
-name: Bridge External Reintegrate
+name: bridge-external-reintegrate
 description: Validate and re-integrate work from an external coding agent
-mode: ["orchestrator"]
 ---
 
 # External Agent Re-integration

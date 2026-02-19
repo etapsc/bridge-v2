@@ -1,7 +1,6 @@
 ---
-name: Bridge External Handoff
+name: bridge-external-handoff
 description: Package a task for execution by an external coding agent
-mode: ["orchestrator"]
 ---
 
 # External Agent Handoff

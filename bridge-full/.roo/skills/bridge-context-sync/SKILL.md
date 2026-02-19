@@ -1,7 +1,6 @@
 ---
-name: Bridge Context Sync
+name: bridge-context-sync
 description: Create or update context.json to reflect current code reality
-mode: ["orchestrator"]
 ---
 
 # Context Synchronization

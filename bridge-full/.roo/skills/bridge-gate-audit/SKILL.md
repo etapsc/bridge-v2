@@ -1,7 +1,6 @@
 ---
-name: Bridge Gate Audit
+name: bridge-gate-audit
 description: Run quality gate checks and produce structured gate report
-mode: ["audit"]
 ---
 
 # Quality Gate Audit
