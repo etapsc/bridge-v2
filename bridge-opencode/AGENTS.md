@@ -93,3 +93,4 @@ CRITICAL: Never assume approval. If the response contains ANY issue descriptions
 - `/bridge-reintegrate` — Re-integrate external work
 - `/bridge-context-create` — Create context.json
 - `/bridge-context-update` — Sync context.json
+- `/bridge-advisor` — Strategic advisor: viability, positioning, launch readiness

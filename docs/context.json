@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
   "project": "BRIDGE v2.1 Toolkit",
-  "last_updated": "2026-02-16",
+  "last_updated": "2026-02-20",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -11,8 +11,11 @@
     "F06": "done",
     "F07": "done",
     "F08": "done",
-    "F09": "in-progress",
-    "F10": "done"
+    "F09": "done",
+    "F10": "done",
+    "F11": "done",
+    "F12": "done",
+    "F13": "done"
   },
   "slice_history": [
     {
@@ -20,34 +23,43 @@
       "goal": "Initial build — all 4 packs, setup.sh, README, methodology doc",
       "status": "done",
       "notes": "Built across multiple claude.ai sessions. Full pack first, then standalone, claude-code, codex."
+    },
+    {
+      "id": "S01",
+      "goal": "Apply Post-Delivery Feedback Loop edits to all packs",
+      "status": "done",
+      "notes": "Feedback loop (ISSUES REPORTED / APPROVED / STOP) applied to all orchestrator files, slice-plan skills, and standalone commands across all 5 packs."
+    },
+    {
+      "id": "S02",
+      "goal": "Verify all packs are consistent and commands match across packs",
+      "status": "done",
+      "notes": "Audit confirmed all 5 packs have identical 17 commands and 8 procedure skills. Added F11 (OpenCode), F12 (Design Command) to requirements.json. Updated all counts from 4→5 packs, 16→17 commands."
+    },
+    {
+      "id": "S03",
+      "goal": "Add bridge-advisor strategic advisor command to all packs",
+      "status": "done",
+      "notes": "Created bridge-advisor in all 5 packs (F13). 3 advisor roles: Product Strategist, Developer Advocate, Critical Friend. Updated command listings in AGENTS.md (codex, opencode) and setup.sh. All counts updated 17→18 commands."
     }
   ],
-  "current_slice": {
-    "id": "S01",
-    "goal": "Apply Post-Delivery Feedback Loop edits to all packs",
-    "features": ["F09"],
-    "acceptance_tests": ["AT07", "AT08", "AT09"],
-    "status": "in-progress",
-    "notes": "Edits designed and reviewed in claude.ai session. Not yet applied to files."
-  },
+  "current_slice": null,
   "handoff": {
-    "stopped_at": "S01 — Feedback Loop edits designed but not yet applied to source files",
-    "next_immediate": "Apply the 6 file edits for Post-Delivery Feedback Loop (see decisions.md for exact changes)",
+    "stopped_at": "S03 complete — bridge-advisor added to all packs, all 13 features done",
+    "next_immediate": "Rebuild tars with package.sh, then consider running bridge-advisor on BRIDGE itself",
     "watch_out": [
-      "bridge-slice-plan/SKILL.md exists in 3 packs (full, claude-code, codex) — must update all 3",
-      "Standalone pack has logic embedded in command files, not skills",
-      "After edits, rebuild tars with package.sh and verify"
+      "Template files in each pack's docs/ folder use {{PROJECT_NAME}} — don't confuse with project-level docs/"
     ]
   },
-  "next_slice": "S01",
+  "next_slice": null,
   "quality_gates": {
     "last_run": null,
     "status": null
   },
   "commands_to_run": {
     "package": "./package.sh",
-    "verify_commands": "for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex; do echo \"=== $pack ===\"; find $pack -name '*.md' | grep -c command; done",
-    "verify_feedback_loop": "grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ | sort"
+    "verify_commands": "for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex bridge-opencode; do echo \"=== $pack ===\"; find $pack -name '*.md' | grep -c command; done",
+    "verify_feedback_loop": "grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ bridge-opencode/ | sort"
   },
   "discrepancies": []
 }

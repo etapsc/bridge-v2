@@ -8,8 +8,8 @@
   },
   "scope": {
     "in_scope": [
-      "4 distributable packs: RooCode Full, RooCode Standalone, Claude Code, Codex",
-      "16 slash commands consistent across all packs",
+      "5 distributable packs: RooCode Full, RooCode Standalone, Claude Code, Codex, OpenCode",
+      "18 slash commands consistent across all packs",
       "8 procedure skills per pack (adapted to pack architecture)",
       "Interactive setup.sh for project initialization",
       "reference/BRIDGE-v2.1-methodology.md comprehensive methodology doc",
@@ -25,7 +25,7 @@
     ],
     "non_goals": [
       "Replace the AI coding agent itself — BRIDGE is a methodology layer, not an agent",
-      "Support every possible AI coding tool — focus on RooCode, Claude Code, Codex"
+      "Support every possible AI coding tool — focus on RooCode, Claude Code, Codex, OpenCode"
     ]
   },
   "constraints": {
@@ -54,25 +54,25 @@
     "F02": {
       "title": "RooCode Standalone Pack",
       "priority": "must",
-      "description": ".roo/commands/ with 16 self-contained command files embedding full prompts. No external rules or skills dependencies. docs/ templates included.",
+      "description": ".roo/commands/ with 18 self-contained command files embedding full prompts. No external rules or skills dependencies. docs/ templates included.",
       "status": "done"
     },
     "F03": {
       "title": "Claude Code Pack",
       "priority": "must",
-      "description": "CLAUDE.md (global rules + delegation model), .claude/agents/ (5 subagents), .claude/skills/ (8 procedures), .claude/commands/ (16 commands), .claude/hooks/README.md, docs/ templates.",
+      "description": "CLAUDE.md (global rules + delegation model), .claude/agents/ (5 subagents), .claude/skills/ (8 procedures), .claude/commands/ (18 commands), .claude/hooks/README.md, docs/ templates.",
       "status": "done"
     },
     "F04": {
       "title": "Codex Pack",
       "priority": "must",
-      "description": "AGENTS.md (global rules + role modes), .agents/skills/ (24 skills = 8 procedures + 16 commands-as-skills), .codex/config.toml, docs/ templates.",
+      "description": "AGENTS.md (global rules + role modes), .agents/skills/ (26 skills = 8 procedures + 18 commands-as-skills), .codex/config.toml, docs/ templates.",
       "status": "done"
     },
     "F05": {
       "title": "Interactive Setup Script",
       "priority": "must",
-      "description": "setup.sh supporting --name, --pack, -o flags. Extracts chosen pack tar.gz, replaces {{PROJECT_NAME}}, creates docs/ with templates.",
+      "description": "setup.sh supporting --name, --pack, -o flags. Extracts chosen pack tar.gz, replaces {{PROJECT_NAME}}, creates docs/ with templates. Supports all 5 packs.",
       "status": "done"
     },
     "F06": {
@@ -82,9 +82,9 @@
       "status": "done"
     },
     "F07": {
-      "title": "16 Consistent Commands",
+      "title": "18 Consistent Commands",
       "priority": "must",
-      "description": "All packs implement the same 16 commands: brainstorm, scope, requirements, requirements-only, feature, migrate, start, resume, end, gate, eval, feedback, offload, reintegrate, context-create, context-update.",
+      "description": "All packs implement the same 18 commands: brainstorm, scope, requirements, requirements-only, feature, design, migrate, start, resume, end, gate, eval, feedback, offload, reintegrate, context-create, context-update, advisor.",
       "status": "done"
     },
     "F08": {
@@ -97,12 +97,30 @@
       "title": "Post-Delivery Feedback Loop",
       "priority": "must",
       "description": "Orchestrator correctly classifies user responses after slice delivery: ISSUES REPORTED (default) → fix loop on current slice, APPROVED → proceed to gate/eval/next, STOP → wrap up. Prevents premature advancement to next slice when user reports issues.",
-      "status": "in-progress"
+      "status": "done"
     },
     "F10": {
       "title": "Packaging Script",
       "priority": "should",
-      "description": "package.sh that rebuilds all 4 tar.gz files from source folders for easy iteration on individual files.",
+      "description": "package.sh that rebuilds all 5 tar.gz files from source folders for easy iteration on individual files.",
+      "status": "done"
+    },
+    "F11": {
+      "title": "OpenCode Pack",
+      "priority": "must",
+      "description": "AGENTS.md (global rules + delegation model), .opencode/agents/ (5 subagents), .opencode/skills/ (8 procedures), .opencode/commands/ (18 commands), docs/ templates.",
+      "status": "done"
+    },
+    "F12": {
+      "title": "Design Integration Command",
+      "priority": "should",
+      "description": "bridge-design command for integrating a design document, PRD, or version spec into requirements. Present in all packs.",
+      "status": "done"
+    },
+    "F13": {
+      "title": "Strategic Advisor Command",
+      "priority": "should",
+      "description": "bridge-advisor command providing honest multi-perspective review of project viability, quality, positioning, community engagement, roadmap gaps, and launch readiness. Three simulated roles: Product Strategist, Developer Advocate, Critical Friend.",
       "status": "done"
     }
   },
@@ -111,12 +129,13 @@
     "AT02": "setup.sh --pack standalone --name TestProject creates project with self-contained commands",
     "AT03": "setup.sh --pack claude-code --name TestProject creates project with CLAUDE.md and .claude/ structure",
     "AT04": "setup.sh --pack codex --name TestProject creates project with AGENTS.md and .agents/ structure",
-    "AT05": "All 16 commands present and functional in each pack",
+    "AT05": "All 18 commands present and functional in each pack",
     "AT06": "bridge-scope and bridge-feature commands work against an existing codebase with existing requirements.json",
     "AT07": "Orchestrator stays in current slice fix loop when user reports issues after slice delivery (does not ask about next slice)",
     "AT08": "Orchestrator advances to next slice only on explicit user approval",
     "AT09": "Post-delivery feedback loop present in: orchestrator rules, slice-plan skill, CLAUDE.md, AGENTS.md, standalone start/resume commands",
-    "AT10": "package.sh rebuilds all 4 tar.gz files from source folders"
+    "AT10": "package.sh rebuilds all 5 tar.gz files from source folders",
+    "AT11": "setup.sh --pack opencode --name TestProject creates project with AGENTS.md and .opencode/ structure"
   },
   "user_flows": {
     "UF01": {
@@ -144,7 +163,7 @@
       "mitigation": "Post-Delivery Feedback Loop with explicit classification rules and ISSUES REPORTED as default"
     },
     "R02": {
-      "description": "Pack divergence — commands/skills drift out of sync across 4 packs",
+      "description": "Pack divergence — commands/skills drift out of sync across 5 packs",
       "likelihood": "medium",
       "impact": "medium",
       "mitigation": "Single source of truth for command list; package.sh for consistent rebuilds"
@@ -167,7 +186,7 @@
     ],
     "open_questions": [
       "Should the feedback loop classification be configurable per-project (e.g., in human-playbook.md)?",
-      "Should package.sh also run validation (e.g., check all 16 commands exist in each pack)?"
+      "Should package.sh also run validation (e.g., check all 18 commands exist in each pack)?"
     ]
   }
 }

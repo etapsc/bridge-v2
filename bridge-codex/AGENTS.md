@@ -111,6 +111,7 @@ Invoke skills with `$skill-name` in your prompt. Key skills:
 - `$bridge-reintegrate` — Re-integrate external work
 - `$bridge-context-create` — Create context.json
 - `$bridge-context-update` — Sync context.json
+- `$bridge-advisor` — Strategic advisor: viability, positioning, launch readiness
 
 **Procedure skills** (used by workflow commands):
 - `$bridge-slice-plan` — Plan and execute thin vertical slices
