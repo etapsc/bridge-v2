@@ -41,15 +41,19 @@
       "goal": "Add bridge-advisor strategic advisor command to all packs",
       "status": "done",
       "notes": "Created bridge-advisor in all 5 packs (F13). 3 advisor roles: Product Strategist, Developer Advocate, Critical Friend. Updated command listings in AGENTS.md (codex, opencode) and setup.sh. All counts updated 17→18 commands."
+    },
+    {
+      "id": "S04",
+      "goal": "Rebuild all 5 tar.gz files using package.sh",
+      "status": "done",
+      "notes": "Rebuilt all tar.gz files: bridge-full (22K), bridge-standalone (22K), bridge-claude-code (23K), bridge-codex (23K), bridge-opencode (23K). All archives validated."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "S03 complete — bridge-advisor added to all packs, all 13 features done",
-    "next_immediate": "Rebuild tars with package.sh, then consider running bridge-advisor on BRIDGE itself",
-    "watch_out": [
-      "Template files in each pack's docs/ folder use {{PROJECT_NAME}} — don't confuse with project-level docs/"
-    ]
+    "stopped_at": "S04 complete — all 5 tar.gz files rebuilt and verified",
+    "next_immediate": "Consider running bridge-advisor on BRIDGE itself for strategic review",
+    "watch_out": []
   },
   "next_slice": null,
   "quality_gates": {
