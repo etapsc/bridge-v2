@@ -196,16 +196,12 @@ section "Shell Lint"
 
 if command -v shellcheck &>/dev/null; then
   for script in setup.sh package.sh test.sh; do
-    if shellcheck "${SCRIPT_DIR}/${script}" 2>&1 | head -1 | grep -q "^$"; then
+    if shellcheck "${SCRIPT_DIR}/${script}" >/dev/null 2>&1; then
       pass "shellcheck: ${script} clean"
+    elif shellcheck -S error "${SCRIPT_DIR}/${script}" >/dev/null 2>&1; then
+      pass "shellcheck: ${script} (warnings only)"
     else
-      # Show first issue but don't block on warnings
-      issue=$(shellcheck "${SCRIPT_DIR}/${script}" 2>&1 | head -3)
-      if shellcheck -S error "${SCRIPT_DIR}/${script}" >/dev/null 2>&1; then
-        pass "shellcheck: ${script} (warnings only)"
-      else
-        fail "shellcheck: ${script} has errors"
-      fi
+      fail "shellcheck: ${script} has errors"
     fi
   done
 else
