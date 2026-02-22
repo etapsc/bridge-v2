@@ -1,6 +1,6 @@
 ---
 name: Bridge requirements
-description: Phase 1: Generate requirements.json and context.json from brainstorm output. Invoke with $bridge-requirements in your prompt.
+description: "Phase 1: Generate requirements.json and context.json from brainstorm output. Invoke with $bridge-requirements in your prompt."
 ---
 
 ## TASK - PHASE 1: GENERATE REQUIREMENTS PACK (bridge.v2)

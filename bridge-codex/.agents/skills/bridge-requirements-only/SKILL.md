@@ -1,6 +1,6 @@
 ---
 name: Bridge requirements only
-description: Phase 1: Generate requirements from existing project description (skip brainstorm). Invoke with $bridge-requirements-only in your prompt.
+description: "Phase 1: Generate requirements from existing project description (skip brainstorm). Invoke with $bridge-requirements-only in your prompt."
 ---
 
 You are following the BRIDGE v2.1 methodology for solo-preneur software development with AI dev teams.

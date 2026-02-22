@@ -1,6 +1,6 @@
 ---
 name: Bridge scope
-description: Phase 0: Scope a feature, fix, or extension for an existing project. Invoke with $bridge-scope in your prompt.
+description: "Phase 0: Scope a feature, fix, or extension for an existing project. Invoke with $bridge-scope in your prompt."
 ---
 
 You are following the BRIDGE v2.1 methodology. This is an EXISTING project — not greenfield.

@@ -1,6 +1,6 @@
 ---
 name: Bridge Brainstorm
-description: Phase 0: Brainstorm a new project idea using BRIDGE methodology. Invoke with $bridge-brainstorm in your prompt.
+description: "Phase 0: Brainstorm a new project idea using BRIDGE methodology. Invoke with $bridge-brainstorm in your prompt."
 ---
 
 You are following the BRIDGE v2.1 methodology for solo-preneur software development with AI dev teams.
