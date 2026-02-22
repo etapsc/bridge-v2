@@ -2,7 +2,48 @@
 
 **B**rainstorm → **R**equirements → **I**mplementation Design → **D**evelop → **G**ate → **E**valuate
 
-A methodology and tooling kit for solo-preneur software development with AI coding agents (RooCode or Claude Code CLI).
+A structured development workflow for AI coding agents. Works across RooCode, Claude Code, Codex, and OpenCode.
+
+## Why BRIDGE?
+
+AI coding agents are powerful, but without structure you get scope creep, context loss, and no quality signal. Every new chat starts from zero. You're shipping and praying.
+
+BRIDGE fixes this by wrapping your AI agent in a disciplined lifecycle:
+
+- **Brainstorm** with kill criteria — know when to stop before you start
+- **Requirements** as structured JSON — not scattered across chat history
+- **Thin vertical slices** — PR-sized increments, not thousand-line diffs
+- **Quality gates** — evidence-based completion, not "looks good to me"
+- **Feedback loops** — the agent fixes current issues before moving on
+- **Session continuity** — resume exactly where you left off
+
+It's not another prompt collection. It's a complete methodology with 18 commands, role-based delegation, and cross-platform portability.
+
+## Example Session
+
+```text
+you:   /bridge-brainstorm
+agent: [analyzes idea, produces pitch, wedge, kill criteria, architecture sketch]
+       HUMAN: Review the brainstorm. Approve to continue, or refine.
+
+you:   /bridge-requirements
+agent: [generates requirements.json with features, acceptance tests, user flows]
+       HUMAN: Review requirements. Adjust scope if needed.
+
+you:   /bridge-start
+agent: [plans slices, implements S01, delivers working code]
+       HUMAN: Test the login endpoint. Run: curl -X POST /api/login
+
+you:   "The endpoint returns 500 when email is empty"
+agent: [stays on S01 — does NOT move to S02]
+       [fixes validation, adds test, re-delivers]
+       HUMAN: Retry: curl -X POST /api/login -d '{}'
+
+you:   "Approved"
+agent: [runs quality gate → PASS → generates eval scenarios → proceeds to S02]
+```
+
+The key insight: BRIDGE keeps the agent in a fix loop on the current slice until you explicitly approve. No more chasing an agent that moved on while bugs remain.
 
 ## Packs
 
@@ -74,6 +115,7 @@ The script auto-detects its source:
 | `/bridge-feedback` | orchestrator | Process evaluation feedback |
 | `/bridge-offload` | orchestrator | Prepare external agent handoff |
 | `/bridge-reintegrate` | orchestrator | Re-integrate external agent work |
+| `/bridge-advisor` | any | Strategic project review and launch readiness |
 
 ## Typical Flow
 
