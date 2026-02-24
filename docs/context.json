@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
   "project": "BRIDGE v2.1 Toolkit",
-  "last_updated": "2026-02-20",
+  "last_updated": "2026-02-23",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -47,13 +47,25 @@
       "goal": "Rebuild all 5 tar.gz files using package.sh",
       "status": "done",
       "notes": "Rebuilt all tar.gz files: bridge-full (22K), bridge-standalone (22K), bridge-claude-code (23K), bridge-codex (23K), bridge-opencode (23K). All archives validated."
+    },
+    {
+      "id": "S05",
+      "goal": "Fix RooCode Ask-mode return path so orchestrator resumes active slice automatically",
+      "status": "done",
+      "notes": "Initial attempt added CLARIFICATIONS HANDLED VIA ASK rules (post-hoc). Replaced in S06 with preventive approach: ban Ask mode switching entirely, use HUMAN: blocks for clarifications instead."
+    },
+    {
+      "id": "S06",
+      "goal": "Replace ineffective Ask-mode return rules with preventive no-Ask-mode constraint",
+      "status": "done",
+      "notes": "Removed CLARIFICATIONS HANDLED VIA ASK sections from bridge-full orchestrator policy and standalone bridge-start/bridge-resume commands. Added hard constraint: NEVER switch to Ask mode — use HUMAN: blocks for user input, delegate to sub-tasks for code investigation. Root cause: S05 fix was post-hoc (told AI to recover after switching) instead of preventive (tell AI not to switch). Tar.gz rebuild needed."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "S04 complete — all 5 tar.gz files rebuilt and verified",
-    "next_immediate": "Consider running bridge-advisor on BRIDGE itself for strategic review",
-    "watch_out": []
+    "stopped_at": "S06 complete — Ask mode switching banned in RooCode packs, HUMAN: blocks used for clarifications instead",
+    "next_immediate": "Rebuild tar.gz files with package.sh, then validate in RooCode that orchestrator no longer switches to Ask mode mid-slice",
+    "watch_out": ["Only bridge-full and bridge-standalone packs are affected (other packs don't have RooCode Ask mode)"]
   },
   "next_slice": null,
   "quality_gates": {

@@ -66,5 +66,6 @@ User describes bugs, missing behavior, or requests changes to CURRENT slice.
 **STOP**: Explicit stop/pause. → Wrap up session.
 
 CRITICAL: Never assume approval. Any issue descriptions = ISSUES REPORTED.
+NEVER switch to Ask mode for clarifications. When you need user input mid-slice, include the question in a HUMAN: block and wait for the user's reply. If you need code investigated, delegate to a sub-task (architect/code/debug) — do not switch the current task's mode.
 
 Then STOP and wait for "continue" or a specific task instruction.

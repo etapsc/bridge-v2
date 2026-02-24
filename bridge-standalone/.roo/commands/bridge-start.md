@@ -77,5 +77,6 @@ Explicit stop/pause request.
 → Run session wrap-up.
 
 CRITICAL: Never assume approval. If the response contains ANY issue descriptions, treat as ISSUES REPORTED even if it also contains partial approval.
+NEVER switch to Ask mode for clarifications. When you need user input mid-slice, include the question in a HUMAN: block and wait for the user's reply. If you need code investigated, delegate to a sub-task (architect/code/debug) — do not switch the current task's mode.
 
 Load both files now and begin. $ARGUMENTS

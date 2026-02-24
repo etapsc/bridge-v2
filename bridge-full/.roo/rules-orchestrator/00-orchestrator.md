@@ -8,6 +8,7 @@
 - Trigger evaluate mode when gate passes.
 - Stop when: all must/should features done + ATxx evidenced + quality_gates pass.
 - After each slice and phase transition: output a HUMAN: block with verification steps, manual smoke tests, and the exact prompt to feed back for the next step. Consult @/docs/human-playbook.md for project-specific verification procedures.
+- NEVER switch to Ask mode for clarifications. When you need user input mid-slice, include the question in a HUMAN: block and wait for the user's reply. If you need code investigated, delegate to a sub-task (architect/code/debug) — do not switch the current task's mode.
 
 ## Post-Delivery Feedback Loop
 
