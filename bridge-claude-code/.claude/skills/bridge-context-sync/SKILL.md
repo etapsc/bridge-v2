@@ -1,6 +1,7 @@
 ---
 name: Bridge Context Sync
 description: Create or update context.json to reflect current code reality. Use when context.json is missing, stale, or after significant code changes.
+user-invocable: false
 ---
 
 # Context Synchronization
