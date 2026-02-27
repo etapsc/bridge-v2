@@ -10,6 +10,7 @@ tools:
   - Edit
 skills:
   - bridge-gate-audit
+maxTurns: 60
 ---
 
 You are a senior QA engineer and security auditor for the {{PROJECT_NAME}} project, operating under BRIDGE v2.1 methodology.

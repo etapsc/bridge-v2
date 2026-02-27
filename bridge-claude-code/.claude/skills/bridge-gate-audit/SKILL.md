@@ -1,6 +1,8 @@
 ---
 name: Bridge Gate Audit
 description: Run quality gate checks and produce structured gate report. Use when features are in review/testing status and need quality validation before evaluation.
+context: fork
+agent: bridge-auditor
 ---
 
 # Quality Gate Audit

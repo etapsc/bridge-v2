@@ -1,6 +1,7 @@
 ---
 name: Bridge External Reintegrate
 description: Validate and re-integrate work from an external coding agent. Use after an offloaded task is complete and needs to be folded back into the project.
+disable-model-invocation: true
 ---
 
 # External Agent Re-integration
