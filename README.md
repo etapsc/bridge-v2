@@ -157,7 +157,21 @@ External: /bridge-offload · /bridge-reintegrate
 | Orchestrator | `orchestrator` | Gemini 3.1 Pro | Standard |
 | Architect | `architect` | Opus 4.6 | Reasoning |
 | Developer | `code` | Opus 4.6 | Reasoning |
-| Debugger | `debug` | GPT-5.3 Codex | Medium |
+| Debugger | `debug` | Sonnet 4.6 | Reasoning |
 | Auditor | `audit` | GPT-5.3 Codex | Medium |
 | Evaluator | `evaluate` | Opus 4.6 | Standard |
+| Ask | `ask` | GPT 5.2 | Low |
+
+## Testing
+
+BAD: GPT-5.3 Codex sucks as both Coder and Debugger!!!!
+
+| Role | Mode | Model | Reasoning |
+|------|------|-------|-----------|
+| Orchestrator | `orchestrator` | Gemini 3.1 Pro | High |
+| Architect | `architect` | Gemini 3.1 Pro | High |
+| Developer | `code` | GPT-5.3 Codex | High |
+| Debugger | `debug` | GPT-5.3 Codex | XHigh |
+| Auditor | `audit` | GPT-5.3 Codex | Medium |
+| Evaluator | `evaluate` | Gemini 3.1 Pro | High |
 | Ask | `ask` | GPT 5.2 | Low |
