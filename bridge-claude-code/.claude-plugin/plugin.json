@@ -1,0 +1,12 @@
+{
+  "name": "bridge",
+  "description": "BRIDGE v2.1 — structured development methodology for Claude Code. Brainstorm → Requirements → Implementation Design → Develop → Gate → Evaluate.",
+  "version": "2.1.0",
+  "author": {
+    "name": "etapsc",
+    "url": "https://github.com/etapsc/bridge-v2"
+  },
+  "homepage": "https://github.com/etapsc/bridge-v2",
+  "repository": "https://github.com/etapsc/bridge-v2",
+  "keywords": ["methodology", "bridge", "development-workflow", "project-management"]
+}
