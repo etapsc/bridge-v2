@@ -2,8 +2,10 @@
 # Post-edit lint hook for BRIDGE projects.
 # Reads the lint command from docs/context.json if available,
 # otherwise falls back to common project conventions.
+# Silently succeeds (exit 0) in non-BRIDGE projects.
 
-set -euo pipefail
+# Never fail — hooks must not block edits
+trap 'exit 0' ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 CONTEXT_FILE="$PROJECT_DIR/docs/context.json"

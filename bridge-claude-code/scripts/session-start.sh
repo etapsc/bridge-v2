@@ -2,19 +2,24 @@
 # SessionStart hook for BRIDGE projects.
 # Checks whether docs/context.json exists and reports its status
 # so Claude can suggest a context sync if needed.
+# Silently succeeds (exit 0) in non-BRIDGE projects.
 
-set -euo pipefail
+# Never fail — hooks must not block startup
+trap 'exit 0' ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 CONTEXT_FILE="$PROJECT_DIR/docs/context.json"
 REQUIREMENTS_FILE="$PROJECT_DIR/docs/requirements.json"
 
+# Not a BRIDGE project — exit silently
+if [ ! -f "$CONTEXT_FILE" ] && [ ! -f "$REQUIREMENTS_FILE" ]; then
+  exit 0
+fi
+
 # Check for context.json
 if [ ! -f "$CONTEXT_FILE" ]; then
-  if [ -f "$REQUIREMENTS_FILE" ]; then
-    echo "BRIDGE: docs/context.json is missing but docs/requirements.json exists."
-    echo "Consider running /bridge-context-create to generate it."
-  fi
+  echo "BRIDGE: docs/context.json is missing but docs/requirements.json exists."
+  echo "Consider running /bridge-context-create to generate it."
   exit 0
 fi
 
