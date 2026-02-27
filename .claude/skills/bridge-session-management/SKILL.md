@@ -1,6 +1,7 @@
 ---
 name: Bridge Session Management
 description: Session start (re-entry brief) and end (wrap-up) procedures. Use when resuming work in a fresh session or ending a development session.
+user-invocable: false
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: Bridge Feedback Process
 description: Triage evaluation feedback and determine iterate vs launch. Use after the human has completed manual testing and filled the feedback form.
+user-invocable: false
 ---
 
 # Feedback Processing

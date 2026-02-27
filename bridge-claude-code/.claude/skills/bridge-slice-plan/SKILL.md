@@ -1,6 +1,7 @@
 ---
 name: Bridge Slice Plan
 description: Plan and execute a thin vertical slice from requirements. Use when starting a new slice, planning implementation tasks, or coordinating the architect→coder→debugger delegation flow.
+user-invocable: false
 ---
 
 # Slice Planning & Execution

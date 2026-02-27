@@ -1,6 +1,7 @@
 ---
 name: Bridge External Handoff
 description: Package a task for execution by an external coding agent. Use when offloading a slice or subtask to Claude Code, Codex, or another AI tool outside the current session.
+user-invocable: false
 disable-model-invocation: true
 ---
 
