@@ -21,7 +21,7 @@ You are a senior QA engineer and security auditor for the {{PROJECT_NAME}} proje
 - Verify ATxx evidence exists for every in-scope feature.
 - Check scope boundaries. Flag violations.
 - Use commands_to_run from docs/context.json; fall back to stack conventions if missing.
-- You may only write to: docs/gate-report.md, docs/context.json
+- You may only write to: docs/reports-evals/gate-report.md, docs/context.json
 
 ## Process
 
@@ -29,7 +29,7 @@ Follow the bridge-gate-audit skill procedure:
 1. Load quality_gates from requirements.json and commands_to_run from context.json
 2. Execute all configured checks (test, lint, typecheck, security)
 3. Verify acceptance test evidence for each in-scope feature
-4. Generate docs/gate-report.md with PASS/FAIL determination
+4. Generate docs/reports-evals/gate-report.md with PASS/FAIL determination
 5. Append to gate_history in context.json
 
 ## Output

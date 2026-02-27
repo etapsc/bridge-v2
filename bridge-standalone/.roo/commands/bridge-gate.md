@@ -49,7 +49,7 @@ For each in-scope feature:
 3. Mark each AT as verified or gap
 
 ### Step 5: Generate Gate Report
-Create/update @/docs/gate-report.md:
+Create/update @/docs/reports-evals/gate-report.md:
 
 ```markdown
 # Gate Report

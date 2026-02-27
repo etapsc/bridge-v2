@@ -81,13 +81,13 @@ Since Codex is single-agent, switch between these modes mentally based on the cu
 - Verify ATxx evidence exists for every in-scope feature.
 - Check scope boundaries. Flag violations.
 - Use `commands_to_run` from `docs/context.json`.
-- Write only to: `docs/gate-report.md`, `docs/gate-report-S*.md`, `docs/context.json`.
+- Write only to: `docs/reports-evals/gate-report.md`, `docs/reports-evals/gate-report-S*.md`, `docs/context.json`.
 
 ### Evaluate Mode
-- Only run after gate passes (verify `docs/gate-report.md`).
+- Only run after gate passes (verify `docs/reports-evals/gate-report.md`).
 - Generate from user perspective. Map to user_flows and acceptance_tests.
 - Use project's configured test framework for E2E.
-- Write only to: `docs/eval-scenarios-S*.md`, `docs/context.json`, `tests/e2e/*`.
+- Write only to: `docs/reports-evals/eval-scenarios-S*.md`, `docs/context.json`, `tests/e2e/*`.
 
 ## Available Skills
 

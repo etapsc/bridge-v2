@@ -6,11 +6,11 @@ description: Generate user test scenarios, E2E tests, and feedback template
 # Evaluation Pack Generation
 
 ## Precondition
-Verify @/docs/gate-report.md shows PASS. If not, abort and notify.
+Verify @/docs/reports-evals/gate-report.md shows PASS. If not, abort and notify.
 
 ## Step 1: Manual Test Scenarios
 
-Create @/docs/eval-scenarios.md:
+Create @/docs/reports-evals/eval-scenarios.md:
 
 ```markdown
 # Evaluation Scenarios
@@ -70,7 +70,7 @@ Append to eval_history in @/docs/context.json:
 ## Step 4: Output
 ```
 EVALUATION PACK GENERATED ✓
-Created: @/docs/eval-scenarios.md ([X] scenarios), /tests/e2e/*.spec.* ([Y] files)
+Created: @/docs/reports-evals/eval-scenarios.md ([X] scenarios), /tests/e2e/*.spec.* ([Y] files)
 
 HUMAN:
 1. Run E2E tests yourself: [exact command]

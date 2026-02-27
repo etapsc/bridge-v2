@@ -31,7 +31,7 @@ For each in-scope feature:
 2. Locate executable evidence
 3. Mark verified or gap
 
-## Step 5: Generate docs/gate-report.md
+## Step 5: Generate docs/reports-evals/gate-report.md
 
 ```markdown
 # Gate Report

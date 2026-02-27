@@ -13,7 +13,7 @@ customModes:
       Use this mode when features are in 'review' or 'testing' status and need
       quality gate validation. Triggered by orchestrator after a development
       slice is complete, or when explicitly requested to run a quality gate
-      audit. Produces docs/gate-report.md with PASS/FAIL determination. Do NOT
+      audit. Produces docs/reports-evals/gate-report.md with PASS/FAIL determination. Do NOT
       use this mode for writing code, fixing bugs, or designing architecture —
       those belong to code, debug, and architect modes respectively.
     description: Run quality gates — tests, coverage, lint, security, acceptance criteria
@@ -21,13 +21,13 @@ customModes:
       - read
       - command
       - - edit
-        - fileRegex: "docs/(gate-report|gate-report-S\\d+|context)\\..+$"
+        - fileRegex: "docs/(reports-evals/(gate-report|gate-report-S\\d+)|context)\\..+$"
     customInstructions: >-
       Load quality_gates thresholds from @/docs/requirements.json and
       commands_to_run from @/docs/context.json. Execute all configured checks.
       For each in-scope feature, verify every acceptance test (ATxx) has
       executable evidence. Generate structured gate-report.md at
-      @/docs/gate-report.md. Append to gate_history in context.json. Output
+      @/docs/reports-evals/gate-report.md. Append to gate_history in context.json. Output
       PASS or FAIL with specific blocking issues. Never fix code — only report.
       If a check command is missing from context.json, attempt the
       stack-conventional command and note the gap.
@@ -42,21 +42,21 @@ customModes:
       templates. You think from the user's perspective, designing scenarios that
       verify features work correctly in real-world usage patterns.
     whenToUse: >-
-      Use this mode ONLY after a quality gate has passed (docs/gate-report.md
+      Use this mode ONLY after a quality gate has passed (docs/reports-evals/gate-report.md
       shows PASS). Triggered by orchestrator after gate passage, or when
       explicitly requested to create evaluation materials. Generates
-      docs/eval-scenarios.md and E2E test files under tests/e2e/. Do NOT use
+      docs/reports-evals/eval-scenarios.md and E2E test files under tests/e2e/. Do NOT use
       for code implementation, debugging, architecture, or gate checks.
     description: Generate test scenarios, E2E tests, and feedback templates
     groups:
       - read
       - command
       - - edit
-        - fileRegex: "docs/(eval-scenarios|eval-scenarios-S\\d+|context)\\..+$|tests/e2e/.+$"
+        - fileRegex: "docs/(reports-evals/(eval-scenarios|eval-scenarios-S\\d+)|context)\\..+$|tests/e2e/.+$"
     customInstructions: >-
-      Confirm gate passed by reading @/docs/gate-report.md. Load features,
+      Confirm gate passed by reading @/docs/reports-evals/gate-report.md. Load features,
       acceptance_tests, and user_flows from @/docs/requirements.json. Generate
-      @/docs/eval-scenarios.md with manual test scenarios (happy path + edge
+      @/docs/reports-evals/eval-scenarios.md with manual test scenarios (happy path + edge
       cases per feature, cross-feature flows mapped to user_flows) and a
       structured feedback form. Generate E2E test files in /tests/e2e/ using
       the project's test framework. Map tests to e2e_critical_paths from

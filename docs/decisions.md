@@ -33,8 +33,8 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 ## 2026-02-16: Pack Architecture Decisions (established)
 
 - **.roomodes uses YAML** — not JSON. Emoji mode names (🔍 Audit, 📋 Evaluate).
-- **Audit fileRegex:** `docs/(gate-report|gate-report-S\d+|context)\..+$`
-- **Evaluate fileRegex:** `docs/(eval-scenarios-S\d+|context)\..+$|tests/e2e/.+$`
+- **Audit fileRegex:** `docs/reports-evals/(gate-report|gate-report-S\d+)\..+$|docs/context\..+$`
+- **Evaluate fileRegex:** `docs/reports-evals/(eval-scenarios-S\d+)\..+$|docs/context\..+$|tests/e2e/.+$`
 - **Distribution: tar.gz only** — no zip files.
 - **setup.sh flags:** `--name`, `--pack`, `-o` (output directory).
 - **{{PROJECT_NAME}} placeholder** — replaced by setup.sh at init time.

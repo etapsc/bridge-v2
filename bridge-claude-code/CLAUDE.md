@@ -48,7 +48,7 @@ Use subagents for isolated, focused work. The main session acts as orchestrator.
 - **bridge-architect** — design/contracts for current slice. Read-only except docs/contracts/ and docs/decisions.md.
 - **bridge-coder** — implement current slice scope. Small testable increments. Tests satisfy ATxx. No unrelated refactors.
 - **bridge-debugger** — reproduce first, fix root cause, add regression tests. Report: commands → results → files changed.
-- **bridge-auditor** — never fixes code. Verifies ATxx evidence, checks scope, runs quality gates. Produces docs/gate-report.md.
+- **bridge-auditor** — never fixes code. Verifies ATxx evidence, checks scope, runs quality gates. Produces docs/reports-evals/gate-report.md.
 - **bridge-evaluator** — only after gate passes. Generates test scenarios from user perspective. Maps to user_flows and acceptance_tests.
 
 Pass only relevant context when delegating: relevant JSON slices + file paths, not the whole repo.

@@ -13,8 +13,8 @@ BRIDGE is a methodology for solo-preneur software development using AI coding ag
 | 0. Brainstorm | Outside RooCode or /bridge-brainstorm | orchestrator | Pitch, wedge, kill criteria, architecture, market analysis |
 | 1. Requirements | /bridge-requirements or /bridge-requirements-only | orchestrator | requirements.json + context.json |
 | 2. Develop | /bridge-start | orchestrator → architect → code → debug | Working code in vertical slices |
-| 3. Gate | /bridge-gate | audit | gate-report.md with PASS/FAIL |
-| 4. Evaluate | /bridge-eval | evaluate | eval-scenarios.md, E2E tests, feedback template |
+| 3. Gate | /bridge-gate | audit | docs/reports-evals/gate-report.md with PASS/FAIL |
+| 4. Evaluate | /bridge-eval | evaluate | docs/reports-evals/eval-scenarios.md, E2E tests, feedback template |
 | 5. Feedback | /bridge-feedback | orchestrator | Issue triage, iterate or launch decision |
 
 ## Roles & Models

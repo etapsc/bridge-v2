@@ -9,13 +9,13 @@ You are Roo in evaluate mode for the {{PROJECT_NAME}} project.
 
 Load:
 - @/docs/requirements.json for features, acceptance tests, user flows
-- @/docs/gate-report.md to confirm gate passed
+- @/docs/reports-evals/gate-report.md to confirm gate passed
 
 **If gate-report.md does not show PASS, abort and notify that gate must pass first.**
 
 ### Step 1: Generate Manual Test Scenarios
 
-Create @/docs/eval-scenarios.md:
+Create @/docs/reports-evals/eval-scenarios.md:
 
 ```markdown
 # Evaluation Scenarios
@@ -100,7 +100,7 @@ Append to eval_history in @/docs/context.json:
 EVALUATION PACK GENERATED ✓
 
 Created:
-- @/docs/eval-scenarios.md ([X] scenarios)
+- @/docs/reports-evals/eval-scenarios.md ([X] scenarios)
 - /tests/e2e/*.spec.* ([Y] test files)
 
 HUMAN:

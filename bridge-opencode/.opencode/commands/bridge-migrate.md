@@ -18,8 +18,8 @@ Search the project for any existing BRIDGE v1 artifacts. Common v1 locations and
 - `docs/context.json` (v1 schema)
 - `docs/decisions.md` or `docs/adr/` (architectural decisions)
 - `docs/brainstorm.md` or similar brainstorm output
-- `docs/gate-report.md` (existing gate results)
-- `docs/eval-scenarios.md` (existing eval materials)
+- `docs/reports-evals/gate-report.md` (existing gate results)
+- `docs/reports-evals/eval-scenarios.md` (existing eval materials)
 - `docs/external-task.md` (offloaded work)
 - `.bridge/` or any other BRIDGE-specific directory
 - `README.md` (may contain project description, stack info)
