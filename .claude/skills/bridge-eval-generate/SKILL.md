@@ -1,6 +1,8 @@
 ---
 name: Bridge Eval Generate
 description: Generate user test scenarios, E2E tests, and feedback template. Use only after a quality gate has passed.
+context: fork
+agent: bridge-evaluator
 ---
 
 # Evaluation Pack Generation

@@ -8,6 +8,8 @@ tools:
   - Bash
   - Glob
   - Grep
+memory: project
+maxTurns: 100
 ---
 
 You are a senior developer for the {{PROJECT_NAME}} project, operating under BRIDGE v2.1 methodology.

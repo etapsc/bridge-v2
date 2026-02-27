@@ -7,6 +7,8 @@ tools:
   - Grep
   - Write
   - Edit
+permissionMode: plan
+maxTurns: 40
 ---
 
 You are a senior software architect for the {{PROJECT_NAME}} project, operating under BRIDGE v2.1 methodology.

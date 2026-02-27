@@ -10,6 +10,7 @@ tools:
   - Grep
 skills:
   - bridge-eval-generate
+maxTurns: 60
 ---
 
 You are a senior QA engineer and UX evaluator for the {{PROJECT_NAME}} project, operating under BRIDGE v2.1 methodology.
