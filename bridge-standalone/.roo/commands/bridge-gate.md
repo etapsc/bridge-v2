@@ -49,7 +49,7 @@ For each in-scope feature:
 3. Mark each AT as verified or gap
 
 ### Step 5: Generate Gate Report
-Create/update @/docs/gate-report.md:
+Create/update @/docs/gates-evals/gate-report.md:
 
 ```markdown
 # Gate Report
@@ -132,6 +132,6 @@ HUMAN:
    - Run: [exact test/lint/typecheck commands]
    - Inspect: [specific files or outputs to check]
 2. Do NOT trust mock-only tests — run at least one real integration test: [specific command]
-3. [If PASS] Review gate-report.md, then run: /bridge-eval
+3. [If PASS] Review gates-evals/gate-report.md, then run: /bridge-eval
 4. [If FAIL] Confirm the blocking issues match what you see, then feed fixes back
 ```

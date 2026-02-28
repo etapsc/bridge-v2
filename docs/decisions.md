@@ -33,8 +33,8 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 ## 2026-02-16: Pack Architecture Decisions (established)
 
 - **.roomodes uses YAML** — not JSON. Emoji mode names (🔍 Audit, 📋 Evaluate).
-- **Audit fileRegex:** `docs/(gate-report|gate-report-S\d+|context)\..+$`
-- **Evaluate fileRegex:** `docs/(eval-scenarios-S\d+|context)\..+$|tests/e2e/.+$`
+- **Audit fileRegex:** `docs/(gates-evals/(gate-report|gate-report-S\d+)|context)\..+$`
+- **Evaluate fileRegex:** `docs/(gates-evals/(eval-scenarios|eval-scenarios-S\d+)|context)\..+$|tests/e2e/.+$`
 - **Distribution: tar.gz only** — no zip files.
 - **setup.sh flags:** `--name`, `--pack`, `-o` (output directory).
 - **{{PROJECT_NAME}} placeholder** — replaced by setup.sh at init time.
@@ -74,3 +74,16 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 **Decision:** Created `package.sh` to rebuild tar.gz files from source folders.
 
 **Rationale:** Enables manual editing of individual files and quick reconstruction of the distributable state. Run from the parent directory containing the four `bridge-*` folders.
+
+---
+
+## 2026-02-28: Codex Native Skills + Config Alignment
+
+**Decision:** Align `bridge-codex` with current Codex conventions by adding `.codex/skills/` as the native skills location, while keeping `.agents/skills/` as an authoring mirror.
+
+**Rationale:** Current Codex documentation loads reusable project skills from `.codex/skills/*/SKILL.md`. Keeping a native skill tree improves compatibility with latest Codex behavior while preserving existing BRIDGE authoring workflows.
+
+**Also Updated:**
+- Switched in-pack human instructions from `/bridge-*` to `$bridge-*` for Codex skill invocation.
+- Added a `profiles.bridge` block in `.codex/config.toml` with `gpt-5-codex`, `model_reasoning_summary = "auto"`, and `web_search = true`.
+- Fixed internal consistency gaps: status vocabulary (`planned|in-progress|review|done|blocked`), eval output filename expectation (`eval-scenarios.md`), and requirements schema support for `quality_gates.e2e_critical_paths`.

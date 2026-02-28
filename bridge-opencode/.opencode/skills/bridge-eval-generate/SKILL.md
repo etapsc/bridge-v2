@@ -6,11 +6,11 @@ description: Generate user test scenarios, E2E tests, and feedback template. Use
 # Evaluation Pack Generation
 
 ## Precondition
-Verify docs/gate-report.md shows PASS. If not, abort and notify.
+Verify docs/gates-evals/gate-report.md shows PASS. If not, abort and notify.
 
 ## Step 1: Manual Test Scenarios
 
-Create docs/eval-scenarios.md:
+Create docs/gates-evals/eval-scenarios.md:
 
 ```markdown
 # Evaluation Scenarios
@@ -70,13 +70,13 @@ Append to eval_history in docs/context.json:
 ## Step 4: Output
 
     EVALUATION PACK GENERATED
-    Created: docs/eval-scenarios.md ([X] scenarios), tests/e2e/*.spec.* ([Y] files)
+    Created: docs/gates-evals/eval-scenarios.md ([X] scenarios), tests/e2e/*.spec.* ([Y] files)
 
     HUMAN:
     1. Run E2E tests yourself: [exact command]
-    2. Walk through each scenario in eval-scenarios.md manually — do not skip
+    2. Walk through each scenario in docs/gates-evals/eval-scenarios.md manually — do not skip
     3. Actually use the application as a real user would for each scenario
-    4. Fill in the feedback form at the bottom of eval-scenarios.md
+    4. Fill in the feedback form at the bottom of docs/gates-evals/eval-scenarios.md
     5. Note any DX friction, performance issues, or "this feels wrong" moments
     6. Paste your filled feedback into: /bridge-feedback [your feedback]
 

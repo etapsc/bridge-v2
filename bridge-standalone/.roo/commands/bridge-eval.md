@@ -9,13 +9,13 @@ You are Roo in evaluate mode for the {{PROJECT_NAME}} project.
 
 Load:
 - @/docs/requirements.json for features, acceptance tests, user flows
-- @/docs/gate-report.md to confirm gate passed
+- @/docs/gates-evals/gate-report.md to confirm gate passed
 
-**If gate-report.md does not show PASS, abort and notify that gate must pass first.**
+**If gates-evals/gate-report.md does not show PASS, abort and notify that gate must pass first.**
 
 ### Step 1: Generate Manual Test Scenarios
 
-Create @/docs/eval-scenarios.md:
+Create @/docs/gates-evals/eval-scenarios.md:
 
 ```markdown
 # Evaluation Scenarios
@@ -100,14 +100,14 @@ Append to eval_history in @/docs/context.json:
 EVALUATION PACK GENERATED ✓
 
 Created:
-- @/docs/eval-scenarios.md ([X] scenarios)
+- @/docs/gates-evals/eval-scenarios.md ([X] scenarios)
 - /tests/e2e/*.spec.* ([Y] test files)
 
 HUMAN:
 1. Run E2E tests yourself: [exact command]
-2. Walk through each scenario in eval-scenarios.md manually — do not skip
+2. Walk through each scenario in gates-evals/eval-scenarios.md manually — do not skip
 3. For each scenario, actually use the application as a real user would
-4. Fill in the feedback form at the bottom of eval-scenarios.md
+4. Fill in the feedback form at the bottom of gates-evals/eval-scenarios.md
 5. Note any DX friction, performance issues, or "this feels wrong" moments
 6. When done, paste your filled feedback form into: /bridge-feedback [your feedback]
 

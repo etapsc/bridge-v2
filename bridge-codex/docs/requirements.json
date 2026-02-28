@@ -45,6 +45,7 @@
       "e2e": "optional",
       "coverage_target": "80%"
     },
+    "e2e_critical_paths": [],
     "linters_typechecks": [],
     "security_checks": [],
     "performance_budgets": {

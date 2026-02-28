@@ -133,7 +133,11 @@ PACK_FOLDER="${SCRIPT_DIR}/bridge-${PACK}"
 PACK_ARCHIVE="${SCRIPT_DIR}/bridge-${PACK}.tar.gz"
 SOURCE_MODE=""
 
-if [[ -d "$PACK_FOLDER" ]]; then
+# claude-code pack uses project/ subdirectory when copying from folder
+if [[ "$PACK" == "claude-code" && -d "$PACK_FOLDER/project" ]]; then
+    PACK_FOLDER="${PACK_FOLDER}/project"
+    SOURCE_MODE="folder"
+elif [[ -d "$PACK_FOLDER" ]]; then
     SOURCE_MODE="folder"
 elif [[ -f "$PACK_ARCHIVE" ]]; then
     SOURCE_MODE="tar"

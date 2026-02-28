@@ -31,7 +31,7 @@ For each in-scope feature:
 2. Locate executable evidence
 3. Mark verified or gap
 
-## Step 5: Generate @/docs/gate-report.md
+## Step 5: Generate @/docs/gates-evals/gate-report.md
 
 ```markdown
 # Gate Report
@@ -86,7 +86,7 @@ Append to gate_history in @/docs/context.json:
 HUMAN:
 1. Verify these results yourself — run: [exact test/lint/typecheck commands]
 2. Do NOT trust mock-only test passes — run at least one real integration test: [command]
-3. Inspect gate-report.md — do the results match what you see?
+3. Inspect docs/gates-evals/gate-report.md — do the results match what you see?
 4. [If PASS] Run: /bridge-eval
 5. [If FAIL] Confirm blocking issues, then feed fix instructions back
 ```

@@ -1,0 +1,30 @@
+{
+  "schema_version": "context.v1",
+  "updated": "",
+  "project": {
+    "name": "{{PROJECT_NAME}}"
+  },
+  "feature_status": [],
+  "handoff": {
+    "stopped_at": "Project initialization",
+    "next_immediate": "Run /bridge-brainstorm or /bridge-requirements-only to define requirements",
+    "watch_out": ""
+  },
+  "next_slice": {
+    "slice_id": "",
+    "goal": "",
+    "features": [],
+    "acceptance_tests": []
+  },
+  "commands_to_run": {
+    "test": "",
+    "lint": "",
+    "typecheck": "",
+    "dev": ""
+  },
+  "recent_decisions": [],
+  "blockers": [],
+  "discrepancies": [],
+  "gate_history": [],
+  "eval_history": []
+}

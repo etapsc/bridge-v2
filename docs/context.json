@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
   "project": "BRIDGE v2.1 Toolkit",
-  "last_updated": "2026-02-23",
+  "last_updated": "2026-02-28",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -59,13 +59,21 @@
       "goal": "Replace ineffective Ask-mode return rules with preventive no-Ask-mode constraint",
       "status": "done",
       "notes": "Removed CLARIFICATIONS HANDLED VIA ASK sections from bridge-full orchestrator policy and standalone bridge-start/bridge-resume commands. Added hard constraint: NEVER switch to Ask mode — use HUMAN: blocks for user input, delegate to sub-tasks for code investigation. Root cause: S05 fix was post-hoc (told AI to recover after switching) instead of preventive (tell AI not to switch). Tar.gz rebuild needed."
+    },
+    {
+      "id": "S07",
+      "goal": "Align bridge-codex with latest Codex conventions and fix Codex-pack inconsistencies",
+      "status": "done",
+      "notes": "Researched latest Codex docs/changelog. Added native `.codex/skills/` tree (26 skills) as compatibility target, kept `.agents/skills/` as authoring mirror, standardized command references to `$bridge-*`, aligned status vocabulary to planned/in-progress/review/done/blocked, fixed eval filename expectation and context path typo, and added `quality_gates.e2e_critical_paths` to codex requirements template. Updated codex config with optional `profiles.bridge` (gpt-5-codex + reasoning summary auto + web search)."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "S06 complete — Ask mode switching banned in RooCode packs, HUMAN: blocks used for clarifications instead",
-    "next_immediate": "Rebuild tar.gz files with package.sh, then validate in RooCode that orchestrator no longer switches to Ask mode mid-slice",
-    "watch_out": ["Only bridge-full and bridge-standalone packs are affected (other packs don't have RooCode Ask mode)"]
+    "stopped_at": "S07 complete — bridge-codex aligned to latest Codex skills/config patterns and internal command/status consistency fixed",
+    "next_immediate": "Rebuild tar.gz files with package.sh, then validate bridge-codex in a fresh Codex project (skill discovery, $bridge invocation, profile usage)",
+    "watch_out": [
+      "bridge-codex now includes both `.agents/skills` (authoring mirror) and `.codex/skills` (native runtime); keep them synchronized on future edits"
+    ]
   },
   "next_slice": null,
   "quality_gates": {

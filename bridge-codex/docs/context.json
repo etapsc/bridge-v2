@@ -7,7 +7,7 @@
   "feature_status": [],
   "handoff": {
     "stopped_at": "Project initialization",
-    "next_immediate": "Run /bridge-brainstorm or /bridge-requirements-only to define requirements",
+    "next_immediate": "Run $bridge-brainstorm or $bridge-requirements-only to define requirements",
     "watch_out": ""
   },
   "next_slice": {
