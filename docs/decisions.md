@@ -85,5 +85,13 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 
 **Also Updated:**
 - Switched in-pack human instructions from `/bridge-*` to `$bridge-*` for Codex skill invocation.
-- Added a `profiles.bridge` block in `.codex/config.toml` with `gpt-5-codex`, `model_reasoning_summary = "auto"`, and `web_search = true`.
+- Added a `profiles.bridge` block in `.codex/config.toml` with `gpt-5-codex` and `model_reasoning_summary = "auto"`; omitted `web_search` from profile defaults for cross-version compatibility (use `--search` at runtime).
 - Fixed internal consistency gaps: status vocabulary (`planned|in-progress|review|done|blocked`), eval output filename expectation (`eval-scenarios.md`), and requirements schema support for `quality_gates.e2e_critical_paths`.
+
+---
+
+## 2026-02-28: Codex `web_search` Profile Compatibility Fix
+
+**Decision:** Keep `profiles.bridge` minimal and remove the static `web_search` key from `bridge-codex/.codex/config.toml`.
+
+**Rationale:** Codex config parsing for `profiles.bridge.web_search` has changed across versions; removing it avoids startup failures in generated projects. Users can explicitly enable web search at runtime with `codex --profile bridge --search`.

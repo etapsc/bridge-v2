@@ -9,4 +9,5 @@ project_doc_max_bytes = 65536
 [profiles.bridge]
 model = "gpt-5-codex"
 model_reasoning_summary = "auto"
-web_search = true
+# Web search is intentionally omitted from profile defaults for broad
+# cross-version compatibility. Enable per run with: codex --profile bridge --search

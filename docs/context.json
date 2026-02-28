@@ -64,15 +64,22 @@
       "id": "S07",
       "goal": "Align bridge-codex with latest Codex conventions and fix Codex-pack inconsistencies",
       "status": "done",
-      "notes": "Researched latest Codex docs/changelog. Added native `.codex/skills/` tree (26 skills) as compatibility target, kept `.agents/skills/` as authoring mirror, standardized command references to `$bridge-*`, aligned status vocabulary to planned/in-progress/review/done/blocked, fixed eval filename expectation and context path typo, and added `quality_gates.e2e_critical_paths` to codex requirements template. Updated codex config with optional `profiles.bridge` (gpt-5-codex + reasoning summary auto + web search)."
+      "notes": "Researched latest Codex docs/changelog. Added native `.codex/skills/` tree (26 skills) as compatibility target, kept `.agents/skills/` as authoring mirror, standardized command references to `$bridge-*`, aligned status vocabulary to planned/in-progress/review/done/blocked, fixed eval filename expectation and context path typo, and added `quality_gates.e2e_critical_paths` to codex requirements template. Updated codex config with optional `profiles.bridge` (gpt-5-codex + reasoning summary auto); omitted `web_search` from profile defaults for cross-version compatibility (use `--search` at runtime)."
+    },
+    {
+      "id": "S08",
+      "goal": "Fix Codex profile parse incompatibility for web_search in bridge-codex",
+      "status": "done",
+      "notes": "Removed `web_search` from `bridge-codex/.codex/config.toml` profile defaults to avoid version-specific parsing errors. Added guidance to use `codex --profile bridge --search` when needed. Rebuilt distributable archives with `./package.sh` and sanity-checked `codex --profile bridge --help` in `bridge-codex/`."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "S07 complete — bridge-codex aligned to latest Codex skills/config patterns and internal command/status consistency fixed",
-    "next_immediate": "Rebuild tar.gz files with package.sh, then validate bridge-codex in a fresh Codex project (skill discovery, $bridge invocation, profile usage)",
+    "stopped_at": "S08 complete — fixed Codex profile parse incompatibility (`profiles.bridge.web_search`) in bridge-codex pack",
+    "next_immediate": "Validate bridge-codex in a fresh Codex project from the rebuilt archive (`codex --profile bridge`, then `codex --profile bridge --search`)",
     "watch_out": [
-      "bridge-codex now includes both `.agents/skills` (authoring mirror) and `.codex/skills` (native runtime); keep them synchronized on future edits"
+      "bridge-codex now includes both `.agents/skills` (authoring mirror) and `.codex/skills` (native runtime); keep them synchronized on future edits",
+      "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema"
     ]
   },
   "next_slice": null,
