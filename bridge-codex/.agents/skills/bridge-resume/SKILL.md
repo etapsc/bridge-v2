@@ -5,4 +5,4 @@ description: Resume development in a fresh session - load context and output bri
 
 Fresh session. Load docs/requirements.json and docs/context.json.
 
-Use the bridge-session-management skill to output the re-entry brief. Then wait for instructions.
+Follow `.agents/procedures/bridge-session-management.md` (Fresh Session Re-entry) to output the brief, then wait for instructions.

@@ -91,7 +91,8 @@ Since Codex is single-agent, switch between these modes mentally based on the cu
 
 ## Available Skills
 
-Codex-native skill files live in `.codex/skills/*/SKILL.md` (runtime). `bridge-codex/.agents/skills/` is kept as an authoring mirror for BRIDGE maintenance.
+User-invokable skill files live in `.agents/skills/*/SKILL.md`.
+Internal procedures live in `.agents/procedures/*.md` and are referenced by workflow skills.
 
 Invoke skills with `$skill-name` in your prompt. Key skills:
 
@@ -115,12 +116,12 @@ Invoke skills with `$skill-name` in your prompt. Key skills:
 - `$bridge-context-update` — Sync context.json
 - `$bridge-advisor` — Strategic advisor: viability, positioning, launch readiness
 
-**Procedure skills** (used by workflow commands):
-- `$bridge-slice-plan` — Plan and execute thin vertical slices
-- `$bridge-gate-audit` — Quality gate check procedures
-- `$bridge-eval-generate` — Evaluation pack generation procedures
-- `$bridge-session-management` — Session re-entry and wrap-up procedures
-- `$bridge-context-sync` — Context synchronization procedures
-- `$bridge-feedback-process` — Feedback triage procedures
-- `$bridge-external-handoff` — External agent packaging procedures
-- `$bridge-external-reintegrate` — External work validation procedures
+**Internal procedures** (not invoked directly with `$`):
+- `.agents/procedures/bridge-slice-plan.md` — Plan and execute thin vertical slices
+- `.agents/procedures/bridge-gate-audit.md` — Quality gate check procedures
+- `.agents/procedures/bridge-eval-generate.md` — Evaluation pack generation procedures
+- `.agents/procedures/bridge-session-management.md` — Session re-entry and wrap-up procedures
+- `.agents/procedures/bridge-context-sync.md` — Context synchronization procedures
+- `.agents/procedures/bridge-feedback-process.md` — Feedback triage procedures
+- `.agents/procedures/bridge-external-handoff.md` — External agent packaging procedures
+- `.agents/procedures/bridge-external-reintegrate.md` — External work validation procedures

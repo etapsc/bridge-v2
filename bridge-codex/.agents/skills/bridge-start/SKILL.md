@@ -5,7 +5,7 @@ description: Start BRIDGE implementation - plan and execute slices from requirem
 
 Load docs/requirements.json and docs/context.json.
 
-Plan and execute the next slice using the bridge-slice-plan skill. Switch to architect mode (if design needed), code mode (implementation), debug mode (if tests fail).
+Plan and execute the next slice using `.agents/procedures/bridge-slice-plan.md`. Switch to architect mode (if design needed), code mode (implementation), debug mode (if tests fail).
 
 Start with the first recommended slice or the slice indicated in context.json next_slice.
 

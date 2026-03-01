@@ -66,7 +66,7 @@
     "F04": {
       "title": "Codex Pack",
       "priority": "must",
-      "description": "AGENTS.md (global rules + role modes), .codex/skills/ (26 Codex-native skills = 8 procedures + 18 commands-as-skills), .agents/skills/ (authoring mirror), .codex/config.toml, docs/ templates.",
+      "description": "AGENTS.md (global rules + role modes), .agents/skills/ (18 user-invokable workflow skills), .agents/procedures/ (8 internal procedure docs referenced by workflow skills), .codex/config.toml, docs/ templates.",
       "status": "done"
     },
     "F05": {

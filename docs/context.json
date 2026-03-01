@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
   "project": "BRIDGE v2.1 Toolkit",
-  "last_updated": "2026-02-28",
+  "last_updated": "2026-03-01",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -71,14 +71,26 @@
       "goal": "Fix Codex profile parse incompatibility for web_search in bridge-codex",
       "status": "done",
       "notes": "Removed `web_search` from `bridge-codex/.codex/config.toml` profile defaults to avoid version-specific parsing errors. Added guidance to use `codex --profile bridge --search` when needed. Rebuilt distributable archives with `./package.sh` and sanity-checked `codex --profile bridge --help` in `bridge-codex/`."
+    },
+    {
+      "id": "S09",
+      "goal": "Remove redundant .codex/skills/ from bridge-codex — single skills directory",
+      "status": "done",
+      "notes": "Removed duplicate `.codex/skills/` directory (byte-for-byte copy of `.agents/skills/`). Skills now live only in `.agents/skills/` per standard Codex convention. `.codex/` retains only `config.toml`. Updated AGENTS.md to remove dual-directory reference. Rebuilt all archives."
+    },
+    {
+      "id": "S10",
+      "goal": "Separate Codex workflow skills from internal procedures to avoid confusing `$` skill suggestions",
+      "status": "done",
+      "notes": "Moved 8 internal procedure docs from `.agents/skills/*/SKILL.md` to `.agents/procedures/*.md` in `bridge-codex`, updated workflow skills to reference procedure file paths directly, and updated `bridge-codex/AGENTS.md` plus requirements F04 to document the new split. Result: only 18 workflow commands remain in Codex skill discovery."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "S08 complete — fixed Codex profile parse incompatibility (`profiles.bridge.web_search`) in bridge-codex pack",
-    "next_immediate": "Validate bridge-codex in a fresh Codex project from the rebuilt archive (`codex --profile bridge`, then `codex --profile bridge --search`)",
+    "stopped_at": "S10 complete — bridge-codex now exposes only workflow commands as `$` skills; procedures moved to `.agents/procedures/`",
+    "next_immediate": "Validate in a real Codex session that `$` suggestions no longer include internal procedure names and core commands still execute correctly",
     "watch_out": [
-      "bridge-codex now includes both `.agents/skills` (authoring mirror) and `.codex/skills` (native runtime); keep them synchronized on future edits",
+      "Do not reintroduce `SKILL.md` files under `.agents/skills/` for internal procedures, or they will appear in Codex `$` discovery",
       "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema"
     ]
   },
