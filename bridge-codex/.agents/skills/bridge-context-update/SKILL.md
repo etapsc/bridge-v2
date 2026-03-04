@@ -1,5 +1,5 @@
 ---
-name: Bridge context update
+name: Bridge Context Update
 description: Sync context.json with current code reality. Invoke with $bridge-context-update in your prompt.
 ---
 

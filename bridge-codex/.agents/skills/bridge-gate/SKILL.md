@@ -1,5 +1,5 @@
 ---
-name: Bridge gate
+name: Bridge Gate
 description: Run quality gate audit on features in review status. Invoke with $bridge-gate in your prompt.
 ---
 

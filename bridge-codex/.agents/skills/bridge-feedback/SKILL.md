@@ -1,5 +1,5 @@
 ---
-name: Bridge feedback
+name: Bridge Feedback
 description: Process evaluation feedback - triage issues, decide iterate or launch. Invoke with $bridge-feedback in your prompt.
 ---
 

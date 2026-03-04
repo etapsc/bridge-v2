@@ -1,5 +1,5 @@
 ---
-name: Bridge start
+name: Bridge Start
 description: Start BRIDGE implementation - plan and execute slices from requirements. Invoke with $bridge-start in your prompt.
 ---
 

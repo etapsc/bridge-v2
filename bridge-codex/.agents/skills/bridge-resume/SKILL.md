@@ -1,5 +1,5 @@
 ---
-name: Bridge resume
+name: Bridge Resume
 description: Resume development in a fresh session - load context and output brief. Invoke with $bridge-resume in your prompt.
 ---
 

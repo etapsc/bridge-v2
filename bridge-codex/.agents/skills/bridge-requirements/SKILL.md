@@ -1,5 +1,5 @@
 ---
-name: Bridge requirements
+name: Bridge Requirements
 description: "Phase 1: Generate requirements.json and context.json from brainstorm output. Invoke with $bridge-requirements in your prompt."
 ---
 

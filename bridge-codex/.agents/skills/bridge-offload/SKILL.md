@@ -1,5 +1,5 @@
 ---
-name: Bridge offload
+name: Bridge Offload
 description: Prepare task handoff for an external coding agent. Invoke with $bridge-offload in your prompt.
 ---
 

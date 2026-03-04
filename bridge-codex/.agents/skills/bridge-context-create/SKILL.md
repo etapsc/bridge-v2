@@ -1,5 +1,5 @@
 ---
-name: Bridge context create
+name: Bridge Context Create
 description: Create context.json from requirements and current codebase. Invoke with $bridge-context-create in your prompt.
 ---
 

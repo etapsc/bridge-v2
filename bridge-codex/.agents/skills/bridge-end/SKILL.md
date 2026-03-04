@@ -1,5 +1,5 @@
 ---
-name: Bridge end
+name: Bridge End
 description: End development session - update handoff and save state. Invoke with $bridge-end in your prompt.
 ---
 

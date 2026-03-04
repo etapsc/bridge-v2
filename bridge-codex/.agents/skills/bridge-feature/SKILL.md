@@ -1,5 +1,5 @@
 ---
-name: Bridge feature
+name: Bridge Feature
 description: Generate incremental requirements for a feature/fix/extension in an existing project. Invoke with $bridge-feature in your prompt.
 ---
 

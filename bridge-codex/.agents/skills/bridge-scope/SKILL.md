@@ -1,5 +1,5 @@
 ---
-name: Bridge scope
+name: Bridge Scope
 description: "Phase 0: Scope a feature, fix, or extension for an existing project. Invoke with $bridge-scope in your prompt."
 ---
 

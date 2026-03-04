@@ -1,5 +1,5 @@
 ---
-name: Bridge reintegrate
+name: Bridge Reintegrate
 description: Re-integrate and validate work completed by an external coding agent. Invoke with $bridge-reintegrate in your prompt.
 ---
 

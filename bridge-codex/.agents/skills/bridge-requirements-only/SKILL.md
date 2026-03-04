@@ -1,5 +1,5 @@
 ---
-name: Bridge requirements only
+name: Bridge Requirements Only
 description: "Phase 1: Generate requirements from existing project description (skip brainstorm). Invoke with $bridge-requirements-only in your prompt."
 ---
 

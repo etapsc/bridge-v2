@@ -1,5 +1,5 @@
 ---
-name: Bridge migrate
+name: Bridge Migrate
 description: Migrate an existing BRIDGE v1 project to BRIDGE v2.1 schema and tooling. Invoke with $bridge-migrate in your prompt.
 ---
 

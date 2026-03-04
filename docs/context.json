@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
   "project": "BRIDGE v2.1 Toolkit",
-  "last_updated": "2026-03-01",
+  "last_updated": "2026-03-03",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -83,12 +83,18 @@
       "goal": "Separate Codex workflow skills from internal procedures to avoid confusing `$` skill suggestions",
       "status": "done",
       "notes": "Moved 8 internal procedure docs from `.agents/skills/*/SKILL.md` to `.agents/procedures/*.md` in `bridge-codex`, updated workflow skills to reference procedure file paths directly, and updated `bridge-codex/AGENTS.md` plus requirements F04 to document the new split. Result: only 18 workflow commands remain in Codex skill discovery."
+    },
+    {
+      "id": "S11",
+      "goal": "Fix Codex skill naming to Title Case + create platform usage guides",
+      "status": "done",
+      "notes": "Standardized all 18 Codex SKILL.md `name:` fields to Title Case (15 fixed, 3 already correct). Created `reference/platform-guides.md` with step-by-step workflows for RooCode (Full + Standalone), Claude Code, and Codex, plus a command reference matrix. Added Platform Guides section to README.md. Rebuilt all 6 archives."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "S10 complete — bridge-codex now exposes only workflow commands as `$` skills; procedures moved to `.agents/procedures/`",
-    "next_immediate": "Validate in a real Codex session that `$` suggestions no longer include internal procedure names and core commands still execute correctly",
+    "stopped_at": "S11 complete — Codex skill naming standardized to Title Case; platform-guides.md created with per-platform workflows and command matrix",
+    "next_immediate": "Validate Codex `$` discovery shows Title Case names; review platform-guides.md for accuracy",
     "watch_out": [
       "Do not reintroduce `SKILL.md` files under `.agents/skills/` for internal procedures, or they will appear in Codex `$` discovery",
       "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema"
