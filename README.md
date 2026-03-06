@@ -59,6 +59,10 @@ The key insight: BRIDGE keeps the agent in a fix loop on the current slice until
 
 Each platform has a different architecture (mode-switching, subagents, single-agent) and invocation syntax. See **[reference/platform-guides.md](reference/platform-guides.md)** for step-by-step workflows, setup recaps, and a full command reference matrix for RooCode, Claude Code, and Codex.
 
+## Multi-Repo Projects
+
+If your product spans multiple repositories, use a single BRIDGE control plane and track repo-specific execution state in context. See **[reference/multi-repo-playbook.md](reference/multi-repo-playbook.md)**.
+
 ## Quick Start (remote install)
 
 ```bash

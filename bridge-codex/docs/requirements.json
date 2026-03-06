@@ -37,6 +37,13 @@
     "apis": [],
     "external_services": []
   },
+  "workspace": {
+    "topology": "single-repo",
+    "control_repo": ".",
+    "repos": [],
+    "cross_repo_contracts": [],
+    "integration_acceptance_tests": []
+  },
   "quality_gates": {
     "ci_required": true,
     "tests": {
@@ -45,7 +52,6 @@
       "e2e": "optional",
       "coverage_target": "80%"
     },
-    "e2e_critical_paths": [],
     "linters_typechecks": [],
     "security_checks": [],
     "performance_budgets": {

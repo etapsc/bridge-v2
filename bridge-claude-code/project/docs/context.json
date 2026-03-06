@@ -4,6 +4,11 @@
   "project": {
     "name": "{{PROJECT_NAME}}"
   },
+  "workspace": {
+    "topology": "single-repo",
+    "control_repo": ".",
+    "repos": []
+  },
   "feature_status": [],
   "handoff": {
     "stopped_at": "Project initialization",
@@ -22,6 +27,8 @@
     "typecheck": "",
     "dev": ""
   },
+  "repo_commands": {},
+  "repo_state": [],
   "recent_decisions": [],
   "blockers": [],
   "discrepancies": [],
