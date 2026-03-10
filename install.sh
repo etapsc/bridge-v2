@@ -57,7 +57,11 @@ ask_yn() {
     local answer
     read -r answer
     answer="${answer:-$default}"
-    [[ "${answer,,}" == "y" ]]
+    if [[ "$default" == "y" ]]; then
+        [[ "${answer,,}" != "n" && "${answer,,}" != "no" ]]
+    else
+        [[ "${answer,,}" == "y" || "${answer,,}" == "yes" ]]
+    fi
 }
 
 # --- Source resolution ---

@@ -95,3 +95,31 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 **Decision:** Keep `profiles.bridge` minimal and remove the static `web_search` key from `bridge-codex/.codex/config.toml`.
 
 **Rationale:** Codex config parsing for `profiles.bridge.web_search` has changed across versions; removing it avoids startup failures in generated projects. Users can explicitly enable web search at runtime with `codex --profile bridge --search`.
+
+---
+
+## 2026-03-09: Remove Obsolete Commands (migrate, offload, reintegrate)
+
+**Decision:** Permanently remove 3 commands (`bridge-migrate`, `bridge-offload`, `bridge-reintegrate`) and 2 skills (`bridge-external-handoff`, `bridge-external-reintegrate`) from all 5 packs. Update all references from 18→15 commands and 8→6 skills.
+
+**Rationale:** These commands were redundant and obsolete. `bridge-migrate` (v1→v2.1 migration) is no longer needed. `bridge-offload`/`bridge-reintegrate` (external agent handoff) were superseded by the multi-repo pack's cross-repo coordination model.
+
+**Impact:** requirements.json, test.sh, README.md, CLAUDE.md, AGENTS.md, methodology doc, platform guides — all updated. 52/52 smoke tests pass after fix.
+
+---
+
+## 2026-03-09: Add Controller Pack (F14) and Multi-Repo Pack (F15)
+
+**Decision:** Track `bridge-controller/` and `bridge-multi-repo/` as new features F14 and F15 in requirements.json with acceptance tests AT12 and AT13.
+
+**Rationale:** Both packs were already built and packaged but not tracked in the requirements or context. F14 is a portfolio-level orchestrator (3 commands: status, init-project, sync). F15 is a cross-repo workspace orchestrator (12 commands, available in claude-code and codex variants).
+
+**Architecture note:** Multi-repo orchestrator and individual repo BRIDGE docs coexist at different levels — workspace-level docs in the orchestrator, repo-level docs in each repo. No migration of existing repo docs needed.
+
+---
+
+## 2026-03-09: Fix install.sh ask_yn to Handle Non-y/n Input
+
+**Decision:** Changed `ask_yn` function so that when default is "y", only explicit "n"/"no" declines — all other input (including typos/accidental text) follows the default.
+
+**Rationale:** During manual testing, typing a repo name at the "Add another repo? (Y/n):" prompt caused the loop to exit silently because the function only matched exact "y". This UX bug caused data loss (second repo never collected).

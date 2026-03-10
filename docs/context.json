@@ -101,11 +101,13 @@
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "Gate PASSED (2026-03-09) — all 15 features verified, 52/52 tests pass, 0 blocking issues, 5 warnings",
-    "next_immediate": "Run /bridge-eval to generate evaluation scenarios, or address warnings (W01-W05) from gate report",
+    "stopped_at": "Session wrap-up (2026-03-09) — S12 done, gate PASSED, eval pack generated (23 scenarios, 115 E2E assertions), install.sh ask_yn bug fixed. All uncommitted — user will commit.",
+    "next_immediate": "Commit all changes. Then: manual testing using docs/gates-evals/eval-scenarios.md, fill docs/gates-evals/feedback-template.md, run /bridge-feedback to process results.",
     "watch_out": [
       "Do not reintroduce `SKILL.md` files under `.agents/skills/` for internal procedures, or they will appear in Codex `$` discovery",
-      "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema"
+      "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema",
+      "5 non-blocking gate warnings (W01-W05) remain — see docs/gates-evals/gate-report.md",
+      "Archives were rebuilt during this session but install.sh fix happened after — rebuild with ./package.sh if distributing"
     ]
   },
   "next_slice": null,
@@ -136,6 +138,16 @@
     "verify_commands": "for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex bridge-opencode; do echo \"=== $pack ===\"; find $pack -name '*.md' | grep -c command; done",
     "verify_feedback_loop": "grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ bridge-opencode/ | sort"
   },
+  "eval_history": [
+    {
+      "date": "2026-03-09",
+      "scenarios_generated": 23,
+      "e2e_tests_generated": 4,
+      "e2e_test_assertions": 115,
+      "awaiting_feedback": true,
+      "notes": "23 manual scenarios covering all 6 user flows (UF01-UF06), all 15 features, and all 13 acceptance tests. 4 E2E test scripts: test-setup-packs.sh (32 assertions), test-pack-consistency.sh (25 assertions), test-advanced-packs.sh (37 assertions), test-workflow-content.sh (21 assertions). All 115 E2E assertions pass."
+    }
+  ],
   "discrepancies": [
     {
       "id": "D01",
