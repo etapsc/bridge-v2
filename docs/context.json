@@ -130,7 +130,7 @@
   },
   "next_slice": null,
   "quality_gates": {
-    "last_run": "2026-03-10",
+    "last_run": "2026-03-13",
     "status": "pass"
   },
   "gate_history": [
@@ -157,6 +157,33 @@
       "blocking_issues": 0,
       "warnings": 1,
       "notes": "Post-restructure validation rerun after canonicalizing the Claude pack layout and aligning multi-repo docs/templates. 45/45 smoke checks pass, 114/114 E2E assertions pass, and generated gate/eval artifacts now match the current 9 release archives. Remaining non-blocking warning: shellcheck not installed."
+    },
+    {
+      "date": "2026-03-12",
+      "result": "fail",
+      "features": ["F16", "F17", "F18", "F19"],
+      "blocking_issues": 3,
+      "warnings": 5,
+      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
+      "notes": "BRIDGE v3 gate audit. Go binary builds and cross-compiles (linux/amd64, darwin/arm64, windows/amd64). bridge new works correctly. 7 specializations and 3 personality profiles are well-structured. 3 blocking issues: (B01) customize --personality fails when binary is not co-located with profiles/ directory, (B02) personality patching skips advisor and brainstorm roles (2 of 8 defined roles), (B03) Codex agent file pattern missing from personality patcher. 5 warnings: stale feature statuses, low test coverage, 4 ATs not verified, shellcheck not installed, no v3 eval scenarios."
+    },
+    {
+      "date": "2026-03-12",
+      "result": "fail",
+      "features": ["F16", "F17", "F18", "F19"],
+      "blocking_issues": 1,
+      "warnings": 6,
+      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
+      "notes": "Retest after B01/B02/B03 fixes. All 3 previous blockers resolved: resolveDataDir() searches 4 locations (B01), agentMappings has 7 entries with stem keywords (B02), patterns cover 7 globs across all pack types (B03). New blocker B04: bridge new and bridge add store personality in .bridge.json but never call ApplyPersonality() -- vibe lines not injected during project creation, violating AT16. 16 Go tests pass, 45 smoke tests pass, 82 E2E assertions pass. Cross-compile verified for 4 targets."
+    },
+    {
+      "date": "2026-03-13",
+      "result": "pass",
+      "features": ["F16", "F17", "F18", "F19"],
+      "blocking_issues": 0,
+      "warnings": 6,
+      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
+      "notes": "All 4 previous blockers (B01-B04) verified resolved. B04 fix confirmed: new.go and add.go now call ApplyPersonality() and AddSpecialization() after pack extraction. 16 Go tests pass, 45 smoke tests pass, 82 E2E assertions pass. Cross-compile verified for 5 targets (linux/amd64, linux/arm64, darwin/amd64, darwin/arm64, windows/amd64). 6 warnings: stale feature statuses, low test coverage, 3 ATs not verified (AT20/AT21/AT22 require TTY/runtime), shellcheck not installed, no v3 eval scenarios, Codex agent-level personality limited."
     }
   ],
   "commands_to_run": {
