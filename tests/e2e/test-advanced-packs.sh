@@ -217,9 +217,10 @@ fi
 section "AT10: Package Script Archives"
 
 EXPECTED_ARCHIVES=(
-  bridge-full bridge-standalone bridge-claude-code bridge-claude-code-plugin
+  bridge-full bridge-standalone bridge-claude-code
   bridge-codex bridge-opencode bridge-controller
   bridge-multi-repo-claude-code bridge-multi-repo-codex
+  bridge-dual-agent
 )
 
 for archive in "${EXPECTED_ARCHIVES[@]}"; do

@@ -24,11 +24,5 @@
   },
   "recent_decisions": [],
   "blockers": [],
-  "discrepancies": [],
-  "commands_to_run": {
-    "test": "",
-    "lint": "",
-    "typecheck": "",
-    "build": ""
-  }
+  "discrepancies": []
 }

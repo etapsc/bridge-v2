@@ -114,7 +114,8 @@ Platform tested (if Scenario 23): ___________________
 
 ### Automated Test Suite
 - [ ] Pass  [ ] Fail  [ ] Skip
-- Tests passed: ___ / 52
+- Smoke checks passed: ___ / 45
+- E2E assertions passed: ___ / 114
 - Notes: ___
 
 ---

@@ -17,8 +17,8 @@ pass() { PASSED=$((PASSED + 1)); printf "  \033[32m+\033[0m %s\n" "$1"; }
 fail() { FAILED=$((FAILED + 1)); ERRORS+=("$1"); printf "  \033[31m-\033[0m %s\n" "$1"; }
 section() { printf "\n\033[1m--- %s ---\033[0m\n" "$1"; }
 
-# Use Claude Code project commands as the canonical content source
-CMD_DIR="${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands"
+# Use the canonical Claude Code pack commands as the content source
+CMD_DIR="${BRIDGE_ROOT}/bridge-claude-code/.claude/commands"
 
 # ============================================================
 # UF01: Greenfield Project Flow
@@ -138,8 +138,8 @@ if grep -q 'HUMAN:' "${CMD_DIR}/bridge-start.md" 2>/dev/null; then
   pass "bridge-start includes HUMAN: handoff protocol"
 elif grep -qi 'slice-plan\|bridge-slice-plan' "${CMD_DIR}/bridge-start.md" 2>/dev/null; then
   # The HUMAN: protocol is in the slice-plan skill that start delegates to
-  SKILL_DIR="${BRIDGE_ROOT}/bridge-claude-code/project/.claude/skills/bridge-slice-plan"
-  if [[ -f "${SKILL_DIR}/SKILL.md" ]] && grep -q 'HUMAN:' "${SKILL_DIR}/SKILL.md" 2>/dev/null; then
+  SKILL_FILE="${BRIDGE_ROOT}/bridge-claude-code/.claude/skills/bridge-slice-plan/SKILL.md"
+  if [[ -f "${SKILL_FILE}" ]] && grep -q 'HUMAN:' "${SKILL_FILE}" 2>/dev/null; then
     pass "bridge-start delegates to slice-plan which has HUMAN: protocol"
   else
     fail "bridge-start delegates to slice-plan but HUMAN: protocol not found there"

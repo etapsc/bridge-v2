@@ -45,19 +45,12 @@ for cmd in "${COMMANDS[@]}"; do
 done
 [[ $missing -eq 0 ]] && pass "Standalone pack: all 15 commands" || fail "Standalone pack: ${missing} commands missing"
 
-# Claude Code pack (project variant)
+# Claude Code pack
 missing=0
 for cmd in "${COMMANDS[@]}"; do
-  [[ -f "${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands/${cmd}.md" ]] || missing=$((missing + 1))
+  [[ -f "${BRIDGE_ROOT}/bridge-claude-code/.claude/commands/${cmd}.md" ]] || missing=$((missing + 1))
 done
-[[ $missing -eq 0 ]] && pass "Claude Code pack (project): all 15 commands" || fail "Claude Code pack: ${missing} commands missing"
-
-# Claude Code pack (plugin variant)
-missing=0
-for cmd in "${COMMANDS[@]}"; do
-  [[ -f "${BRIDGE_ROOT}/bridge-claude-code/plugin/commands/${cmd}.md" ]] || missing=$((missing + 1))
-done
-[[ $missing -eq 0 ]] && pass "Claude Code pack (plugin): all 15 commands" || fail "Claude Code plugin: ${missing} commands missing"
+[[ $missing -eq 0 ]] && pass "Claude Code pack: all 15 commands" || fail "Claude Code pack: ${missing} commands missing"
 
 # Codex pack (skills)
 missing=0
@@ -74,16 +67,18 @@ done
 [[ $missing -eq 0 ]] && pass "OpenCode pack: all 15 commands" || fail "OpenCode pack: ${missing} commands missing"
 
 # No extra commands (check for unexpected files)
-for pack_dir in \
-  "${BRIDGE_ROOT}/bridge-full/.roo/commands" \
-  "${BRIDGE_ROOT}/bridge-standalone/.roo/commands" \
-  "${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands" \
-  "${BRIDGE_ROOT}/bridge-opencode/.opencode/commands"; do
-  COUNT=$(ls "$pack_dir" 2>/dev/null | grep -c '.md$' || echo 0)
+for pack in \
+  "bridge-full:${BRIDGE_ROOT}/bridge-full/.roo/commands" \
+  "bridge-standalone:${BRIDGE_ROOT}/bridge-standalone/.roo/commands" \
+  "bridge-claude-code:${BRIDGE_ROOT}/bridge-claude-code/.claude/commands" \
+  "bridge-opencode:${BRIDGE_ROOT}/bridge-opencode/.opencode/commands"; do
+  label="${pack%%:*}"
+  pack_dir="${pack#*:}"
+  COUNT=$(find "$pack_dir" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d '[:space:]')
   if [[ "$COUNT" -eq 15 ]]; then
-    pass "$(basename "$(dirname "$(dirname "$pack_dir")")"): exactly 15 files (no extras)"
+    pass "${label}: exactly 15 files (no extras)"
   else
-    fail "$(basename "$(dirname "$(dirname "$pack_dir")")"): expected 15, got ${COUNT}"
+    fail "${label}: expected 15, got ${COUNT}"
   fi
 done
 
@@ -93,14 +88,14 @@ done
 section "AT06: Existing Project Commands (F08)"
 
 # bridge-scope content check
-if grep -qi 'existing\|codebase\|scope' "${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands/bridge-scope.md" 2>/dev/null; then
+if grep -qi 'existing\|codebase\|scope' "${BRIDGE_ROOT}/bridge-claude-code/.claude/commands/bridge-scope.md" 2>/dev/null; then
   pass "bridge-scope references existing codebase analysis"
 else
   fail "bridge-scope does not mention existing codebase"
 fi
 
 # bridge-feature content check
-if grep -qi 'incremental\|append\|existing\|requirements' "${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands/bridge-feature.md" 2>/dev/null; then
+if grep -qi 'incremental\|append\|existing\|requirements' "${BRIDGE_ROOT}/bridge-claude-code/.claude/commands/bridge-feature.md" 2>/dev/null; then
   pass "bridge-feature references incremental requirements"
 else
   fail "bridge-feature does not mention incremental requirements"
@@ -150,7 +145,7 @@ done
 # ============================================================
 section "F12: Design Integration Command"
 
-if grep -qi 'design\|PRD\|spec' "${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands/bridge-design.md" 2>/dev/null; then
+if grep -qi 'design\|PRD\|spec' "${BRIDGE_ROOT}/bridge-claude-code/.claude/commands/bridge-design.md" 2>/dev/null; then
   pass "bridge-design references design document/PRD/spec"
 else
   fail "bridge-design content missing expected terms"
@@ -161,7 +156,7 @@ fi
 # ============================================================
 section "F13: Strategic Advisor Command"
 
-ADVISOR_FILE="${BRIDGE_ROOT}/bridge-claude-code/project/.claude/commands/bridge-advisor.md"
+ADVISOR_FILE="${BRIDGE_ROOT}/bridge-claude-code/.claude/commands/bridge-advisor.md"
 if [[ -f "$ADVISOR_FILE" ]]; then
   roles_found=0
   grep -qi 'product strategist' "$ADVISOR_FILE" && roles_found=$((roles_found + 1))

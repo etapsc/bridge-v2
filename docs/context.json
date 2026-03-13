@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
   "project": "BRIDGE v2.1 Toolkit",
-  "last_updated": "2026-03-09",
+  "last_updated": "2026-03-12",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -97,22 +97,36 @@
       "goal": "Remove obsolete commands (migrate, offload, reintegrate) and skills (external-handoff, external-reintegrate) — update all references",
       "status": "done",
       "notes": "3 commands (migrate, offload, reintegrate) and 2 skills (external-handoff, external-reintegrate) removed from all 5 packs as intentional cleanup. Updated: requirements.json (18→15 commands, 8→6 skills), test.sh arrays, README.md, CLAUDE.md, bridge-codex/AGENTS.md, bridge-claude-code/*/CLAUDE.md, reference/BRIDGE-v2.1-methodology.md, reference/platform-guides.md. Added F14 (Controller Pack) and F15 (Multi-Repo Pack) with AT12/AT13 to requirements.json. All 52 smoke tests pass. Archives rebuilt."
+    },
+    {
+      "id": "S13",
+      "goal": "Sync validation and docs after Claude pack flattening and multi-repo instruction cleanup",
+      "status": "done",
+      "notes": "Updated generated E2E tests, gate/eval artifacts, requirements, methodology docs, and context to reflect the canonical root `bridge-claude-code` layout and the current 9 release archives. Aligned multi-repo repo-path instructions to `workspace.repos[].path`, removed stale `commands_to_run` from multi-repo context templates, documented the Claude PreToolUse hook, replaced `eval` with `printf -v` in install-orchestrators.sh, and removed the last `bridge-claude-code/project` fallback from add-bridge.sh. Validation passes: 45/45 smoke checks and 114/114 E2E assertions."
+    },
+    {
+      "id": "S14",
+      "goal": "Add a single eval-scenario validator script and sync the eval docs to current pack reality",
+      "status": "done",
+      "notes": "Added tests/e2e/validate-eval-scenarios.sh to run scenarios 1-23 from docs/gates-evals/eval-scenarios.md in order, including guided TTY handoff for the interactive setup.sh cases and the live-agent scenario. Synced eval-scenarios.md to the current 9-archive release set and canonical full-pack orchestrator path, and documented the feedback loop in reference/BRIDGE-v2.1-methodology.md so Scenario 17 is executable."
     }
   ],
   "current_slice": null,
   "handoff": {
-    "stopped_at": "Session wrap-up (2026-03-09) — S12 done, gate PASSED, eval pack generated (23 scenarios, 115 E2E assertions), install.sh ask_yn bug fixed. All uncommitted — user will commit.",
-    "next_immediate": "Commit all changes. Then: manual testing using docs/gates-evals/eval-scenarios.md, fill docs/gates-evals/feedback-template.md, run /bridge-feedback to process results.",
+    "stopped_at": "Slice S14 applied (2026-03-12) — added an eval-scenario validator script, refreshed the stale eval-scenarios expectations it depends on, and documented the feedback loop in the methodology reference.",
+    "next_immediate": "Run `bash tests/e2e/validate-eval-scenarios.sh` from a real terminal, complete the interactive/live prompts it opens, then fill docs/gates-evals/feedback-template.md and run /bridge-feedback with the results.",
     "watch_out": [
       "Do not reintroduce `SKILL.md` files under `.agents/skills/` for internal procedures, or they will appear in Codex `$` discovery",
       "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema",
-      "5 non-blocking gate warnings (W01-W05) remain — see docs/gates-evals/gate-report.md",
-      "Archives were rebuilt during this session but install.sh fix happened after — rebuild with ./package.sh if distributing"
+      "Do not reintroduce deleted `bridge-claude-code/project` or `bridge-claude-code/plugin` paths into generated docs or tests — the root `bridge-claude-code/.claude` layout is the canonical source",
+      "In multi-repo packs, repo topology lives in docs/requirements.json `workspace.repos`; runtime execution state lives in docs/context.json `repo_commands` and `repo_state`",
+      "shellcheck is still not installed locally, so shell-script linting was skipped in the 2026-03-10 gate",
+      "Scenarios 6, 7, and 23 in tests/e2e/validate-eval-scenarios.sh require a real TTY; Scenario 23 also requires a supported live CLI such as Claude, Codex, or OpenCode"
     ]
   },
   "next_slice": null,
   "quality_gates": {
-    "last_run": "2026-03-09",
+    "last_run": "2026-03-10",
     "status": "pass"
   },
   "gate_history": [
@@ -131,9 +145,20 @@
       "blocking_issues": 0,
       "warnings": 5,
       "notes": "All 11 previous blocking issues resolved. 52/52 smoke tests pass. F14 (Controller) and F15 (Multi-Repo) verified against AT12/AT13. No stale references in pack sources. 5 non-blocking warnings: eval in install.sh, methodology doc missing 2 commands, AT10 archive count outdated, AT06 no integration test, shellcheck not installed."
+    },
+    {
+      "date": "2026-03-10",
+      "result": "pass",
+      "features": ["F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10", "F11", "F12", "F13", "F14", "F15"],
+      "blocking_issues": 0,
+      "warnings": 1,
+      "notes": "Post-restructure validation rerun after canonicalizing the Claude pack layout and aligning multi-repo docs/templates. 45/45 smoke checks pass, 114/114 E2E assertions pass, and generated gate/eval artifacts now match the current 9 release archives. Remaining non-blocking warning: shellcheck not installed."
     }
   ],
   "commands_to_run": {
+    "test": "bash test.sh",
+    "e2e": "for f in tests/e2e/test-setup-packs.sh tests/e2e/test-pack-consistency.sh tests/e2e/test-advanced-packs.sh tests/e2e/test-workflow-content.sh; do bash \"$f\"; done",
+    "eval_validator": "bash tests/e2e/validate-eval-scenarios.sh",
     "package": "./package.sh",
     "verify_commands": "for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex bridge-opencode; do echo \"=== $pack ===\"; find $pack -name '*.md' | grep -c command; done",
     "verify_feedback_loop": "grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ bridge-opencode/ | sort"
@@ -146,6 +171,14 @@
       "e2e_test_assertions": 115,
       "awaiting_feedback": true,
       "notes": "23 manual scenarios covering all 6 user flows (UF01-UF06), all 15 features, and all 13 acceptance tests. 4 E2E test scripts: test-setup-packs.sh (32 assertions), test-pack-consistency.sh (25 assertions), test-advanced-packs.sh (37 assertions), test-workflow-content.sh (21 assertions). All 115 E2E assertions pass."
+    },
+    {
+      "date": "2026-03-10",
+      "scenarios_generated": 23,
+      "e2e_tests_generated": 4,
+      "e2e_test_assertions": 114,
+      "awaiting_feedback": true,
+      "notes": "Refreshed evaluation pack after the Claude pack flattening and multi-repo doc cleanup. 23 manual scenarios now target the canonical root `bridge-claude-code` layout and 9 release archives. E2E suite results: test-setup-packs.sh (32 assertions), test-pack-consistency.sh (24 assertions), test-advanced-packs.sh (37 assertions), test-workflow-content.sh (21 assertions). All 114 assertions pass."
     }
   ],
   "discrepancies": [
@@ -176,6 +209,20 @@
       "description": "New packs bridge-controller/ and bridge-multi-repo/ exist in codebase, built by package.sh, installed by install.sh, but have no feature IDs or acceptance tests in requirements.json",
       "affected": ["F10"],
       "resolution": "resolved in S12 — added as F14 (Controller Pack) and F15 (Multi-Repo Pack) with AT12/AT13"
+    },
+    {
+      "id": "D05",
+      "date": "2026-03-10",
+      "description": "Generated E2E tests and eval docs still referenced deleted `bridge-claude-code/project` and `bridge-claude-code/plugin` paths, and expected a removed `bridge-claude-code-plugin.tar.gz` archive after the Claude pack flattening",
+      "affected": ["F03", "F10"],
+      "resolution": "resolved in S13 — updated generated validation artifacts to the canonical root Claude layout and current 9-archive release set"
+    },
+    {
+      "id": "D06",
+      "date": "2026-03-10",
+      "description": "Multi-repo docs mixed topology and runtime state by treating repo paths as coming from context.json and leaving a stale `commands_to_run` block in context templates",
+      "affected": ["F15"],
+      "resolution": "resolved in S13 — repo paths now consistently come from requirements.json `workspace.repos`, and multi-repo context templates keep only runtime state (`repo_commands`, `repo_state`, handoff/history)"
     }
   ]
 }

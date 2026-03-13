@@ -30,6 +30,31 @@ suggest a context sync if needed.
 }
 ```
 
+### PreToolUse: Auto-approve safe `cd && git ...` checks
+
+Runs `auto-approve-cd-git.sh` before Bash tool calls. It approves
+read-only git inspection commands that are already scoped to a target
+directory, and leaves everything else to Claude's normal permission flow.
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/auto-approve-cd-git.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
 ### PostToolUse: Auto-lint after file edits
 
 Runs `post-edit-lint.sh` after Claude edits or writes files. Reads the

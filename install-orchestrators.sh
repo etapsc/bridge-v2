@@ -46,7 +46,7 @@ ask() {
     local answer
     read -r answer
     answer="${answer:-$default}"
-    eval "$var_name=\"\$answer\""
+    printf -v "$var_name" '%s' "$answer"
 }
 
 ask_yn() {
@@ -259,27 +259,42 @@ install_multi_repo() {
     mkdir -p "$orch_path"
 
     # Resolve the right variant
+    # For local folder installs: merge shared infra from base pack + multi-repo overlay
+    # For tar/remote installs: archive is already pre-merged by package.sh
     local pack_name="bridge-multi-repo"
     local subfolder="$platform"
-    if [[ "$platform" == "claude-code" ]]; then
-        # Check for local folder first, then tar
-        if [[ -d "${SCRIPT_DIR}/${pack_name}/${subfolder}" ]]; then
-            resolve_source "$pack_name" "$orch_path" "$subfolder"
-        elif [[ -f "${SCRIPT_DIR}/${pack_name}-${platform}.tar.gz" ]]; then
-            info "Extracting from: ${pack_name}-${platform}.tar.gz"
-            tar -xzf "${SCRIPT_DIR}/${pack_name}-${platform}.tar.gz" -C "$orch_path"
+    local multi_repo_dir="${SCRIPT_DIR}/${pack_name}/${subfolder}"
+    local archive="${SCRIPT_DIR}/${pack_name}-${platform}.tar.gz"
+
+    if [[ -d "$multi_repo_dir" ]]; then
+        # Local folder: merge shared infra from base pack + multi-repo overlay
+        if [[ "$platform" == "claude-code" ]]; then
+            local base="${SCRIPT_DIR}/bridge-claude-code"
+            if [[ -d "$base" ]]; then
+                info "Copying shared infra from bridge-claude-code/"
+                cp -r "$base/.claude" "$orch_path/.claude"
+                cp -r "$base/docs" "$orch_path/docs"
+            else
+                warn "bridge-claude-code/ not found — shared infra will be missing"
+            fi
         else
-            resolve_source "${pack_name}-${platform}" "$orch_path"
+            local base="${SCRIPT_DIR}/bridge-codex"
+            if [[ -d "$base" ]]; then
+                info "Copying shared infra from bridge-codex/"
+                cp -r "$base/.agents" "$orch_path/.agents"
+                cp -r "$base/.codex" "$orch_path/.codex"
+                cp -r "$base/docs" "$orch_path/docs"
+            else
+                warn "bridge-codex/ not found — shared infra will be missing"
+            fi
         fi
+        info "Overlaying multi-repo files from ${pack_name}/${subfolder}/"
+        cp -r "$multi_repo_dir"/. "$orch_path"/
+    elif [[ -f "$archive" ]]; then
+        info "Extracting from: ${pack_name}-${platform}.tar.gz"
+        tar -xzf "$archive" -C "$orch_path"
     else
-        if [[ -d "${SCRIPT_DIR}/${pack_name}/${subfolder}" ]]; then
-            resolve_source "$pack_name" "$orch_path" "$subfolder"
-        elif [[ -f "${SCRIPT_DIR}/${pack_name}-${platform}.tar.gz" ]]; then
-            info "Extracting from: ${pack_name}-${platform}.tar.gz"
-            tar -xzf "${SCRIPT_DIR}/${pack_name}-${platform}.tar.gz" -C "$orch_path"
-        else
-            resolve_source "${pack_name}-${platform}" "$orch_path"
-        fi
+        resolve_source "${pack_name}-${platform}" "$orch_path"
     fi
 
     # Replace placeholder
@@ -496,13 +511,7 @@ REQEOF
   },
   "recent_decisions": [],
   "blockers": [],
-  "discrepancies": [],
-  "commands_to_run": {
-    "test": "",
-    "lint": "",
-    "typecheck": "",
-    "build": ""
-  }
+  "discrepancies": []
 }
 CTXEOF
 

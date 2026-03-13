@@ -123,3 +123,19 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 **Decision:** Changed `ask_yn` function so that when default is "y", only explicit "n"/"no" declines — all other input (including typos/accidental text) follows the default.
 
 **Rationale:** During manual testing, typing a repo name at the "Add another repo? (Y/n):" prompt caused the loop to exit silently because the function only matched exact "y". This UX bug caused data loss (second repo never collected).
+
+---
+
+## 2026-03-10: Canonical Claude Code Pack Layout
+
+**Decision:** Treat `bridge-claude-code/` root (`CLAUDE.md` + `.claude/`) as the only canonical Claude Code pack layout. Generated tests, gate/eval artifacts, and packaging expectations now target that root layout only.
+
+**Rationale:** The recent restructuring removed the old `project/` and `plugin/` duplicates. Validation and operator docs must match the shipped pack shape or they produce false failures and unusable manual instructions.
+
+---
+
+## 2026-03-10: Multi-Repo Workspace Schema Ownership
+
+**Decision:** Multi-repo repo paths are sourced from `docs/requirements.json` `workspace.repos[].path`. `docs/context.json` in multi-repo packs stores runtime state only (`repo_commands`, `repo_state`, handoff/history) and no longer carries a stale `commands_to_run` block.
+
+**Rationale:** The prior docs mixed topology data with runtime state, which made the Claude Code and Codex multi-repo instructions disagree about where repo paths live. Keeping topology in requirements and runtime execution state in context matches the shipped schema and reduces drift.

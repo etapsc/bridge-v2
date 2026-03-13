@@ -92,20 +92,11 @@ fi
 # ============================================================
 section "Pack Structure — bridge-claude-code"
 if [[ -d "${SCRIPT_DIR}/bridge-claude-code" ]]; then
-  # Project distribution (used by setup.sh and bridge-claude-code.tar.gz)
-  check_files "project-commands" "${SCRIPT_DIR}/bridge-claude-code/project/.claude/commands" ".md" "${COMMANDS[@]}"
-  check_files "project-skills" "${SCRIPT_DIR}/bridge-claude-code/project/.claude/skills" "/SKILL.md" "${SKILLS[@]}"
-  check_files "project-agents" "${SCRIPT_DIR}/bridge-claude-code/project/.claude/agents" ".md" "${AGENTS[@]}"
-  check_files "project-docs" "${SCRIPT_DIR}/bridge-claude-code/project/docs" "" "${DOCS[@]}"
-  check_file "project CLAUDE.md" "${SCRIPT_DIR}/bridge-claude-code/project/CLAUDE.md"
-
-  # Plugin distribution (used by bridge-claude-code-plugin.tar.gz)
-  check_files "plugin-commands" "${SCRIPT_DIR}/bridge-claude-code/plugin/commands" ".md" "${COMMANDS[@]}"
-  check_files "plugin-skills" "${SCRIPT_DIR}/bridge-claude-code/plugin/skills" "/SKILL.md" "${SKILLS[@]}"
-  check_files "plugin-agents" "${SCRIPT_DIR}/bridge-claude-code/plugin/agents" ".md" "${AGENTS[@]}"
-  check_files "plugin-docs" "${SCRIPT_DIR}/bridge-claude-code/plugin/docs" "" "${DOCS[@]}"
-  check_file "plugin CLAUDE.md" "${SCRIPT_DIR}/bridge-claude-code/plugin/CLAUDE.md"
-  check_file "plugin manifest" "${SCRIPT_DIR}/bridge-claude-code/plugin/.claude-plugin/plugin.json"
+  check_files "commands" "${SCRIPT_DIR}/bridge-claude-code/.claude/commands" ".md" "${COMMANDS[@]}"
+  check_files "skills" "${SCRIPT_DIR}/bridge-claude-code/.claude/skills" "/SKILL.md" "${SKILLS[@]}"
+  check_files "agents" "${SCRIPT_DIR}/bridge-claude-code/.claude/agents" ".md" "${AGENTS[@]}"
+  check_files "docs" "${SCRIPT_DIR}/bridge-claude-code/docs" "" "${DOCS[@]}"
+  check_file "CLAUDE.md" "${SCRIPT_DIR}/bridge-claude-code/CLAUDE.md"
 else
   fail "bridge-claude-code: folder not found"
 fi
@@ -180,7 +171,7 @@ section "package.sh"
 
 if bash "${SCRIPT_DIR}/package.sh" >/dev/null 2>&1; then
   pass "package.sh: exits successfully"
-  for pack in bridge-full bridge-standalone bridge-claude-code bridge-claude-code-plugin bridge-codex bridge-opencode; do
+  for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex bridge-opencode; do
     archive="${SCRIPT_DIR}/${pack}.tar.gz"
     if [[ -f "$archive" ]]; then
       size=$(stat -c%s "$archive" 2>/dev/null || stat -f%z "$archive" 2>/dev/null)

@@ -9,8 +9,8 @@ The user will specify what to sync (or the skill will detect drift).
 
 ## Steps
 
-1. Load `docs/requirements.json` for workspace topology and `cross_repo_contracts`.
-2. Load `docs/context.json` for repo paths and commands.
+1. Load `docs/requirements.json` for workspace topology, repo paths, and `cross_repo_contracts`.
+2. Load `docs/context.json` for `repo_commands` and `repo_state`.
 3. Identify sync targets:
    - If user specified: sync the named contract/type/config.
    - If not specified: scan declared contracts for drift (compare source definition vs consumer usage).

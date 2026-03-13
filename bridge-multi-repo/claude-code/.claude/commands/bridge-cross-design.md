@@ -6,8 +6,8 @@ The user will describe a feature or change that spans multiple repos.
 
 Steps:
 
-1. Load `docs/requirements.json` to understand workspace topology, repos, and existing contracts.
-2. Load `docs/context.json` for current state and repo paths.
+1. Load `docs/requirements.json` to understand workspace topology, repo paths, and existing contracts.
+2. Load `docs/context.json` for current state, recent repo activity, and handoff notes.
 3. Identify impacted repos for this design.
 4. For each impacted repo, inspect relevant source files (API definitions, schema files, shared types).
 5. Produce a cross-repo design document:

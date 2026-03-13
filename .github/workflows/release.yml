@@ -28,4 +28,10 @@ jobs:
             bridge-claude-code.tar.gz
             bridge-codex.tar.gz
             bridge-opencode.tar.gz
+            bridge-controller.tar.gz
+            bridge-multi-repo-claude-code.tar.gz
+            bridge-multi-repo-codex.tar.gz
+            bridge-dual-agent.tar.gz
             setup.sh
+            add-bridge.sh
+            install-orchestrators.sh

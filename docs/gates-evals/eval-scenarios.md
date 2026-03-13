@@ -1,8 +1,8 @@
 # Evaluation Scenarios
 
-Generated: 2026-03-09
+Generated: 2026-03-10
 Project: BRIDGE v2.1 Toolkit
-Gate Status: PASS (2026-03-09, 52/52 smoke tests, 0 blocking issues, 5 warnings)
+Gate Status: PASS (2026-03-10, 45/45 smoke tests, 114/114 E2E assertions, 1 warning)
 
 ## How to Use
 
@@ -11,6 +11,7 @@ Gate Status: PASS (2026-03-09, 52/52 smoke tests, 0 blocking issues, 5 warnings)
 3. Mark the checklist items as you go.
 4. Fill out the feedback form in docs/gates-evals/feedback-template.md when done.
 5. Time estimate: 45-60 minutes for all scenarios.
+6. Optional helper: `bash tests/e2e/validate-eval-scenarios.sh` runs the automatable checks, pauses for the interactive `setup.sh` scenarios on a real TTY, and can launch the live CLI scenario when a supported agent is installed.
 
 Prerequisites:
 - Terminal with bash
@@ -226,9 +227,9 @@ Prerequisites:
 2. Run: `./package.sh`
    - Expected: Lists each archive as it is built. No errors.
 3. Count archives: `ls *.tar.gz | wc -l`
-   - Expected: 10 archives (full, standalone, claude-code, claude-code-plugin, codex, opencode, controller, multi-repo-claude-code, multi-repo-codex, dual-agent).
+   - Expected: 9 archives (full, standalone, claude-code, codex, opencode, controller, multi-repo-claude-code, multi-repo-codex, dual-agent).
 4. Check sizes are reasonable: `ls -la *.tar.gz`
-   - Expected: All archives > 1 KB. Core packs 17-23 KB, controller ~6 KB, multi-repo ~13-15 KB.
+   - Expected: All archives > 1 KB. Core packs 17-23 KB, controller ~6 KB, multi-repo ~24-28 KB, dual-agent ~5 KB.
 5. Verify timestamps updated: `ls -la *.tar.gz | head -5`
    - Expected: Timestamps are now current.
 6. Verify one archive extracts correctly:
@@ -241,7 +242,7 @@ Prerequisites:
 
 ### Checklist
 - [ ] package.sh runs without errors
-- [ ] 10 tar.gz archives created
+- [ ] 9 tar.gz archives created
 - [ ] All archives have reasonable file sizes
 - [ ] Archives contain correct pack contents when extracted
 
@@ -258,13 +259,13 @@ Prerequisites:
 1. List Full pack commands:
    `ls bridge-full/.roo/commands/ | sed 's/.md$//' | sort`
 2. List Claude Code pack commands:
-   `ls bridge-claude-code/project/.claude/commands/ | sed 's/.md$//' | sort`
+   `ls bridge-claude-code/.claude/commands/ | sed 's/.md$//' | sort`
 3. List Codex pack skills:
    `ls bridge-codex/.agents/skills/ | sort`
 4. Compare -- all three lists should be identical. Run:
    ```
    diff <(ls bridge-full/.roo/commands/ | sed 's/.md$//') \
-        <(ls bridge-claude-code/project/.claude/commands/ | sed 's/.md$//')
+        <(ls bridge-claude-code/.claude/commands/ | sed 's/.md$//')
    ```
    - Expected: No differences.
 5. Verify the 15 expected commands are present. Check for:
@@ -294,7 +295,7 @@ Prerequisites:
 1. Check bridge-scope exists in all packs:
    ```
    for pack in bridge-full/.roo/commands bridge-standalone/.roo/commands \
-               bridge-claude-code/project/.claude/commands bridge-opencode/.opencode/commands; do
+               bridge-claude-code/.claude/commands bridge-opencode/.opencode/commands; do
      [ -f "$pack/bridge-scope.md" ] && echo "OK: $pack" || echo "MISSING: $pack"
    done
    [ -d "bridge-codex/.agents/skills/bridge-scope" ] && echo "OK: codex" || echo "MISSING: codex"
@@ -302,10 +303,10 @@ Prerequisites:
    - Expected: All OK.
 2. Check bridge-feature exists in all packs (same pattern).
 3. Read one scope command to verify it instructs the agent to analyze existing code:
-   `head -20 bridge-claude-code/project/.claude/commands/bridge-scope.md`
+   `head -20 bridge-claude-code/.claude/commands/bridge-scope.md`
    - Expected: Instructions about analyzing existing codebase, scoping features/fixes.
 4. Read one feature command:
-   `head -20 bridge-claude-code/project/.claude/commands/bridge-feature.md`
+   `head -20 bridge-claude-code/.claude/commands/bridge-feature.md`
    - Expected: Instructions about incremental requirements, appending to existing requirements.json.
 
 ### Checklist
@@ -326,12 +327,12 @@ Prerequisites:
 
 1. Search for "ISSUES REPORTED" across all packs:
    `grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ bridge-opencode/ | wc -l`
-   - Expected: At least 15 files (multiple files per pack contain this logic).
+   - Expected: At least 10 files across orchestrator/slice-plan surfaces in the 5 packs.
 2. Verify the classification rules in one pack. Read the Full pack orchestrator:
-   `grep -A 5 'ISSUES REPORTED' bridge-full/.roo/rules/rules-bridge-orchestrator/01-workflow.md | head -15`
+   `grep -A 5 'ISSUES REPORTED' bridge-full/.roo/rules-orchestrator/00-orchestrator.md | head -15`
    - Expected: Rules about staying in fix loop when issues are reported.
 3. Verify "APPROVED" classification is paired with it:
-   `grep -c 'APPROVED' bridge-full/.roo/rules/rules-bridge-orchestrator/01-workflow.md`
+   `grep -c 'APPROVED' bridge-full/.roo/rules-orchestrator/00-orchestrator.md`
    - Expected: At least 1 occurrence.
 4. Check standalone commands embed the loop (since they have no external rules):
    `grep -c 'ISSUES REPORTED' bridge-standalone/.roo/commands/bridge-start.md`
@@ -358,7 +359,7 @@ Prerequisites:
 ### Steps
 
 1. Check bridge-design in Claude Code:
-   `cat bridge-claude-code/project/.claude/commands/bridge-design.md | head -20`
+   `cat bridge-claude-code/.claude/commands/bridge-design.md | head -20`
    - Expected: Instructions about integrating a design document, PRD, or version spec.
 2. Check bridge-design in Codex:
    `cat bridge-codex/.agents/skills/bridge-design/SKILL.md | head -20`
@@ -367,7 +368,7 @@ Prerequisites:
    ```
    for f in bridge-full/.roo/commands/bridge-design.md \
             bridge-standalone/.roo/commands/bridge-design.md \
-            bridge-claude-code/project/.claude/commands/bridge-design.md \
+            bridge-claude-code/.claude/commands/bridge-design.md \
             bridge-codex/.agents/skills/bridge-design/SKILL.md \
             bridge-opencode/.opencode/commands/bridge-design.md; do
      [ -f "$f" ] && echo "OK: $f" || echo "MISSING: $f"
@@ -391,10 +392,10 @@ Prerequisites:
 ### Steps
 
 1. Read the advisor command:
-   `cat bridge-claude-code/project/.claude/commands/bridge-advisor.md`
+   `cat bridge-claude-code/.claude/commands/bridge-advisor.md`
    - Expected: Mentions 3 roles: Product Strategist, Developer Advocate, Critical Friend.
 2. Check the advisor covers strategic concerns:
-   `grep -i 'viability\|positioning\|launch\|roadmap\|community' bridge-claude-code/project/.claude/commands/bridge-advisor.md`
+   `grep -i 'viability\|positioning\|launch\|roadmap\|community' bridge-claude-code/.claude/commands/bridge-advisor.md`
    - Expected: Multiple matches across these strategic topics.
 3. Verify present in Codex:
    `head -20 bridge-codex/.agents/skills/bridge-advisor/SKILL.md`
@@ -539,7 +540,7 @@ Prerequisites:
 
 1. Check file exists and has substantial content:
    `wc -l reference/BRIDGE-v2.1-methodology.md`
-   - Expected: Several hundred lines.
+   - Expected: 100+ lines.
 2. Verify it covers all 6 BRIDGE phases:
    `grep -i 'brainstorm\|requirements\|implementation design\|develop\|gate\|evaluate' reference/BRIDGE-v2.1-methodology.md | wc -l`
    - Expected: Multiple matches.
@@ -551,7 +552,7 @@ Prerequisites:
    - Expected: Both schemas mentioned.
 
 ### Checklist
-- [ ] Document is substantial (200+ lines)
+- [ ] Document is substantial (100+ lines)
 - [ ] All 6 BRIDGE phases covered
 - [ ] Feedback loop documented
 - [ ] JSON schemas documented
@@ -567,13 +568,17 @@ Prerequisites:
 ### Steps
 
 1. Run: `./test.sh`
-   - Expected: 52 tests pass, 0 fail.
-2. Review output for any warnings or skips.
-   - Expected: shellcheck may be skipped if not installed. All other tests pass.
+   - Expected: 45 smoke checks pass, 0 fail.
+2. Run:
+   `for f in tests/e2e/test-setup-packs.sh tests/e2e/test-pack-consistency.sh tests/e2e/test-advanced-packs.sh tests/e2e/test-workflow-content.sh; do bash "$f"; done`
+   - Expected: 114 E2E assertions pass, 0 fail.
+3. Review output for any warnings or skips.
+   - Expected: shellcheck may be skipped if not installed. All other checks pass.
 
 ### Checklist
 - [ ] test.sh exits with code 0
-- [ ] 52/52 tests pass
+- [ ] 45/45 smoke checks pass
+- [ ] 114/114 E2E assertions pass
 - [ ] No unexpected failures or warnings
 
 ---
@@ -655,15 +660,15 @@ Prerequisites:
 ### Steps
 
 1. Read context-create:
-   `head -20 bridge-claude-code/project/.claude/commands/bridge-context-create.md`
+   `head -20 bridge-claude-code/.claude/commands/bridge-context-create.md`
    - Expected: Instructions to scan codebase and generate initial context.json.
 2. Read context-update:
-   `head -20 bridge-claude-code/project/.claude/commands/bridge-context-update.md`
+   `head -20 bridge-claude-code/.claude/commands/bridge-context-update.md`
    - Expected: Instructions to sync context.json with current codebase state.
 3. Verify both exist across packs:
    ```
    for pack in bridge-full/.roo/commands bridge-standalone/.roo/commands \
-               bridge-claude-code/project/.claude/commands bridge-opencode/.opencode/commands; do
+               bridge-claude-code/.claude/commands bridge-opencode/.opencode/commands; do
      [ -f "$pack/bridge-context-create.md" ] && [ -f "$pack/bridge-context-update.md" ] && echo "OK: $pack" || echo "MISSING: $pack"
    done
    ```

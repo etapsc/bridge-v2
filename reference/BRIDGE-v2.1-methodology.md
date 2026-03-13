@@ -55,6 +55,7 @@ BRIDGE is a methodology for solo-preneur software development using AI coding ag
 | /bridge-requirements-only | orchestrator | Generate requirements from description |
 | /bridge-scope | orchestrator | Scope a feature/fix for existing project |
 | /bridge-feature | orchestrator | Incremental requirements for existing project |
+| /bridge-design | orchestrator | Integrate a design document, PRD, or version spec |
 | /bridge-start | orchestrator | Start implementation |
 | /bridge-context-create | orchestrator | Create context.json |
 | /bridge-context-update | orchestrator | Sync context.json |
@@ -63,6 +64,7 @@ BRIDGE is a methodology for solo-preneur software development using AI coding ag
 | /bridge-gate | audit | Quality gate |
 | /bridge-eval | evaluate | Generate eval pack |
 | /bridge-feedback | orchestrator | Process feedback |
+| /bridge-advisor | orchestrator | Strategic product and launch review |
 
 ## Typical Flow
 
@@ -92,6 +94,18 @@ BRIDGE is a methodology for solo-preneur software development using AI coding ag
                                   ▼                   ▼
                             [iterate]             LAUNCH 🚀
 ```
+
+## Post-Delivery Feedback Loop
+
+After each slice, the orchestrator ends with a `HUMAN:` block that tells the operator exactly what to verify, what decision is needed, and what to feed back next.
+
+When the human responds, classify the result before taking any action:
+
+- **ISSUES REPORTED**: Bugs, missing behavior, regressions, investigation requests, or any ambiguous feedback. Stay on the current slice, create fix tasks, re-implement, and present a new `HUMAN:` block. Do not move to gate/evaluate.
+- **APPROVED**: Explicit approval only ("done", "PASSED", "looks good", "continue", "next slice"). Proceed to gate/evaluate or the next slice.
+- **STOP**: Explicit pause or stop request. Save state and hand off the current status.
+
+This loop is strict: never assume approval when the feedback includes problems. Issue reports always win over partial praise.
 
 ## Two Packs
 

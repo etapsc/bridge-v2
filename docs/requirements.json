@@ -9,12 +9,14 @@
   "scope": {
     "in_scope": [
       "5 distributable packs: RooCode Full, RooCode Standalone, Claude Code, Codex, OpenCode",
+      "Advanced orchestrator packs: Controller and Multi-Repo",
       "15 slash commands consistent across all packs",
       "6 procedure skills per pack (adapted to pack architecture)",
       "Interactive setup.sh for project initialization",
+      "install-orchestrators.sh for Controller and Multi-Repo setup",
       "reference/BRIDGE-v2.1-methodology.md comprehensive methodology doc",
       "README.md with installation and usage instructions",
-      "Packaging script (package.sh) for rebuilding tar.gz from source folders",
+      "Packaging script (package.sh) for rebuilding release tar.gz archives from source folders",
       "docs/ templates: requirements.json, context.json, decisions.md, human-playbook.md"
     ],
     "out_of_scope": [
@@ -102,7 +104,7 @@
     "F10": {
       "title": "Packaging Script",
       "priority": "should",
-      "description": "package.sh that rebuilds all 5 tar.gz files from source folders for easy iteration on individual files.",
+      "description": "package.sh that rebuilds all release tar.gz archives from source folders, including core packs and advanced orchestrator packs.",
       "status": "done"
     },
     "F11": {
@@ -146,7 +148,7 @@
     "AT07": "Orchestrator stays in current slice fix loop when user reports issues after slice delivery (does not ask about next slice)",
     "AT08": "Orchestrator advances to next slice only on explicit user approval",
     "AT09": "Post-delivery feedback loop present in: orchestrator rules, slice-plan skill, CLAUDE.md, AGENTS.md, standalone start/resume commands",
-    "AT10": "package.sh rebuilds all 5 tar.gz files from source folders",
+    "AT10": "package.sh rebuilds all release tar.gz archives from source folders",
     "AT11": "setup.sh --pack opencode --name TestProject creates project with AGENTS.md and .opencode/ structure",
     "AT12": "bridge-controller pack contains CLAUDE.md, 3 commands (bridge-status, bridge-init-project, bridge-sync), controller rules, portfolio.json template, and reference guide",
     "AT13": "bridge-multi-repo pack contains both claude-code and codex variants, each with 12 commands/skills, multi-repo rules, workspace docs templates, and reference playbook"

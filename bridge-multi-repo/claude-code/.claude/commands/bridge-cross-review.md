@@ -6,8 +6,8 @@ Review pending or recent changes across workspace repos for cross-repo consisten
 
 Steps:
 
-1. Load `docs/context.json` to get repo paths and current `repo_state`.
-2. Load `docs/requirements.json` to get `workspace.cross_repo_contracts`.
+1. Load `docs/requirements.json` to get repo paths from `workspace.repos` and cross-repo contracts.
+2. Load `docs/context.json` to get current `repo_state`.
 3. For each repo with an active feature branch (from `repo_state`):
    - Read the diff or recent commits on the feature branch.
    - Check: do contract changes in one repo have matching updates in consumers?
