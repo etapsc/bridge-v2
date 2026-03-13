@@ -18,10 +18,10 @@
     "F13": "done",
     "F14": "done",
     "F15": "done",
-    "F16": "planned",
-    "F17": "planned",
-    "F18": "planned",
-    "F19": "planned"
+    "F16": "review",
+    "F17": "review",
+    "F18": "review",
+    "F19": "review"
   },
   "slice_history": [
     {
