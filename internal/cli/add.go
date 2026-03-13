@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/etapsc/bridge/internal/config"
+	"github.com/etapsc/bridge/internal/customize"
 	"github.com/etapsc/bridge/internal/pack"
 	"github.com/spf13/cobra"
 )
@@ -76,6 +77,39 @@ func addCmd() *cobra.Command {
 			result, err := pack.InstallToExisting(stagingDir, absTarget)
 			if err != nil {
 				return fmt.Errorf("failed to install: %w", err)
+			}
+
+			// Apply personality
+			if personality != "balanced" {
+				profilesDir, err := resolveDataDir("profiles")
+				if err != nil {
+					return fmt.Errorf("cannot find personality profiles: %w", err)
+				}
+				profile, err := customize.LoadProfile(profilesDir, personality)
+				if err != nil {
+					return err
+				}
+				patched, err := customize.ApplyPersonality(absTarget, profile)
+				if err != nil {
+					return fmt.Errorf("failed to apply personality: %w", err)
+				}
+				if len(patched) > 0 {
+					fmt.Printf("Applied %q personality to %d files\n", personality, len(patched))
+				}
+			}
+
+			// Install specializations
+			if len(specs) > 0 {
+				specsDir, err := resolveDataDir("specializations")
+				if err != nil {
+					return fmt.Errorf("cannot find specializations: %w", err)
+				}
+				for _, spec := range specs {
+					if err := customize.AddSpecialization(absTarget, specsDir, spec); err != nil {
+						return fmt.Errorf("failed to add spec %q: %w", spec, err)
+					}
+					fmt.Printf("  + Added specialization: %s\n", spec)
+				}
 			}
 
 			// Save .bridge.json
