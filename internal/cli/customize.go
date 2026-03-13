@@ -46,7 +46,6 @@ func customizeCmd() *cobra.Command {
 			}
 
 			changed := false
-			execDir := executableDir()
 
 			// Apply personality
 			if personality != "" {
@@ -54,7 +53,10 @@ func customizeCmd() *cobra.Command {
 					return fmt.Errorf("invalid personality %q: must be one of %v", personality, config.Personalities())
 				}
 
-				profilesDir := filepath.Join(execDir, "profiles")
+				profilesDir, err := resolveDataDir("profiles")
+				if err != nil {
+					return fmt.Errorf("cannot find personality profiles: %w", err)
+				}
 				profile, err := customize.LoadProfile(profilesDir, personality)
 				if err != nil {
 					return err
@@ -80,7 +82,10 @@ func customizeCmd() *cobra.Command {
 
 			// Add specializations
 			if len(addSpecs) > 0 {
-				specsDir := filepath.Join(execDir, "specializations")
+				specsDir, err := resolveDataDir("specializations")
+				if err != nil {
+					return fmt.Errorf("cannot find specializations: %w", err)
+				}
 				for _, spec := range addSpecs {
 					if err := customize.AddSpecialization(absTarget, specsDir, spec); err != nil {
 						return fmt.Errorf("failed to add spec %q: %w", spec, err)

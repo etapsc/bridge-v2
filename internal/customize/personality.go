@@ -44,28 +44,36 @@ var markerRegex = regexp.MustCompile(`(?s)` + regexp.QuoteMeta(markerStart) + `.
 func ApplyPersonality(projectDir string, profile *Profile) ([]string, error) {
 	var patched []string
 
-	// Map agent file patterns to profile keys
+	// Map filename keywords to profile vibe keys.
+	// Keywords use stem forms to match both full names (bridge-coder.md)
+	// and short names (00-code.md) across pack types.
 	agentMappings := map[string]string{
 		"architect":  "architect",
-		"coder":      "coder",
-		"debugger":   "debugger",
-		"auditor":    "auditor",
-		"evaluator":  "evaluator",
+		"code":       "coder",
+		"debug":      "debugger",
+		"audit":      "auditor",
+		"evaluat":    "evaluator",
+		"advisor":    "advisor",
+		"brainstorm": "brainstorm",
 	}
 
-	// Find all agent files across pack types
+	// Find all agent/command/skill files across pack types
 	patterns := []string{
 		".claude/agents/bridge-*.md",
-		".roo/rules-*/agent-*.md",
+		".claude/commands/bridge-*.md",
+		".roo/rules-*/00-*.md",
+		".roo/commands/bridge-*.md",
 		".opencode/agents/bridge-*.md",
+		".agents/skills/bridge-*/SKILL.md",
+		".agents/procedures/bridge-*.md",
 	}
 
 	for _, pattern := range patterns {
 		matches, _ := filepath.Glob(filepath.Join(projectDir, pattern))
 		for _, path := range matches {
-			base := filepath.Base(path)
+			rel, _ := filepath.Rel(projectDir, path)
 			for keyword, role := range agentMappings {
-				if strings.Contains(base, keyword) {
+				if strings.Contains(rel, keyword) {
 					vibe, ok := profile.Vibes[role]
 					if !ok {
 						continue
@@ -73,8 +81,8 @@ func ApplyPersonality(projectDir string, profile *Profile) ([]string, error) {
 					if err := patchFile(path, vibe); err != nil {
 						return patched, fmt.Errorf("failed to patch %s: %w", path, err)
 					}
-					rel, _ := filepath.Rel(projectDir, path)
 					patched = append(patched, rel)
+					break // one match per file
 				}
 			}
 		}

@@ -28,6 +28,9 @@ archives:
         formats:
           - zip
     name_template: "bridge_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - profiles/*
+      - specializations/*
 
 checksum:
   name_template: "checksums.txt"
