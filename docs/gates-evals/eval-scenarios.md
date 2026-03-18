@@ -1,8 +1,8 @@
 # Evaluation Scenarios
 
-Generated: 2026-03-14
-Project: BRIDGE v3 Toolkit
-Gate Status: PASS (2026-03-14, F16-F19 — 16 Go tests, 45 smoke tests, 184 E2E assertions, 251 eval validator assertions, 5 cross-compile targets)
+Generated: 2026-03-18
+Project: BRIDGE v2.2 Toolkit
+Gate Status: PASS (2026-03-18, shell-first rollback verified)
 
 ## How to Use
 
@@ -11,7 +11,7 @@ Gate Status: PASS (2026-03-14, F16-F19 — 16 Go tests, 45 smoke tests, 184 E2E 
 3. Mark the checklist items as you go.
 4. Fill out the feedback form in docs/gates-evals/feedback-template.md when done.
 5. Time estimate: 45-60 minutes for all scenarios.
-6. Optional helper: `bash tests/e2e/validate-eval-scenarios.sh` runs the automatable checks, pauses for the interactive `setup.sh` scenarios on a real TTY, and can launch the live CLI scenario when a supported agent is installed.
+6. Optional helper: `bash tests/e2e/validate-eval-scenarios.sh` runs the automatable checks, pauses for the interactive `bridge.sh` scenarios on a real TTY, and can launch the live CLI scenario when a supported agent is installed.
 
 Prerequisites:
 - Terminal with bash
@@ -22,13 +22,13 @@ Prerequisites:
 
 ## Scenario 1: Setup Script -- Full Pack (F01, F05, AT01, UF01)
 
-**Goal:** Verify setup.sh creates a working RooCode Full project from scratch.
+**Goal:** Verify `bridge.sh new` creates a working RooCode Full project from scratch.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Run: `./setup.sh --name "Eval Full" --pack full -o /tmp/bridge-eval`
+1. Run: `./bridge.sh new --name "Eval Full" --pack full -o /tmp/bridge-eval`
    - Expected: Script prints summary, creates `/tmp/bridge-eval/eval-full/` directory, lists files.
 2. Check directory structure: `ls /tmp/bridge-eval/eval-full/.roo/commands/ | wc -l`
    - Expected: 15 command files.
@@ -44,7 +44,7 @@ Prerequisites:
    - Expected: YAML content with mode definitions.
 
 ### Checklist
-- [ ] setup.sh exits successfully
+- [ ] `bridge.sh new` exits successfully
 - [ ] 15 command files present
 - [ ] 6 skill directories present
 - [ ] No unreplaced {{PROJECT_NAME}} placeholders
@@ -56,13 +56,13 @@ Prerequisites:
 
 ## Scenario 2: Setup Script -- Claude Code Pack (F03, F05, AT03, UF01)
 
-**Goal:** Verify setup.sh creates a working Claude Code project.
+**Goal:** Verify `bridge.sh new` creates a working Claude Code project.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Run: `./setup.sh --name "Eval Claude" --pack claude-code -o /tmp/bridge-eval`
+1. Run: `./bridge.sh new --name "Eval Claude" --pack claude-code -o /tmp/bridge-eval`
    - Expected: Script succeeds, creates `/tmp/bridge-eval/eval-claude/`.
 2. Check CLAUDE.md: `head -3 /tmp/bridge-eval/eval-claude/CLAUDE.md`
    - Expected: Contains "Eval Claude" in the header.
@@ -76,7 +76,7 @@ Prerequisites:
    - Expected: No output.
 
 ### Checklist
-- [ ] setup.sh exits successfully
+- [ ] `bridge.sh new` exits successfully
 - [ ] CLAUDE.md exists with correct project name
 - [ ] 15 command files in .claude/commands/
 - [ ] 5 agent files in .claude/agents/
@@ -87,13 +87,13 @@ Prerequisites:
 
 ## Scenario 3: Setup Script -- Codex Pack (F04, F05, AT04, UF01)
 
-**Goal:** Verify setup.sh creates a working Codex project.
+**Goal:** Verify `bridge.sh new` creates a working Codex project.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Run: `./setup.sh --name "Eval Codex" --pack codex -o /tmp/bridge-eval`
+1. Run: `./bridge.sh new --name "Eval Codex" --pack codex -o /tmp/bridge-eval`
    - Expected: Script succeeds, creates `/tmp/bridge-eval/eval-codex/`.
 2. Check AGENTS.md: `head -3 /tmp/bridge-eval/eval-codex/AGENTS.md`
    - Expected: Contains "Eval Codex".
@@ -107,7 +107,7 @@ Prerequisites:
    - Expected: No output.
 
 ### Checklist
-- [ ] setup.sh exits successfully
+- [ ] `bridge.sh new` exits successfully
 - [ ] AGENTS.md exists with correct project name
 - [ ] 15 skill directories in .agents/skills/
 - [ ] 6 procedure files in .agents/procedures/
@@ -124,7 +124,7 @@ Prerequisites:
 
 ### Steps
 
-1. Run: `./setup.sh --name "Eval Standalone" --pack standalone -o /tmp/bridge-eval`
+1. Run: `./bridge.sh new --name "Eval Standalone" --pack standalone -o /tmp/bridge-eval`
    - Expected: Script succeeds.
 2. Check commands are self-contained: `wc -l /tmp/bridge-eval/eval-standalone/.roo/commands/bridge-start.md`
    - Expected: Significantly more lines than a thin command (the prompt is embedded).
@@ -134,7 +134,7 @@ Prerequisites:
    - Expected: 15.
 
 ### Checklist
-- [ ] setup.sh exits successfully
+- [ ] `bridge.sh new` exits successfully
 - [ ] Commands contain embedded prompts (not thin delegates)
 - [ ] No .roo/skills/ directory
 - [ ] 15 command files present
@@ -143,13 +143,13 @@ Prerequisites:
 
 ## Scenario 5: Setup Script -- OpenCode Pack (F11, F05, AT11)
 
-**Goal:** Verify setup.sh creates a working OpenCode project.
+**Goal:** Verify `bridge.sh new` creates a working OpenCode project.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Run: `./setup.sh --name "Eval OpenCode" --pack opencode -o /tmp/bridge-eval`
+1. Run: `./bridge.sh new --name "Eval OpenCode" --pack opencode -o /tmp/bridge-eval`
    - Expected: Script succeeds.
 2. Check AGENTS.md: `head -3 /tmp/bridge-eval/eval-opencode/AGENTS.md`
    - Expected: Contains "Eval OpenCode".
@@ -161,7 +161,7 @@ Prerequisites:
    - Expected: 5.
 
 ### Checklist
-- [ ] setup.sh exits successfully
+- [ ] `bridge.sh new` exits successfully
 - [ ] AGENTS.md present with project name
 - [ ] 15 commands, 6 skills, 5 agents present
 - [ ] No unreplaced placeholders
@@ -170,13 +170,13 @@ Prerequisites:
 
 ## Scenario 6: Setup Script -- Interactive Mode (F05)
 
-**Goal:** Verify setup.sh works in interactive mode (no flags).
+**Goal:** Verify `bridge.sh` works in interactive mode (no args).
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Run: `./setup.sh`
+1. Run: `./bridge.sh`
 2. When prompted for pack, enter: `3` (claude-code)
 3. When prompted for name, enter: `Interactive Test`
 4. When prompted for output directory, press Enter (accept default `.`)
@@ -195,15 +195,15 @@ Prerequisites:
 
 ## Scenario 7: Setup Script -- Error Handling (F05)
 
-**Goal:** Verify setup.sh handles bad input gracefully.
+**Goal:** Verify `bridge.sh new` handles bad input gracefully.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Run: `./setup.sh --pack invalid-pack --name "Test" -o /tmp/bridge-eval`
+1. Run: `./bridge.sh new --pack invalid-pack --name "Test" -o /tmp/bridge-eval`
    - Expected: Error message about invalid pack, non-zero exit code.
-2. Run: `./setup.sh --pack full --name "Eval Full" -o /tmp/bridge-eval`
+2. Run: `./bridge.sh new --pack full --name "Eval Full" -o /tmp/bridge-eval`
    - Expected: Error about directory already existing (from Scenario 1), prompt to overwrite.
    - Enter: `N` to decline.
    - Expected: "Aborted." message.
@@ -217,14 +217,14 @@ Prerequisites:
 
 ## Scenario 8: Package Rebuild (F10, AT10)
 
-**Goal:** Verify package.sh rebuilds all archives from source folders.
+**Goal:** Verify `bridge.sh pack` rebuilds all archives from source folders.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
 1. Note archive timestamps: `ls -la *.tar.gz | head -5`
-2. Run: `./package.sh`
+2. Run: `./bridge.sh pack`
    - Expected: Lists each archive as it is built. No errors.
 3. Count archives: `ls *.tar.gz | wc -l`
    - Expected: 9 archives (full, standalone, claude-code, codex, opencode, controller, multi-repo-claude-code, multi-repo-codex, dual-agent).
@@ -241,7 +241,7 @@ Prerequisites:
    - Expected: 15 command files extracted.
 
 ### Checklist
-- [ ] package.sh runs without errors
+- [ ] `bridge.sh pack` runs without errors
 - [ ] 9 tar.gz archives created
 - [ ] All archives have reasonable file sizes
 - [ ] Archives contain correct pack contents when extracted
@@ -568,17 +568,17 @@ Prerequisites:
 ### Steps
 
 1. Run: `./test.sh`
-   - Expected: 45 smoke checks pass, 0 fail.
+   - Expected: 56 top-level checks pass, 0 fail.
 2. Run:
-   `for f in tests/e2e/test-setup-packs.sh tests/e2e/test-pack-consistency.sh tests/e2e/test-advanced-packs.sh tests/e2e/test-workflow-content.sh; do bash "$f"; done`
-   - Expected: 114 E2E assertions pass, 0 fail.
+   `for f in tests/e2e/test-setup-packs.sh tests/e2e/test-pack-consistency.sh tests/e2e/test-advanced-packs.sh tests/e2e/test-workflow-content.sh tests/e2e/test-shell-personality.sh; do bash "$f"; done`
+   - Expected: 123 E2E assertions pass, 0 fail.
 3. Review output for any warnings or skips.
    - Expected: shellcheck may be skipped if not installed. All other checks pass.
 
 ### Checklist
 - [ ] test.sh exits with code 0
-- [ ] 45/45 smoke checks pass
-- [ ] 114/114 E2E assertions pass
+- [ ] 56/56 top-level checks pass
+- [ ] 123/123 E2E assertions pass
 - [ ] No unexpected failures or warnings
 
 ---
@@ -719,7 +719,7 @@ Prerequisites:
 ### Steps (adjust for your platform)
 
 **For Claude Code:**
-1. Set up a fresh project: `./setup.sh --name "Live Test" --pack claude-code -o /tmp/bridge-live`
+1. Set up a fresh project: `./bridge.sh new --name "Live Test" --pack claude-code -o /tmp/bridge-live`
 2. `cd /tmp/bridge-live/live-test`
 3. Start Claude Code: `claude`
 4. Run: `/bridge-brainstorm` and provide a simple idea (e.g., "a CLI tool that counts words in a file").
@@ -732,7 +732,7 @@ Prerequisites:
    - Expected: Agent saves session state, produces handoff notes.
 
 **For Codex:**
-1. Set up: `./setup.sh --name "Live Test" --pack codex -o /tmp/bridge-live`
+1. Set up: `./bridge.sh new --name "Live Test" --pack codex -o /tmp/bridge-live`
 2. `cd /tmp/bridge-live/live-test`
 3. Start Codex: `codex`
 4. Run: `$bridge-brainstorm` with a simple idea.
@@ -747,643 +747,36 @@ Prerequisites:
 
 ---
 
----
+## Scenario 24: Shell Personality Overlay (F16, AT14, UF07)
 
-# BRIDGE v3 Scenarios (F16-F19)
-
-Prerequisites for Scenarios 24-34:
-- Go 1.21+ installed (`go version`)
-- The BRIDGE repo cloned locally with Go source under cmd/bridge/ and internal/
-- For binary tests: build first with `go build -o /tmp/bridge-bin ./cmd/bridge/`
-- For TUI test (Scenario 30): a real TTY terminal
-
----
-
-## Scenario 24: Go Binary Build and Help (F16, AT25)
-
-**Goal:** Verify the bridge binary compiles, runs, and exposes all subcommands.
-
-**Preconditions:** Terminal in the BRIDGE repo root directory. Go installed.
-
-### Steps
-
-1. Build the binary: `go build -o /tmp/bridge-bin ./cmd/bridge/`
-   - Expected: Exits 0. Binary created at /tmp/bridge-bin.
-2. Run help: `/tmp/bridge-bin --help`
-   - Expected: Shows "BRIDGE v3" description and lists subcommands: new, add, orchestrator, customize, pack.
-3. Check version: `/tmp/bridge-bin --version`
-   - Expected: Prints a version string.
-4. Verify each subcommand has help:
-   ```
-   for cmd in new add orchestrator customize pack; do
-     /tmp/bridge-bin $cmd --help >/dev/null 2>&1 && echo "OK: $cmd" || echo "FAIL: $cmd"
-   done
-   ```
-   - Expected: All OK.
-
-### Checklist
-- [ ] Binary compiles without errors
-- [ ] --help shows all 5 subcommands (new, add, orchestrator, customize, pack)
-- [ ] --version prints a version string
-- [ ] Each subcommand accepts --help
-
----
-
-## Scenario 25: bridge new -- Project Creation (F16, AT14, UF07)
-
-**Goal:** Verify `bridge new` creates a project with correct structure, same as setup.sh.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Create a project:
-   `/tmp/bridge-bin new --name "V3 Test" --pack claude-code --output /tmp/bridge-v3-eval`
-   - Expected: Prints setup summary. Creates /tmp/bridge-v3-eval/v3-test/.
-2. Check CLAUDE.md: `head -3 /tmp/bridge-v3-eval/v3-test/CLAUDE.md`
-   - Expected: Contains "V3 Test" in header.
-3. Check commands: `ls /tmp/bridge-v3-eval/v3-test/.claude/commands/ | wc -l`
-   - Expected: 15 command files.
-4. Check agents: `ls /tmp/bridge-v3-eval/v3-test/.claude/agents/ | wc -l`
-   - Expected: 5 agent files.
-5. Check skills: `ls /tmp/bridge-v3-eval/v3-test/.claude/skills/ | wc -l`
-   - Expected: 6 skill directories.
-6. Check placeholder replacement: `grep -r '{{PROJECT_NAME}}' /tmp/bridge-v3-eval/v3-test/`
-   - Expected: No output (all replaced).
-7. Check docs: `ls /tmp/bridge-v3-eval/v3-test/docs/`
-   - Expected: context.json, decisions.md, human-playbook.md, requirements.json.
-8. Check .bridge.json: `cat /tmp/bridge-v3-eval/v3-test/.bridge.json`
-   - Expected: JSON with version "3.0", pack "claude-code", personality "balanced".
-
-### Checklist
-- [ ] bridge new exits successfully
-- [ ] Project directory created with correct slug
-- [ ] CLAUDE.md has project name
-- [ ] 15 commands, 5 agents, 6 skills present
-- [ ] No unreplaced {{PROJECT_NAME}} placeholders
-- [ ] docs/ templates present
-- [ ] .bridge.json created with correct defaults
-
----
-
-## Scenario 26: bridge new -- Codex Pack (F16, AT14)
-
-**Goal:** Verify `bridge new` works with codex pack.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Create: `/tmp/bridge-bin new --name "Codex V3" --pack codex --output /tmp/bridge-v3-eval`
-   - Expected: Creates /tmp/bridge-v3-eval/codex-v3/.
-2. Check AGENTS.md: `head -3 /tmp/bridge-v3-eval/codex-v3/AGENTS.md`
-   - Expected: Contains "Codex V3".
-3. Check skills: `ls /tmp/bridge-v3-eval/codex-v3/.agents/skills/ | wc -l`
-   - Expected: 15 skill directories.
-4. Check procedures: `ls /tmp/bridge-v3-eval/codex-v3/.agents/procedures/ | wc -l`
-   - Expected: 6 procedure files.
-5. Check .bridge.json: `cat /tmp/bridge-v3-eval/codex-v3/.bridge.json`
-   - Expected: pack "codex".
-
-### Checklist
-- [ ] Codex project created successfully
-- [ ] AGENTS.md personalized
-- [ ] 15 skills, 6 procedures present
-- [ ] .bridge.json tracks pack type
-
----
-
-## Scenario 27: bridge new with Personality (F16, F18, AT16)
-
-**Goal:** Verify `bridge new --personality strict` injects vibe lines into agent definitions.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Create with strict personality:
-   `/tmp/bridge-bin new --name "Strict Project" --pack claude-code --personality strict --output /tmp/bridge-v3-eval`
-   - Expected: Output shows "Personality: strict".
-2. Check .bridge.json personality:
-   `cat /tmp/bridge-v3-eval/strict-project/.bridge.json | grep personality`
-   - Expected: "personality": "strict"
-3. Check vibe injection in an agent file:
-   `grep -i 'vibe\|skeptical\|evidence\|rigorous' /tmp/bridge-v3-eval/strict-project/.claude/agents/bridge-architect.md`
-   - Expected: Strict vibe line present (e.g., "Challenges every abstraction").
-4. Check vibe in another agent:
-   `grep -i 'vibe\|edge case\|shortcut\|TODO' /tmp/bridge-v3-eval/strict-project/.claude/agents/bridge-coder.md`
-   - Expected: Strict coder vibe present.
-5. Compare with balanced (no markers should remain empty):
-   `grep -c 'BRIDGE-PERSONALITY' /tmp/bridge-v3-eval/strict-project/.claude/agents/bridge-architect.md`
-   - Expected: Markers present (2 -- start and end) with vibe content between them.
-
-### Checklist
-- [ ] Personality printed in setup summary
-- [ ] .bridge.json records "strict"
-- [ ] Architect agent has strict vibe line
-- [ ] Coder agent has strict vibe line
-- [ ] Personality markers present in agent files
-
----
-
-## Scenario 28: bridge new with Specializations (F16, F17, AT18, AT24)
-
-**Goal:** Verify `bridge new --spec frontend --spec backend` copies specialization files into the project.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Create with specs:
-   `/tmp/bridge-bin new --name "Spec Project" --pack claude-code --spec frontend --spec backend --output /tmp/bridge-v3-eval`
-   - Expected: Output shows "Specs: [frontend backend]".
-2. Check specialization directories exist:
-   ```
-   ls /tmp/bridge-v3-eval/spec-project/.claude/skills/bridge-spec-frontend/SKILL.md
-   ls /tmp/bridge-v3-eval/spec-project/.claude/skills/bridge-spec-backend/SKILL.md
-   ```
-   - Expected: Both files exist.
-3. Check specialization content:
-   `head -5 /tmp/bridge-v3-eval/spec-project/.claude/skills/bridge-spec-frontend/SKILL.md`
-   - Expected: SKILL.md with "Frontend Specialization" or similar.
-4. Check .bridge.json:
-   `cat /tmp/bridge-v3-eval/spec-project/.bridge.json | grep specializations`
-   - Expected: ["frontend", "backend"]
-5. Verify specialization contains domain-specific content:
-   `grep -i 'accessibility\|component\|responsive' /tmp/bridge-v3-eval/spec-project/.claude/skills/bridge-spec-frontend/SKILL.md`
-   - Expected: Frontend-specific checklists.
-
-### Checklist
-- [ ] Specs printed in setup summary
-- [ ] bridge-spec-frontend/SKILL.md exists in project skills
-- [ ] bridge-spec-backend/SKILL.md exists in project skills
-- [ ] Specializations contain domain-specific checklists
-- [ ] .bridge.json tracks both specializations
-
----
-
-## Scenario 29: bridge add -- Existing Project (F16, AT15)
-
-**Goal:** Verify `bridge add` installs BRIDGE into an existing directory without overwriting protected content.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Create a fake existing project:
-   ```
-   mkdir -p /tmp/bridge-v3-eval/existing-project/src
-   echo "existing code" > /tmp/bridge-v3-eval/existing-project/src/main.go
-   echo "existing readme" > /tmp/bridge-v3-eval/existing-project/README.md
-   ```
-2. Add BRIDGE:
-   `/tmp/bridge-bin add --name "Existing" --pack claude-code --target /tmp/bridge-v3-eval/existing-project`
-   - Expected: Installs BRIDGE files.
-3. Verify existing files preserved:
-   `cat /tmp/bridge-v3-eval/existing-project/src/main.go`
-   - Expected: "existing code" (unchanged).
-   `cat /tmp/bridge-v3-eval/existing-project/README.md`
-   - Expected: "existing readme" (unchanged).
-4. Verify BRIDGE files added:
-   `ls /tmp/bridge-v3-eval/existing-project/CLAUDE.md`
-   - Expected: File exists.
-   `ls /tmp/bridge-v3-eval/existing-project/.claude/commands/ | wc -l`
-   - Expected: 15 command files.
-5. Verify .bridge.json created:
-   `cat /tmp/bridge-v3-eval/existing-project/.bridge.json`
-   - Expected: JSON with pack and personality fields.
-
-### Checklist
-- [ ] bridge add exits successfully
-- [ ] Existing files (src/main.go, README.md) not overwritten
-- [ ] CLAUDE.md and .claude/ structure added
-- [ ] 15 commands present
-- [ ] .bridge.json created
-
----
-
-## Scenario 30: bridge Interactive TUI (F16, AT20, UF07)
-
-**Goal:** Verify `bridge` with no args launches an interactive TUI.
-
-**Preconditions:** Binary built at /tmp/bridge-bin. Real TTY terminal.
-
-### Steps
-
-1. Run with no args: `/tmp/bridge-bin`
-   - Expected: An interactive menu appears with options: New project, Add to existing, Orchestrator, Customize, Pack.
-2. Select "New project" (if the TUI allows).
-   - Expected: A form appears asking for project name, pack, personality, specializations.
-3. Press Ctrl+C or Escape to exit without completing.
-   - Expected: Exits cleanly, no crash.
-
-### Checklist
-- [ ] TUI menu appears with 5 action options
-- [ ] Selecting an action shows the relevant form
-- [ ] Cancellation exits cleanly
-
----
-
-## Scenario 31: bridge customize -- Personality Swap (F16, F18, AT17, UF08)
-
-**Goal:** Verify `bridge customize --personality mentoring` swaps personality in an existing project.
-
-**Preconditions:** A project from Scenario 25 at /tmp/bridge-v3-eval/v3-test/ (balanced personality).
-
-### Steps
-
-1. Check current personality:
-   `/tmp/bridge-bin customize --list --target /tmp/bridge-v3-eval/v3-test`
-   - Expected: Shows personality "balanced".
-2. Swap to mentoring:
-   `/tmp/bridge-bin customize --personality mentoring --target /tmp/bridge-v3-eval/v3-test`
-   - Expected: Exits successfully. Prints confirmation.
-3. Check .bridge.json updated:
-   `cat /tmp/bridge-v3-eval/v3-test/.bridge.json | grep personality`
-   - Expected: "personality": "mentoring"
-4. Check vibe injection:
-   `grep -i 'vibe\|mentor\|teaching\|learning\|guidance' /tmp/bridge-v3-eval/v3-test/.claude/agents/bridge-architect.md`
-   - Expected: Mentoring vibe line present.
-5. Verify --list reflects change:
-   `/tmp/bridge-bin customize --list --target /tmp/bridge-v3-eval/v3-test`
-   - Expected: Shows personality "mentoring".
-
-### Checklist
-- [ ] --list shows current personality
-- [ ] Personality swap exits successfully
-- [ ] .bridge.json updated to "mentoring"
-- [ ] Agent files contain mentoring vibe lines
-- [ ] --list reflects the new personality
-
----
-
-## Scenario 32: bridge customize -- Add/Remove Specializations (F16, F17, AT18, AT19, UF08)
-
-**Goal:** Verify adding and removing specializations via bridge customize.
-
-**Preconditions:** A project from Scenario 25 at /tmp/bridge-v3-eval/v3-test/ (no specializations).
-
-### Steps
-
-1. Add specializations:
-   `/tmp/bridge-bin customize --add-spec frontend --add-spec security --target /tmp/bridge-v3-eval/v3-test`
-   - Expected: Exits successfully. Copies spec files.
-2. Verify files:
-   ```
-   ls /tmp/bridge-v3-eval/v3-test/.claude/skills/bridge-spec-frontend/SKILL.md
-   ls /tmp/bridge-v3-eval/v3-test/.claude/skills/bridge-spec-security/SKILL.md
-   ```
-   - Expected: Both exist.
-3. Check .bridge.json:
-   `cat /tmp/bridge-v3-eval/v3-test/.bridge.json | grep -A2 specializations`
-   - Expected: ["frontend", "security"]
-4. Remove one specialization:
-   `/tmp/bridge-bin customize --remove-spec frontend --target /tmp/bridge-v3-eval/v3-test`
-   - Expected: Exits successfully.
-5. Verify removal:
-   `ls /tmp/bridge-v3-eval/v3-test/.claude/skills/bridge-spec-frontend/ 2>/dev/null && echo "EXISTS" || echo "REMOVED"`
-   - Expected: "REMOVED"
-6. Check .bridge.json updated:
-   `cat /tmp/bridge-v3-eval/v3-test/.bridge.json | grep -A2 specializations`
-   - Expected: ["security"] (frontend removed).
-
-### Checklist
-- [ ] --add-spec copies SKILL.md files to project
-- [ ] .bridge.json tracks added specializations
-- [ ] --remove-spec removes the specialization directory
-- [ ] .bridge.json updated after removal
-- [ ] Remaining specialization unaffected
-
----
-
-## Scenario 33: Specialization Content Quality (F17, AT24)
-
-**Goal:** Verify all 7 specialization skill files are well-formed and contain domain-specific content.
+**Goal:** Verify the shell installer applies a strict personality overlay without changing the normal setup flow.
 
 **Preconditions:** Terminal in the BRIDGE repo root directory.
 
 ### Steps
 
-1. Check all 7 specialization directories exist:
-   ```
-   for spec in frontend backend api data infra mobile security; do
-     [ -f "specializations/${spec}/SKILL.md" ] && echo "OK: $spec" || echo "MISSING: $spec"
-   done
-   ```
-   - Expected: All 7 OK.
-2. Verify SKILL.md format (frontmatter with name and description):
-   ```
-   for spec in frontend backend api data infra mobile security; do
-     grep -q '^---' "specializations/${spec}/SKILL.md" && echo "OK: $spec has frontmatter" || echo "FAIL: $spec"
-   done
-   ```
-   - Expected: All have YAML frontmatter.
-3. Spot-check domain specificity:
-   - `grep -i 'accessibility\|component\|CSS' specializations/frontend/SKILL.md | head -3`
-     - Expected: Frontend-specific terms.
-   - `grep -i 'endpoint\|REST\|GraphQL\|versioning' specializations/api/SKILL.md | head -3`
-     - Expected: API-specific terms.
-   - `grep -i 'OWASP\|authentication\|authorization\|vulnerability' specializations/security/SKILL.md | head -3`
-     - Expected: Security-specific terms.
-   - `grep -i 'pipeline\|ETL\|schema\|migration' specializations/data/SKILL.md | head -3`
-     - Expected: Data-specific terms.
-4. Verify each file has substantial content:
-   ```
-   for spec in frontend backend api data infra mobile security; do
-     lines=$(wc -l < "specializations/${spec}/SKILL.md")
-     [ "$lines" -gt 30 ] && echo "OK: $spec ($lines lines)" || echo "SHORT: $spec ($lines lines)"
-   done
-   ```
-   - Expected: All > 30 lines.
+1. Run:
+   `./bridge.sh new --name "Eval Strict" --pack claude-code --personality strict -o /tmp/bridge-eval`
+   - Expected: Script succeeds and creates `/tmp/bridge-eval/eval-strict/`.
+2. Check the root orchestrator file:
+   `grep -n 'bridge:personality\|Tight scope enforcement' /tmp/bridge-eval/eval-strict/CLAUDE.md`
+   - Expected: Marker block present with the strict orchestrator vibe.
+3. Check the architect agent:
+   `grep -n 'bridge:personality\|Challenges every abstraction' /tmp/bridge-eval/eval-strict/.claude/agents/bridge-architect.md`
+   - Expected: Marker block present with the strict architect vibe.
+4. Check the brainstorm command:
+   `grep -n 'bridge:personality\|Kill criteria weighted heavily' /tmp/bridge-eval/eval-strict/.claude/commands/bridge-brainstorm.md`
+   - Expected: Marker block present with the strict brainstorm vibe.
+5. Count inserted personality blocks:
+   `grep -R 'bridge:personality' /tmp/bridge-eval/eval-strict | wc -l`
+   - Expected: More than 0 matching files.
 
 ### Checklist
-- [ ] All 7 specialization directories exist with SKILL.md
-- [ ] SKILL.md files have valid frontmatter (name, description)
-- [ ] Frontend covers component architecture, accessibility
-- [ ] API covers endpoints, versioning, REST/GraphQL
-- [ ] Security covers OWASP, auth, vulnerabilities
-- [ ] Data covers pipelines, schemas, ETL
-- [ ] All files are substantial (30+ lines)
-
----
-
-## Scenario 34: Personality Profile Quality (F18, AT23)
-
-**Goal:** Verify all 3 personality profiles are valid JSON with 8 vibe keys.
-
-**Preconditions:** Terminal in the BRIDGE repo root directory.
-
-### Steps
-
-1. Check all 3 profiles exist:
-   ```
-   for p in strict balanced mentoring; do
-     [ -f "profiles/${p}.json" ] && echo "OK: $p" || echo "MISSING: $p"
-   done
-   ```
-   - Expected: All 3 OK.
-2. Validate JSON:
-   ```
-   for p in strict balanced mentoring; do
-     python3 -c "import json; json.load(open('profiles/${p}.json'))" 2>/dev/null && echo "VALID: $p" || echo "INVALID: $p"
-   done
-   ```
-   - Expected: All VALID.
-3. Check 8 vibe keys in each profile:
-   ```
-   for p in strict balanced mentoring; do
-     keys=$(python3 -c "import json; d=json.load(open('profiles/${p}.json')); print(len(d.get('vibes',{})))")
-     [ "$keys" -eq 8 ] && echo "OK: $p has $keys vibes" || echo "FAIL: $p has $keys vibes"
-   done
-   ```
-   - Expected: All have exactly 8 vibes (architect, coder, debugger, auditor, evaluator, advisor, brainstorm, orchestrator).
-4. Verify vibe key names match expected roles:
-   ```
-   python3 -c "
-   import json
-   expected = {'architect','coder','debugger','auditor','evaluator','advisor','brainstorm','orchestrator'}
-   for p in ['strict','balanced','mentoring']:
-     d = json.load(open(f'profiles/{p}.json'))
-     actual = set(d.get('vibes',{}).keys())
-     if actual == expected:
-       print(f'OK: {p}')
-     else:
-       print(f'MISMATCH: {p} — missing={expected-actual}, extra={actual-expected}')
-   "
-   ```
-   - Expected: All OK.
-5. Verify vibes are non-empty strings:
-   ```
-   python3 -c "
-   import json
-   for p in ['strict','balanced','mentoring']:
-     d = json.load(open(f'profiles/{p}.json'))
-     empty = [k for k,v in d.get('vibes',{}).items() if not v.strip()]
-     if empty:
-       print(f'EMPTY VIBES in {p}: {empty}')
-     else:
-       print(f'OK: {p} — all vibes are non-empty')
-   "
-   ```
-   - Expected: All OK.
-
-### Checklist
-- [ ] All 3 profile files exist (strict, balanced, mentoring)
-- [ ] All parse as valid JSON
-- [ ] Each has exactly 8 vibe keys
-- [ ] Vibe keys match expected role names
-- [ ] All vibes are non-empty strings
-
----
-
-## Scenario 35: Cross-Platform Build (F19, AT25)
-
-**Goal:** Verify goreleaser config cross-compiles for all target platforms.
-
-**Preconditions:** Terminal in the BRIDGE repo root directory. Go installed.
-
-### Steps
-
-1. Check .goreleaser.yml exists:
-   `cat .goreleaser.yml | head -30`
-   - Expected: Project name "bridge", builds section with goos/goarch.
-2. Verify target platforms in config:
-   `grep -A10 'goos:' .goreleaser.yml`
-   - Expected: linux, darwin, windows.
-   `grep -A5 'goarch:' .goreleaser.yml`
-   - Expected: amd64, arm64.
-3. Verify windows/arm64 is excluded:
-   `grep -A2 'ignore:' .goreleaser.yml`
-   - Expected: windows + arm64 exclusion.
-4. Cross-compile manually for each target:
-   ```
-   for goos in linux darwin; do
-     for goarch in amd64 arm64; do
-       GOOS=$goos GOARCH=$goarch go build -o /dev/null ./cmd/bridge/ && echo "OK: $goos/$goarch" || echo "FAIL: $goos/$goarch"
-     done
-   done
-   GOOS=windows GOARCH=amd64 go build -o /dev/null ./cmd/bridge/ && echo "OK: windows/amd64" || echo "FAIL: windows/amd64"
-   ```
-   - Expected: All 5 OK.
-5. Verify archives include profiles and specializations:
-   `grep -A5 'files:' .goreleaser.yml`
-   - Expected: profiles/* and specializations/* listed.
-
-### Checklist
-- [ ] .goreleaser.yml exists with correct project name
-- [ ] linux/amd64, linux/arm64, darwin/amd64, darwin/arm64, windows/amd64 targets defined
-- [ ] windows/arm64 excluded
-- [ ] All 5 cross-compile targets build successfully
-- [ ] Archives configured to include profiles/ and specializations/
-
----
-
-## Scenario 36: bridge new -- Error Handling (F16)
-
-**Goal:** Verify the bridge binary handles invalid input gracefully.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Missing required flags:
-   `/tmp/bridge-bin new 2>&1; echo "exit: $?"`
-   - Expected: Error about --name being required. Non-zero exit.
-2. Invalid pack name:
-   `/tmp/bridge-bin new --name "Test" --pack invalid-pack 2>&1; echo "exit: $?"`
-   - Expected: Error about invalid pack. Non-zero exit.
-3. Invalid personality:
-   `/tmp/bridge-bin new --name "Test" --pack claude-code --personality aggressive 2>&1; echo "exit: $?"`
-   - Expected: Error about invalid personality. Non-zero exit.
-4. Directory already exists:
-   `/tmp/bridge-bin new --name "V3 Test" --pack claude-code --output /tmp/bridge-v3-eval 2>&1; echo "exit: $?"`
-   - Expected: Error about directory already existing. Non-zero exit.
-
-### Checklist
-- [ ] Missing --name produces clear error
-- [ ] Invalid pack produces clear error with valid options
-- [ ] Invalid personality produces clear error with valid options
-- [ ] Existing directory produces clear error
-- [ ] All error cases exit non-zero
-
----
-
-## Scenario 37: .bridge.json Config Tracking (F16, F18, AT23)
-
-**Goal:** Verify .bridge.json accurately tracks all configuration through lifecycle changes.
-
-**Preconditions:** Binary built at /tmp/bridge-bin.
-
-### Steps
-
-1. Create project:
-   `/tmp/bridge-bin new --name "Config Test" --pack full --personality strict --spec api --output /tmp/bridge-v3-eval`
-2. Check initial state:
-   `cat /tmp/bridge-v3-eval/config-test/.bridge.json`
-   - Expected: version "3.0", pack "full", personality "strict", specializations ["api"].
-3. Change personality:
-   `/tmp/bridge-bin customize --personality mentoring --target /tmp/bridge-v3-eval/config-test`
-4. Check personality updated:
-   `cat /tmp/bridge-v3-eval/config-test/.bridge.json | grep personality`
-   - Expected: "personality": "mentoring"
-5. Add spec:
-   `/tmp/bridge-bin customize --add-spec security --target /tmp/bridge-v3-eval/config-test`
-6. Check specs updated:
-   `cat /tmp/bridge-v3-eval/config-test/.bridge.json | grep -A3 specializations`
-   - Expected: ["api", "security"]
-7. Remove spec:
-   `/tmp/bridge-bin customize --remove-spec api --target /tmp/bridge-v3-eval/config-test`
-8. Check final state:
-   `cat /tmp/bridge-v3-eval/config-test/.bridge.json`
-   - Expected: version "3.0", pack "full", personality "mentoring", specializations ["security"].
-
-### Checklist
-- [ ] Initial .bridge.json has all 4 fields correct
-- [ ] Personality change persists to .bridge.json
-- [ ] Add-spec appends to specializations array
-- [ ] Remove-spec removes from specializations array
-- [ ] Pack and version unchanged through customizations
-
----
-
-## Scenario 38: Agent HUMAN: Block Instructions (F03, F07, F09)
-
-**Goal:** Verify all 5 agent definitions include HUMAN: block instructions in their Output section, and CLAUDE.md enforces the post-subagent HUMAN: block rule.
-
-**Preconditions:** Terminal in the BRIDGE repo root directory.
-
-### Steps
-
-1. Check each agent file in the distributable template for HUMAN: block:
-   ```
-   for agent in bridge-architect bridge-coder bridge-debugger bridge-auditor bridge-evaluator; do
-     grep -q 'HUMAN:' "bridge-claude-code/.claude/agents/${agent}.md" && echo "OK: $agent" || echo "MISSING: $agent"
-   done
-   ```
-   - Expected: All 5 OK.
-2. Verify each agent's HUMAN: block is in the Output section (not just anywhere in the file):
-   ```
-   for agent in bridge-architect bridge-coder bridge-debugger bridge-auditor bridge-evaluator; do
-     awk '/^## Output/,0' "bridge-claude-code/.claude/agents/${agent}.md" | grep -q 'HUMAN:' && echo "OK: $agent Output has HUMAN:" || echo "FAIL: $agent"
-   done
-   ```
-   - Expected: All 5 OK.
-3. Check CLAUDE.md has the post-subagent HUMAN: block rule:
-   `grep -i 'after receiving subagent output' bridge-claude-code/CLAUDE.md`
-   - Expected: Rule about always presenting a HUMAN: block after subagent output.
-4. Verify CLAUDE.md still has the original Human Handoff Protocol section:
-   `grep -c 'HUMAN:' bridge-claude-code/CLAUDE.md`
-   - Expected: At least 3 occurrences (protocol template + delegation rule + feedback loop).
-5. Check project .claude/agents/ matches the template:
-   ```
-   for agent in bridge-architect bridge-coder bridge-debugger bridge-auditor bridge-evaluator; do
-     diff "bridge-claude-code/.claude/agents/${agent}.md" ".claude/agents/${agent}.md" >/dev/null 2>&1 && echo "SYNCED: $agent" || echo "DRIFT: $agent"
-   done
-   ```
-   - Expected: All 5 SYNCED.
-6. Check project CLAUDE.md matches the template:
-   `diff bridge-claude-code/CLAUDE.md CLAUDE.md`
-   - Expected: No differences.
-
-### Checklist
-- [ ] All 5 agent files have HUMAN: in Output section
-- [ ] CLAUDE.md has post-subagent HUMAN: block rule
-- [ ] CLAUDE.md has original Human Handoff Protocol
-- [ ] Project .claude/agents/ synced with template
-- [ ] Project CLAUDE.md synced with template
-
----
-
-## Scenario 39: Project .claude/ Integrity (F03, F07)
-
-**Goal:** Verify the project's .claude/ directory has no stale files and matches the distributable template structure.
-
-**Preconditions:** Terminal in the BRIDGE repo root directory.
-
-### Steps
-
-1. Check exactly 15 commands exist (no extras from deleted commands):
-   `ls .claude/commands/ | wc -l`
-   - Expected: 15.
-2. Verify deleted commands are absent:
-   ```
-   for cmd in bridge-migrate bridge-offload bridge-reintegrate; do
-     [ -f ".claude/commands/${cmd}.md" ] && echo "STALE: $cmd" || echo "OK: $cmd absent"
-   done
-   ```
-   - Expected: All 3 absent.
-3. Check exactly 6 skills exist (no extras from deleted skills):
-   `ls .claude/skills/ | wc -l`
-   - Expected: 6.
-4. Verify deleted skills are absent:
-   ```
-   for skill in bridge-external-handoff bridge-external-reintegrate; do
-     [ -d ".claude/skills/${skill}" ] && echo "STALE: $skill" || echo "OK: $skill absent"
-   done
-   ```
-   - Expected: Both absent.
-5. Check exactly 5 agent files exist:
-   `ls .claude/agents/ | wc -l`
-   - Expected: 5.
-6. Verify all commands match the template:
-   `diff <(ls bridge-claude-code/.claude/commands/ | sort) <(ls .claude/commands/ | sort)`
-   - Expected: No differences.
-7. Verify all skills match the template:
-   `diff <(ls bridge-claude-code/.claude/skills/ | sort) <(ls .claude/skills/ | sort)`
-   - Expected: No differences.
-8. Verify all agent files match the template:
-   `diff <(ls bridge-claude-code/.claude/agents/ | sort) <(ls .claude/agents/ | sort)`
-   - Expected: No differences.
-
-### Checklist
-- [ ] Exactly 15 commands (no stale extras)
-- [ ] No deleted commands present (migrate, offload, reintegrate)
-- [ ] Exactly 6 skills (no stale extras)
-- [ ] No deleted skills present (external-handoff, external-reintegrate)
-- [ ] Exactly 5 agent files
-- [ ] Commands match template
-- [ ] Skills match template
-- [ ] Agents match template
+- [ ] `bridge.sh new` accepts `--personality strict`
+- [ ] CLAUDE.md receives the strict orchestrator block
+- [ ] bridge-architect.md receives the strict architect block
+- [ ] bridge-brainstorm.md receives the strict brainstorm block
+- [ ] Personality markers are inserted into the generated project
 
 ---
 
@@ -1392,5 +785,5 @@ Prerequisites for Scenarios 24-34:
 After all scenarios are complete, clean up test artifacts:
 
 ```bash
-rm -rf /tmp/bridge-eval /tmp/bridge-live /tmp/bridge-pkg-test /tmp/bridge-v3-eval /tmp/bridge-bin
+rm -rf /tmp/bridge-eval /tmp/bridge-live /tmp/bridge-pkg-test
 ```

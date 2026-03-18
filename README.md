@@ -1,8 +1,8 @@
-# BRIDGE v2.1
+# BRIDGE v2.2
 
 **B**rainstorm → **R**equirements → **I**mplementation Design → **D**evelop → **G**ate → **E**valuate
 
-A structured development workflow for AI coding agents. Works across RooCode, Claude Code, Codex, and OpenCode.
+A structured development methodology for AI coding agents. Ships as ready-to-use packs for Claude Code, RooCode, Codex, and OpenCode.
 
 ## Why BRIDGE?
 
@@ -18,6 +18,12 @@ BRIDGE fixes this by wrapping your AI agent in a disciplined lifecycle:
 - **Session continuity** — resume exactly where you left off
 
 It's not another prompt collection. It's a complete methodology with 15 commands, role-based delegation, and cross-platform portability.
+
+### What's new in v2.2
+
+- **Personality overlays** — shell installs can apply `strict`, `balanced`, or `mentoring` tone overlays to the orchestrator, advisor, brainstorm flow, and agent definitions
+- **Unified shell entrypoint** — `bridge.sh` now covers new project setup, existing-project install, orchestrators, and archive packaging
+- **Human handoff enforcement** — every agent now outputs `HUMAN:` blocks so you always know what to verify next
 
 ## Example Session
 
@@ -45,82 +51,142 @@ agent: [runs quality gate → PASS → generates eval scenarios → proceeds to 
 
 The key insight: BRIDGE keeps the agent in a fix loop on the current slice until you explicitly approve. No more chasing an agent that moved on while bugs remain.
 
-## Packs
+## Quick Start
 
-| Pack | Description | When to Use |
-|------|-------------|-------------|
-| `full/` | Thin slash commands + persistent rules + composable skills for **RooCode**. | Recommended for RooCode users. Smaller context per message, consistent behavior. |
-| `standalone/` | Self-contained slash commands with full prompts for **RooCode**. No rules or skills. | Quick RooCode setup, portability, or if you prefer all instructions in prompts. |
-| `claude-code/` | CLAUDE.md + subagent definitions + skills + commands for **Claude Code CLI**. | Use with the `claude` CLI. Leverages subagents for isolated context per role. |
-| `codex/` | AGENTS.md + skills for **OpenAI Codex CLI**. | Use with the `codex` CLI. Single-agent with skill invocation via `$skill-name`. |
-| `opencode/` | AGENTS.md + agents + skills + commands for **OpenCode CLI**. | Use with the `opencode` CLI. Subagents via `@mention`, native skill discovery. |
-
-## Platform Guides
-
-Each platform has a different architecture (mode-switching, subagents, single-agent) and invocation syntax. See **[reference/platform-guides.md](reference/platform-guides.md)** for step-by-step workflows, setup recaps, and a full command reference matrix for RooCode, Claude Code, and Codex.
-
-## Multi-Repo Projects
-
-If your product spans multiple repositories, use a single BRIDGE control plane and track repo-specific execution state in context. See **[reference/multi-repo-playbook.md](reference/multi-repo-playbook.md)**.
-
-## Quick Start (remote install)
+### Option A: Unified shell installer
 
 ```bash
-# One-liner — downloads the pack from GitHub Releases
-curl -fsSL https://raw.githubusercontent.com/etapsc/bridge/main/setup.sh | bash -s -- \
-  --pack claude-code --name "My Project"
+# Remote one-liner — downloads the pack from GitHub Releases
+curl -fsSL https://raw.githubusercontent.com/etapsc/bridge/main/bridge.sh | bash -s -- \
+  new --pack claude-code --name "My Project" --personality strict
 
-# With a specific version
-curl -fsSL https://raw.githubusercontent.com/etapsc/bridge/main/setup.sh | bash -s -- \
-  --pack claude-code --name "My Project" --version v2.1.0
-
-# With a custom output directory
-curl -fsSL https://raw.githubusercontent.com/etapsc/bridge/main/setup.sh | bash -s -- \
-  --pack full --name "My Project" -o ~/projects
-```
-
-## Setup (from cloned repo)
-
-```bash
+# Or clone and run locally
 git clone https://github.com/etapsc/bridge.git
 cd bridge
-
-# Interactive
-./setup.sh
-
-# Or specify options directly
-./setup.sh --name "My Project" --pack full          # RooCode (rules+skills)
-./setup.sh --name "My Project" --pack standalone    # RooCode (self-contained)
-./setup.sh --name "My Project" --pack claude-code   # Claude Code CLI
-./setup.sh --name "My Project" --pack codex         # OpenAI Codex CLI
-./setup.sh --name "My Project" --pack opencode      # OpenCode CLI
+./bridge.sh new --name "My Project" --pack claude-code --personality strict
 ```
 
-The script auto-detects its source:
+### Option B: Manual copy
 
-- **Local folder** — copies directly from `bridge-{pack}/` (fastest, for development)
-- **Local tar** — extracts from `bridge-{pack}.tar.gz` (offline use)
-- **Remote** — downloads from GitHub Releases (curl one-liner)
+Each pack is a self-contained folder. Copy its contents into your project root:
 
-## Quick Reference
+```bash
+# From a cloned repo
+cp -r bridge-claude-code/. /path/to/your-project/
 
-| Slash Command | RooCode Mode | Purpose |
-|---------------|------|---------|
-| `/bridge-brainstorm` | any | Phase 0: brainstorm a new idea |
-| `/bridge-requirements` | any | Phase 1: generate requirements from brainstorm |
-| `/bridge-requirements-only` | any | Phase 1: generate requirements (skip brainstorm) |
-| `/bridge-scope` | orchestrator | Phase 0: scope a feature/fix for an existing project |
-| `/bridge-feature` | orchestrator | Phase 1: incremental requirements for existing project |
-| `/bridge-design` | orchestrator | Integrate a design document, PRD, or version spec |
-| `/bridge-start` | orchestrator | Start implementation from requirements |
-| `/bridge-context-create` | orchestrator | Create context.json from codebase |
-| `/bridge-context-update` | orchestrator | Sync context.json with code reality |
-| `/bridge-resume` | orchestrator | Fresh session re-entry with brief |
-| `/bridge-end` | orchestrator | End session, update handoff |
-| `/bridge-gate` | audit | Run quality gate |
-| `/bridge-eval` | evaluate | Generate evaluation pack |
-| `/bridge-feedback` | orchestrator | Process evaluation feedback |
-| `/bridge-advisor` | any | Strategic project review and launch readiness |
+# From a release archive
+tar -xzf bridge-claude-code.tar.gz -C /path/to/your-project/
+```
+
+Then find-and-replace `{{PROJECT_NAME}}` with your project name in all `.md` and `.json` files.
+
+## What Gets Installed
+
+Every pack installs two things into your project root:
+
+1. **A top-level config file** — tells the AI agent about BRIDGE methodology, delegation rules, and workflow constraints
+2. **A `docs/` folder** — template `requirements.json`, `context.json`, `human-playbook.md`, and `decisions.md`
+
+Some packs also install platform-specific tooling under a hidden directory. Here's what each pack contains:
+
+### Claude Code (`bridge-claude-code/`)
+
+```
+your-project/
+├── CLAUDE.md                          # Methodology rules, delegation model, feedback loop
+├── .claude/
+│   ├── agents/                        # 5 subagent definitions
+│   │   ├── bridge-architect.md        #   design contracts and interfaces
+│   │   ├── bridge-coder.md            #   implement slices with tests
+│   │   ├── bridge-debugger.md         #   diagnose and fix failures
+│   │   ├── bridge-auditor.md          #   quality gate verification (read-only)
+│   │   └── bridge-evaluator.md        #   generate test scenarios
+│   ├── commands/                      # 15 slash commands (/bridge-*)
+│   ├── skills/                        # 6 composable skills
+│   ├── hooks/                         # 3 lifecycle hooks
+│   │   ├── session-start.sh           #   check context.json freshness on startup
+│   │   ├── auto-approve-cd-git.sh     #   auto-approve safe git read commands
+│   │   └── post-edit-lint.sh          #   auto-lint after file edits
+│   ├── rules/                         # persistent rules (methodology, security)
+│   └── settings.json                  # permissions, hook configuration
+└── docs/
+    ├── requirements.json              # structured project requirements (bridge.v2 schema)
+    ├── context.json                   # as-built project state and handoff
+    ├── human-playbook.md              # verification procedures (generated)
+    └── decisions.md                   # architectural decision log
+```
+
+**How to use:** Run `claude` in your project directory. All 15 `/bridge-*` commands are available immediately. Start with `/bridge-brainstorm` for a new idea or `/bridge-requirements-only` to jump straight to requirements.
+
+### RooCode Full (`bridge-full/`)
+
+Rules + skills for VS Code with the RooCode extension. Uses mode-switching (orchestrator, architect, code, debug, audit, evaluate). Smaller context per message.
+
+### RooCode Standalone (`bridge-standalone/`)
+
+Self-contained slash commands with full prompts embedded. No rules or skills needed — everything is in the command prompts. Good for portability.
+
+### Codex (`bridge-codex/`)
+
+`AGENTS.md` + skills for the OpenAI Codex CLI. Single-agent with skill invocation via `$skill-name`.
+
+### OpenCode (`bridge-opencode/`)
+
+`AGENTS.md` + agents + skills + commands for the OpenCode CLI. Subagents via `@mention`, native skill discovery.
+
+## Packs at a Glance
+
+| Pack | Config File | Agent Model | Best For |
+|------|-------------|-------------|----------|
+| `claude-code` | `CLAUDE.md` + `.claude/` | Subagents (5 roles) | Claude Code CLI users |
+| `full` | `.roo/rules/` + `.roo/skills/` | Mode-switching (7 modes) | RooCode in VS Code |
+| `standalone` | Self-contained commands | Single-agent | Quick RooCode setup |
+| `codex` | `AGENTS.md` + `.agents/` | Single-agent + skills | OpenAI Codex CLI |
+| `opencode` | `AGENTS.md` + `opencode.json` | Subagents + commands | OpenCode CLI |
+
+## Setup Commands
+
+The unified `bridge.sh` script supports these subcommands:
+
+| Command | Purpose |
+|---------|---------|
+| `new` | Create a new project directory with BRIDGE tooling |
+| `add` | Add BRIDGE to an existing project (won't overwrite `docs/`, `src/`, `tests/`) |
+| `orchestrator` | Install a portfolio controller or multi-repo workspace |
+| `pack` | Rebuild `.tar.gz` archives from source folders (maintainers) |
+
+```bash
+# Examples
+bridge.sh new  --name "My API" --pack claude-code --personality strict
+bridge.sh add  --name "My API" --pack claude-code --target . --personality mentoring
+bridge.sh new  --name "My App" --pack full -o ~/projects
+bridge.sh orchestrator
+bridge.sh pack
+```
+
+Source resolution is automatic: local folder → local `.tar.gz` → GitHub Releases download.
+
+## Slash Commands
+
+Once installed, these commands are available inside your AI agent:
+
+| Command | Purpose |
+|---------|---------|
+| `/bridge-brainstorm` | Phase 0: brainstorm a new idea with kill criteria |
+| `/bridge-requirements` | Phase 1: generate requirements from brainstorm output |
+| `/bridge-requirements-only` | Phase 1: generate requirements (skip brainstorm) |
+| `/bridge-scope` | Phase 0: scope a feature/fix for an existing project |
+| `/bridge-feature` | Phase 1: incremental requirements for existing project |
+| `/bridge-design` | Integrate a design document, PRD, or version spec |
+| `/bridge-start` | Start implementation — plan slices, delegate to agents |
+| `/bridge-context-create` | Create `context.json` from codebase |
+| `/bridge-context-update` | Sync `context.json` with code reality |
+| `/bridge-resume` | Resume a session — load context, output re-entry brief |
+| `/bridge-end` | End session — update handoff state |
+| `/bridge-gate` | Run quality gate audit |
+| `/bridge-eval` | Generate evaluation scenarios and E2E tests |
+| `/bridge-feedback` | Process evaluation feedback — iterate or launch |
+| `/bridge-advisor` | Strategic project review and launch readiness check |
 
 ## Typical Flow
 
@@ -148,13 +214,27 @@ The script auto-detects its source:
                                        [issues]           [ready]
                                           │                   │
                                           ▼                   ▼
-                                    [back to dev]         LAUNCH 🚀
+                                    [back to dev]         LAUNCH
 
 Session: /bridge-resume (start) · /bridge-end (stop)
 Context: /bridge-context-create · /bridge-context-update
 ```
 
-## Model Recommendations for RooCode
+## Advanced Setups
+
+### Multi-Repo Projects
+
+If your product spans multiple repositories, use `bridge.sh orchestrator` to set up a cross-repo workspace with a single BRIDGE control plane. See **[reference/multi-repo-playbook.md](reference/multi-repo-playbook.md)**.
+
+### Dual-Agent (Claude Code + Codex)
+
+Use `bridge.sh add --pack dual-agent` to overlay coordination commands on an existing Claude Code or Codex install. Claude handles architecture and coding; Codex handles research and validation.
+
+### Platform Guides
+
+Each platform has a different architecture (mode-switching, subagents, single-agent) and invocation syntax. See **[reference/platform-guides.md](reference/platform-guides.md)** for detailed workflows and a full command reference matrix.
+
+## Model Recommendations (RooCode)
 
 | Role | Mode | Model | Reasoning |
 |------|------|-------|-----------|

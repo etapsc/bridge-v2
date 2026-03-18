@@ -36,8 +36,8 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 - **Audit fileRegex:** `docs/(gates-evals/(gate-report|gate-report-S\d+)|context)\..+$`
 - **Evaluate fileRegex:** `docs/(gates-evals/(eval-scenarios|eval-scenarios-S\d+)|context)\..+$|tests/e2e/.+$`
 - **Distribution: tar.gz only** — no zip files.
-- **setup.sh flags:** `--name`, `--pack`, `-o` (output directory).
-- **{{PROJECT_NAME}} placeholder** — replaced by setup.sh at init time.
+- **bridge.sh new flags:** `--name`, `--pack`, `-o` (output directory).
+- **{{PROJECT_NAME}} placeholder** — replaced by bridge.sh at init time.
 
 ---
 
@@ -71,7 +71,7 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 
 ## 2026-02-16: Packaging Script
 
-**Decision:** Created `package.sh` to rebuild tar.gz files from source folders.
+**Decision:** Added the `bridge.sh pack` subcommand to rebuild tar.gz files from source folders.
 
 **Rationale:** Enables manual editing of individual files and quick reconstruction of the distributable state. Run from the parent directory containing the four `bridge-*` folders.
 

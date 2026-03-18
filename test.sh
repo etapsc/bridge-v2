@@ -2,11 +2,55 @@
 set -euo pipefail
 
 # ============================================================
-# BRIDGE v2.1 — Smoke Tests
-# Validates pack structure, commands, setup.sh, and package.sh
+# BRIDGE v2.2 — Test Runner
+#
+# Usage:
+#   ./test.sh              Run smoke tests + E2E suite
+#   ./test.sh --validate   Run eval scenario validator instead
+#   ./test.sh --all        Run smoke + E2E + eval validator
+#
+# Pass-through flags for validate-eval-scenarios.sh:
+#   --skip-interactive, --skip-live, --keep-artifacts
 # ============================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+MODE="default"
+VALIDATE_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --validate)   MODE="validate"; shift ;;
+    --all)        MODE="all"; shift ;;
+    -h|--help)
+      echo "Usage: $(basename "$0") [--validate | --all] [validator-flags...]"
+      echo ""
+      echo "Modes:"
+      echo "  (default)    Smoke tests + E2E suite"
+      echo "  --validate   Eval scenario validator only"
+      echo "  --all        Smoke + E2E + eval validator"
+      echo ""
+      echo "Validator flags (passed through to validate-eval-scenarios.sh):"
+      echo "  --skip-interactive   Skip TTY-dependent scenarios"
+      echo "  --skip-live          Skip live platform tests"
+      echo "  --keep-artifacts     Keep /tmp test artifacts"
+      exit 0 ;;
+    --skip-interactive|--skip-live|--keep-artifacts|--live-platform)
+      VALIDATE_ARGS+=("$1")
+      if [[ "$1" == "--live-platform" ]]; then
+        VALIDATE_ARGS+=("${2:-}")
+        shift
+      fi
+      shift ;;
+    *)  echo "Unknown option: $1"; exit 1 ;;
+  esac
+done
+
+# ============================================================
+# SMOKE + E2E
+# ============================================================
+run_smoke_and_e2e() {
+
 PASSED=0
 FAILED=0
 ERRORS=()
@@ -131,9 +175,9 @@ else
 fi
 
 # ============================================================
-# 6. setup.sh — runs for each pack
+# 6. bridge.sh new — runs for each pack
 # ============================================================
-section "setup.sh Smoke Tests"
+section "bridge.sh new Smoke Tests"
 
 TMPDIR_BASE="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR_BASE"' EXIT
@@ -141,36 +185,36 @@ trap 'rm -rf "$TMPDIR_BASE"' EXIT
 for pack in full standalone claude-code codex opencode; do
   OUT="${TMPDIR_BASE}/${pack}"
   mkdir -p "$OUT"
-  if bash "${SCRIPT_DIR}/setup.sh" --name "Test Project" --pack "$pack" -o "$OUT" >/dev/null 2>&1; then
-    pass "setup.sh --pack ${pack}: exits successfully"
+  if bash "${SCRIPT_DIR}/bridge.sh" new --name "Test Project" --pack "$pack" -o "$OUT" >/dev/null 2>&1; then
+    pass "bridge.sh new --pack ${pack}: exits successfully"
 
     PROJECT="${OUT}/test-project"
 
     # Placeholder replacement
     if grep -rq '{{PROJECT_NAME}}' "$PROJECT" 2>/dev/null; then
-      fail "setup.sh --pack ${pack}: {{PROJECT_NAME}} not fully replaced"
+      fail "bridge.sh new --pack ${pack}: {{PROJECT_NAME}} not fully replaced"
     else
-      pass "setup.sh --pack ${pack}: placeholder replaced"
+      pass "bridge.sh new --pack ${pack}: placeholder replaced"
     fi
 
     # docs/ directory created
     if [[ -d "${PROJECT}/docs" ]]; then
-      pass "setup.sh --pack ${pack}: docs/ created"
+      pass "bridge.sh new --pack ${pack}: docs/ created"
     else
-      fail "setup.sh --pack ${pack}: docs/ not created"
+      fail "bridge.sh new --pack ${pack}: docs/ not created"
     fi
   else
-    fail "setup.sh --pack ${pack}: exited with error"
+    fail "bridge.sh new --pack ${pack}: exited with error"
   fi
 done
 
 # ============================================================
-# 7. package.sh — builds all tar.gz
+# 7. bridge.sh pack — builds all tar.gz
 # ============================================================
-section "package.sh"
+section "bridge.sh pack"
 
-if bash "${SCRIPT_DIR}/package.sh" >/dev/null 2>&1; then
-  pass "package.sh: exits successfully"
+if bash "${SCRIPT_DIR}/bridge.sh" pack >/dev/null 2>&1; then
+  pass "bridge.sh pack: exits successfully"
   for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex bridge-opencode; do
     archive="${SCRIPT_DIR}/${pack}.tar.gz"
     if [[ -f "$archive" ]]; then
@@ -185,7 +229,7 @@ if bash "${SCRIPT_DIR}/package.sh" >/dev/null 2>&1; then
     fi
   done
 else
-  fail "package.sh: exited with error"
+  fail "bridge.sh pack: exited with error"
 fi
 
 # ============================================================
@@ -194,7 +238,7 @@ fi
 section "Shell Lint"
 
 if command -v shellcheck &>/dev/null; then
-  for script in setup.sh package.sh test.sh; do
+  for script in bridge.sh test.sh; do
     if shellcheck "${SCRIPT_DIR}/${script}" >/dev/null 2>&1; then
       pass "shellcheck: ${script} clean"
     elif shellcheck -S error "${SCRIPT_DIR}/${script}" >/dev/null 2>&1; then
@@ -205,6 +249,55 @@ if command -v shellcheck &>/dev/null; then
   done
 else
   echo "  - shellcheck not installed, skipping"
+fi
+
+# ============================================================
+# 9. E2E Test Suite
+# ============================================================
+E2E_SCRIPTS=(
+  tests/e2e/test-setup-packs.sh
+  tests/e2e/test-pack-consistency.sh
+  tests/e2e/test-advanced-packs.sh
+  tests/e2e/test-workflow-content.sh
+  tests/e2e/test-shell-personality.sh
+)
+
+section "E2E Test Suite"
+
+E2E_TOTAL_PASSED=0
+E2E_TOTAL_FAILED=0
+
+for e2e_script in "${E2E_SCRIPTS[@]}"; do
+  e2e_path="${SCRIPT_DIR}/${e2e_script}"
+  e2e_name="$(basename "${e2e_script}")"
+
+  if [[ ! -f "${e2e_path}" ]]; then
+    fail "${e2e_name}: script not found"
+    continue
+  fi
+
+  e2e_log="$(mktemp)"
+  if bash "${e2e_path}" >"${e2e_log}" 2>&1; then
+    pass "${e2e_name}: exits successfully"
+  else
+    fail "${e2e_name}: exited non-zero"
+  fi
+
+  # Extract pass/fail counts from output (strip ANSI codes first)
+  e2e_clean="$(sed -E $'s/\x1B\\[[0-9;]*[a-zA-Z]//g' "${e2e_log}")"
+  e2e_passed="$(echo "${e2e_clean}" | grep -oP 'Passed:\s*\K[0-9]+' 2>/dev/null || echo "0")"
+  e2e_failed="$(echo "${e2e_clean}" | grep -oP 'Failed:\s*\K[0-9]+' 2>/dev/null || echo "0")"
+  pass "${e2e_name}: ${e2e_passed} passed, ${e2e_failed} failed"
+
+  E2E_TOTAL_PASSED=$((E2E_TOTAL_PASSED + e2e_passed))
+  E2E_TOTAL_FAILED=$((E2E_TOTAL_FAILED + e2e_failed))
+  rm -f "${e2e_log}"
+done
+
+if [[ "${E2E_TOTAL_FAILED}" -eq 0 ]]; then
+  pass "E2E suite total: ${E2E_TOTAL_PASSED} passed, 0 failed"
+else
+  fail "E2E suite total: ${E2E_TOTAL_PASSED} passed, ${E2E_TOTAL_FAILED} failed"
 fi
 
 # ============================================================
@@ -229,4 +322,37 @@ if [[ $FAILED -eq 0 ]]; then
 else
   printf "\033[31m%d test(s) failed.\033[0m\n" "$FAILED"
 fi
-exit "$FAILED"
+return "$FAILED"
+
+}
+
+# ============================================================
+# EVAL VALIDATOR
+# ============================================================
+run_validator() {
+  echo ""
+  printf "\033[1m━━━ Eval Scenario Validator ━━━\033[0m\n"
+  exec bash "${SCRIPT_DIR}/tests/e2e/validate-eval-scenarios.sh" "${VALIDATE_ARGS[@]}"
+}
+
+# ============================================================
+# MAIN
+# ============================================================
+case "$MODE" in
+  default)
+    run_smoke_and_e2e
+    exit $?
+    ;;
+  validate)
+    run_validator
+    ;;
+  all)
+    run_smoke_and_e2e
+    SMOKE_EXIT=$?
+    echo ""
+    printf "\033[1m━━━ Now running eval scenario validator ━━━\033[0m\n"
+    bash "${SCRIPT_DIR}/tests/e2e/validate-eval-scenarios.sh" "${VALIDATE_ARGS[@]}"
+    VALIDATE_EXIT=$?
+    exit $((SMOKE_EXIT + VALIDATE_EXIT))
+    ;;
+esac

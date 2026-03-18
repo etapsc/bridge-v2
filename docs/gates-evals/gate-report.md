@@ -1,99 +1,68 @@
 # Gate Report
 
-Generated: 2026-03-14
-Features Audited: F16, F17, F18, F19
-Scope: BRIDGE v3 features -- Go TUI Binary, Domain Specializations, Personality Packs, Cross-Platform Distribution
-Previous Gate: 2026-03-13 (PASS, 6 warnings -- W01 and W05 resolved on 2026-03-14)
+Generated: 2026-03-18
+Features Audited: F01-F16
+Scope: BRIDGE v2.2 shell-first packs, single-script installation, packaging, and install-time personality overlays
 
 ## Summary
 
 **OVERALL: PASS**
 
-All checks pass. No blocking issues. 4 non-blocking warnings remain (W02-W04, W06), down from 6 in the previous gate (W01 and W05 confirmed resolved). The Go binary builds and cross-compiles for all 5 targets. 16 Go unit tests pass. 45 smoke tests pass. All 5 E2E suites pass (184 assertions total). Eval scenario validator passes 222/222 assertions (4 expected skips: TTY/live). All 9 release archives present at reasonable sizes. Agent HUMAN: block instructions verified in all 5 agent files. CLAUDE.md post-subagent HUMAN: block rule verified. No stale files in project .claude/ directory.
-
-## Changes Since Previous Gate (2026-03-13)
-
-1. **requirements.json**: F16-F19 statuses updated from "planned" to "review" (W01 resolved).
-2. **Agent files**: All 5 agents (bridge-architect, bridge-coder, bridge-debugger, bridge-auditor, bridge-evaluator) updated with HUMAN: block instructions in Output sections.
-3. **CLAUDE.md**: Updated with post-subagent HUMAN: block rule in Delegation Model section.
-4. **Stale file cleanup**: 5 stale files deleted from project .claude/ (bridge-migrate, bridge-offload, bridge-reintegrate commands; bridge-external-handoff, bridge-external-reintegrate skills).
-5. **validate-eval-scenarios.sh**: Extended with v3 scenarios 24-37 (W05 resolved).
-6. **Archives**: All 9 rebuilt.
+The rejected Go/v3 installer branch has been removed. BRIDGE is back to a shell-first setup surface with `bridge.sh` as the canonical entrypoint, legacy shell commands restored as wrappers, and personality overlays as the only new install-time behavior. Regression coverage passes cleanly: `bash test.sh` reports 56 passed / 0 failed top-level checks, `123/123` E2E assertions pass across 5 suites, and `bash tests/e2e/validate-eval-scenarios.sh --skip-interactive --skip-live` reports `127/127` assertions passing with 3 expected skips.
 
 ## Test Results
 
-- Go build: `go build ./...` -- **PASS** (zero errors)
-- Go vet: `go vet ./...` -- **PASS** (zero issues)
-- Go unit tests: 3 packages, 16 tests, 0 failures -- **PASS**
-  - `internal/config`: 5 tests, 83.3% coverage
-  - `internal/customize`: 5 tests, 48.6% coverage
-  - `internal/pack`: 6 tests, 25.8% coverage
-  - `cmd/bridge`: no test files
-  - `internal/cli`: no test files
-  - `internal/tui`: no test files
-- Legacy smoke tests (`bash test.sh`): 45 passed, 0 failed -- **PASS**
-- E2E tests (all 5 suites):
-  - `test-setup-packs.sh`: 32 passed, 0 failed -- **PASS**
-  - `test-pack-consistency.sh`: 24 passed, 0 failed -- **PASS**
-  - `test-advanced-packs.sh`: 37 passed, 0 failed -- **PASS**
-  - `test-workflow-content.sh`: 21 passed, 0 failed -- **PASS**
-  - `test-v3-binary.sh`: 70 passed, 0 failed -- **PASS**
-- Eval scenario validator: 222 passed, 0 failed, 4 skipped (TTY/live) -- **PASS**
-- Cross-compilation (5 targets):
-  - linux/amd64: **PASS**
-  - linux/arm64: **PASS**
-  - darwin/amd64: **PASS**
-  - darwin/arm64: **PASS**
-  - windows/amd64: **PASS**
-- Shell lint: `shellcheck` not installed -- **SKIP**
+- `bash test.sh` — **PASS**
+  - 56 top-level checks passed, 0 failed
+  - Includes 5 E2E suites and `bridge.sh pack`
+- E2E suite totals — **PASS**
+  - `test-setup-packs.sh`: 32/32
+  - `test-pack-consistency.sh`: 24/24
+  - `test-advanced-packs.sh`: 37/37
+  - `test-workflow-content.sh`: 21/21
+  - `test-shell-personality.sh`: 9/9
+  - Total: 123/123 assertions
+- `bash tests/e2e/validate-eval-scenarios.sh --skip-interactive --skip-live` — **PASS**
+  - 127 assertions passed, 0 failed, 3 skipped
+  - Expected skips: Scenario 6, Scenario 7 overwrite prompt, Scenario 23 live CLI
+- `./bridge.sh pack` — **PASS**
+  - Rebuilt the 9 release archives
+- `shellcheck` — **SKIP**
+  - Not installed locally
 
 ## Code Quality
 
-- Go module: `github.com/etapsc/bridge` -- **PASS**
-- Feature status alignment: requirements.json and context.json both show F16-F19 as "review" -- **PASS**
-- All 7 specialization SKILL.md files present with valid frontmatter and domain-specific checklists -- **PASS**
-- All 3 personality profiles (strict, balanced, mentoring) have valid JSON with 8 vibe keys each -- **PASS**
-- `.goreleaser.yml` covers all 5 target platforms and bundles `profiles/*` + `specializations/*` in archives -- **PASS**
-- All 5 agent files have HUMAN: block instructions in Output sections -- **PASS**
-- CLAUDE.md has post-subagent HUMAN: block rule -- **PASS**
-- No stale files in project .claude/ (migrate, offload, reintegrate, external-handoff, external-reintegrate confirmed absent) -- **PASS**
-- All 9 release archives present at reasonable sizes (5K-28K) -- **PASS**
+- `bridge.sh` is the only installer surface; setup, add, orchestrator, and pack all run through subcommands on the same script — **PASS**
+- Personality overlays are applied during `bridge.sh new` and `bridge.sh add` with marker-based inserts into orchestrator, advisor, brainstorm, and role files — **PASS**
+- `bridge.sh add` now exits cleanly after install; the temporary staging cleanup no longer fails on shell exit — **PASS**
+- Go CLI sources, goreleaser config, and the stray binary release artifact are removed — **PASS**
+- Install-time specialization leftovers are removed; install no longer asks users to choose specialists up front — **PASS**
 
 ## Security
 
-- No `.env`, `.pem`, or `.key` files in repository -- **PASS**
-- No hardcoded secrets, API keys, or credentials in Go source or data files -- **PASS**
-- `go vet` reports zero issues -- **PASS**
-- No sensitive data patterns in specialization or profile files -- **PASS**
-- `.gitignore` excludes binary, dist, and tar.gz artifacts -- **PASS**
+- No `.env`, `.pem`, or `.key` files found in the repo — **PASS**
+- No shell runtime dependency added beyond the documented core utilities — **PASS**
+- Personality overlay data lives in local JSON profiles only; no secrets detected there — **PASS**
 
 ## Acceptance Test Evidence
 
-| Feature | AT ID | Criterion | Evidence | Status |
-|---------|-------|-----------|----------|--------|
-| F16 | AT14 | `bridge new --pack claude-code --name TestProject` creates correct project | `test-v3-binary.sh`: 9 assertions -- dir created, CLAUDE.md present, 15 commands, 5 agents, 6 skills, placeholders replaced, docs present, .bridge.json defaults correct. Also verified for codex pack (4 assertions). | **PASS** |
-| F16 | AT15 | `bridge add` adds without overwriting protected dirs | `test-v3-binary.sh`: 5 assertions -- exits 0, existing src/app.js preserved, existing README.md preserved, CLAUDE.md added, 15 commands added, .bridge.json created. | **PASS** |
-| F18 | AT16 | `bridge new --personality strict` injects vibe lines | `test-v3-binary.sh`: 3 assertions -- exits 0, .bridge.json records "strict", strict vibes injected into bridge-architect.md and bridge-coder.md. | **PASS** |
-| F18 | AT17 | `bridge customize --personality mentoring` swaps personality | `test-v3-binary.sh`: 3 assertions -- exits 0, .bridge.json updated to "mentoring", mentoring vibes injected into bridge-architect.md. | **PASS** |
-| F17 | AT18 | `bridge customize --add-spec frontend backend` copies skill files | `test-v3-binary.sh`: 4 assertions -- exits 0, bridge-spec-frontend/SKILL.md installed, bridge-spec-backend/SKILL.md installed, .bridge.json tracks both. | **PASS** |
-| F17 | AT19 | `bridge customize --remove-spec frontend` removes spec and updates .bridge.json | `test-v3-binary.sh`: 4 assertions -- exits 0, frontend dir removed, .bridge.json no longer lists frontend, backend still present. | **PASS** |
-| F16 | AT20 | `bridge` (no args) opens interactive TUI | Requires TTY -- cannot be verified in automated environment. | **NOT VERIFIED** |
-| F16 | AT21 | `bridge pack` builds all release archives | Requires runtime with pack sources -- not tested in automated environment. | **NOT VERIFIED** |
-| F16 | AT22 | `bridge orchestrator` produces same result as install-orchestrators.sh | Requires runtime with orchestrator pack sources -- not tested in automated environment. | **NOT VERIFIED** |
-| F18 | AT23 | `.bridge.json` tracks personality, specializations, pack type, and version | `test-v3-binary.sh` lifecycle test: 9 assertions -- initial state correct, personality swap persists, spec add/remove persists, pack and version unchanged through customizations. Plus unit tests in `config_test.go`. | **PASS** |
-| F17 | AT24 | Specialization skill files contain domain-specific checklists | `test-v3-binary.sh`: 6 assertions -- all 7 specs exist with YAML frontmatter, 30+ lines, domain-specific terms verified for frontend, api, and security. Eval validator scenarios 33-34 also pass. | **PASS** |
-| F19 | AT25 | Binary cross-compiles for all 5 targets | Direct cross-compile test: all 5 targets build successfully. `test-v3-binary.sh`: 8 assertions covering .goreleaser.yml validation and cross-compile. | **PASS** |
-
-## Additional Verifications (Post-Previous-Gate Changes)
-
-| Check | Evidence | Status |
-|-------|----------|--------|
-| 5 agent files have HUMAN: block instructions | `grep -l HUMAN:` finds all 5: bridge-architect.md, bridge-coder.md, bridge-debugger.md, bridge-auditor.md, bridge-evaluator.md | **PASS** |
-| CLAUDE.md has post-subagent HUMAN: block rule | Line 56: "After receiving subagent output: Always present the subagent's HUMAN: block..." | **PASS** |
-| No stale files in project .claude/ | `find` for migrate/offload/reintegrate/external-handoff/external-reintegrate returns empty | **PASS** |
-| Exactly 15 commands in .claude/commands/ | `ls` confirms exactly 15 .md files, no extras | **PASS** |
-| Exactly 6 skills in .claude/skills/ | `ls` confirms exactly 6 skill directories, no extras | **PASS** |
-| All 9 archives present and reasonable size | bridge-full (20K), bridge-standalone (18K), bridge-claude-code (23K), bridge-codex (19K), bridge-opencode (20K), bridge-controller (5.7K), bridge-multi-repo-claude-code (28K), bridge-multi-repo-codex (25K), bridge-dual-agent (5.3K) | **PASS** |
+| AT | Criterion | Evidence | Status |
+|----|-----------|----------|--------|
+| AT01 | `bridge.sh new --pack full` creates a working RooCode Full project | `test-setup-packs.sh`: 8 assertions | **PASS** |
+| AT02 | `bridge.sh new --pack standalone` creates a standalone project | `test-setup-packs.sh`: 5 assertions | **PASS** |
+| AT03 | `bridge.sh new --pack claude-code` creates a Claude Code project | `test-setup-packs.sh`: 6 assertions | **PASS** |
+| AT04 | `bridge.sh new --pack codex` creates a Codex project | `test-setup-packs.sh`: 6 assertions | **PASS** |
+| AT05 | All 15 commands are present in each core pack | `test-pack-consistency.sh`: command and exact-count checks | **PASS** |
+| AT06 | Existing-project commands work against an existing codebase | `test-pack-consistency.sh`: content checks for `bridge-scope` and `bridge-feature` | **PASS** |
+| AT07 | Orchestrator stays in fix loop when issues are reported | `test-pack-consistency.sh`: `ISSUES REPORTED` checks across all packs | **PASS** |
+| AT08 | Orchestrator advances only on explicit approval | `test-pack-consistency.sh`: `APPROVED` checks across all packs | **PASS** |
+| AT09 | Feedback loop appears in all required surfaces | `test-pack-consistency.sh` and `test-workflow-content.sh` | **PASS** |
+| AT10 | `bridge.sh pack` rebuilds the release archives | `test-advanced-packs.sh` and validator Scenario 8 | **PASS** |
+| AT11 | `bridge.sh new --pack opencode` creates an OpenCode project | `test-setup-packs.sh`: 6 assertions | **PASS** |
+| AT12 | Controller pack contains the required files | `test-advanced-packs.sh`: 9 assertions | **PASS** |
+| AT13 | Multi-repo pack contains both variants and required assets | `test-advanced-packs.sh`: 18 assertions across both variants | **PASS** |
+| AT14 | `bridge.sh new --personality strict` injects strict personality lines | `test-shell-personality.sh` and validator Scenario 24 | **PASS** |
+| AT15 | `bridge.sh add --personality mentoring` preserves existing files while injecting mentoring lines | `test-shell-personality.sh`: existing files preserved + mentoring overlay assertions | **PASS** |
 
 ## Blocking Issues
 
@@ -101,43 +70,11 @@ None.
 
 ## Warnings
 
-1. **[W01] RESOLVED (2026-03-14).** Feature statuses updated to "review" in both requirements.json and context.json.
-
-2. **[W02] Low test coverage in some packages.**
-   - `internal/pack`: 25.8% coverage
-   - `internal/customize`: 48.6% coverage
-   - `cmd/bridge`, `internal/cli`, `internal/tui`: 0% (no test files)
-   Recommendation: Add unit tests for CLI subcommands. Target 70%+ for customize and pack packages.
-
-3. **[W03] AT20, AT21, AT22 not verified in automated environment.**
-   - AT20 (interactive TUI) requires a TTY.
-   - AT21 (bridge pack) and AT22 (bridge orchestrator) require runtime execution with pack sources.
-   Recommendation: Verify AT20 manually. Add integration tests for AT21 and AT22.
-
-4. **[W04] `shellcheck` not installed.**
-   Shell script linting skipped for test.sh, setup.sh, package.sh, add-bridge.sh, install-orchestrators.sh, bridge.sh.
-   Recommendation: Install shellcheck and include in gate checks.
-
-5. **[W05] RESOLVED (2026-03-14).** v3 eval scenarios 24-37 generated and integrated into `validate-eval-scenarios.sh`. Full validator passes 222/222 (4 skips: TTY/live).
-
-6. **[W06] Codex agent-level personality application is limited.**
-   Codex defines agent roles inline in AGENTS.md rather than in separate files. Only the orchestrator vibe is applied to AGENTS.md; individual agent role vibes (architect, coder, debugger, evaluator) are not injected into Codex projects. The `.agents/skills/` and `.agents/procedures/` patterns do match advisor and brainstorm, and the gate-audit procedure. This is a known architectural limitation of the Codex pack format.
-   Recommendation: Document as a known limitation or add per-role marker insertion points in AGENTS.md.
-
-## Summary of Warning Status
-
-| Warning | Status | Notes |
-|---------|--------|-------|
-| W01 | RESOLVED | Feature statuses aligned |
-| W02 | OPEN | Low Go test coverage |
-| W03 | OPEN | 3 ATs require TTY/runtime |
-| W04 | OPEN | shellcheck not installed |
-| W05 | RESOLVED | v3 eval scenarios added |
-| W06 | OPEN | Codex personality limitation |
+1. `shellcheck` is not installed locally, so shell linting was skipped.
+2. Manual eval still needs a real terminal and/or live CLI for Scenario 6, Scenario 7 overwrite handling, and Scenario 23.
 
 ## Recommended Actions
 
-1. Increase test coverage for `internal/customize` (48.6%) and `internal/pack` (25.8%) packages.
-2. Manually verify AT20 (interactive TUI) in a TTY environment.
-3. Install shellcheck for shell script linting in future gates.
-4. Document Codex agent personality limitation or add per-role marker support.
+1. Run the remaining manual scenarios in `docs/gates-evals/eval-scenarios.md` from a real terminal.
+2. Review Scenario 24 alongside the other shell install flows and fill `docs/gates-evals/feedback-template.md`.
+3. Feed the results into `/bridge-feedback`; any new issues should keep work on S15 until explicitly approved.

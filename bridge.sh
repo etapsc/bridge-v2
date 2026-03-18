@@ -2,10 +2,9 @@
 set -euo pipefail
 
 # ============================================================
-# BRIDGE — Unified Shell Script (backward compatibility)
+# BRIDGE — Unified Shell Installer
 #
-# Combines: setup.sh, add-bridge.sh, install-orchestrators.sh
-# Prefer the Go binary (`bridge`) when available.
+# Single entrypoint for: new, add, orchestrator, pack
 #
 # Usage:
 #   bridge.sh new   [OPTIONS]   — create a new project
@@ -37,7 +36,7 @@ fi
 # ============================================================
 
 info()    { echo -e "${GREEN}>${RESET} $*"; }
-prompt()  { echo -en "${CYAN}?${RESET} $*"; }
+prompt()  { echo -en "${CYAN}?${RESET} $*" >&2; }
 warn()    { echo -e "${YELLOW}!${RESET} $*"; }
 header()  { echo -e "\n${BOLD}$*${RESET}\n"; }
 
@@ -127,17 +126,17 @@ replace_placeholder() {
 
 select_pack() {
     local include_dual="${1:-false}"
-    echo ""
-    echo "  Available packs:"
-    echo "    1) full        — Rules + Skills for RooCode (recommended)"
-    echo "    2) standalone  — Self-contained commands for RooCode"
-    echo "    3) claude-code — CLAUDE.md + agents + commands for Claude Code CLI"
-    echo "    4) codex       — AGENTS.md + skills for OpenAI Codex CLI"
-    echo "    5) opencode    — AGENTS.md + agents + commands for OpenCode CLI"
+    echo "" >&2
+    echo "  Available packs:" >&2
+    echo "    1) full        — Rules + Skills for RooCode (recommended)" >&2
+    echo "    2) standalone  — Self-contained commands for RooCode" >&2
+    echo "    3) claude-code — CLAUDE.md + agents + commands for Claude Code CLI" >&2
+    echo "    4) codex       — AGENTS.md + skills for OpenAI Codex CLI" >&2
+    echo "    5) opencode    — AGENTS.md + agents + commands for OpenCode CLI" >&2
     if [[ "$include_dual" == "true" ]]; then
-        echo "    6) dual-agent  — Overlay for Claude Code + Codex coordination"
+        echo "    6) dual-agent  — Overlay for Claude Code + Codex coordination" >&2
     fi
-    echo ""
+    echo "" >&2
     local pack_choice
     ask pack_choice "Select pack" "1"
     case "$pack_choice" in
@@ -161,6 +160,186 @@ validate_pack() {
         [[ "$pack" == "$v" ]] && return 0
     done
     return 1
+}
+
+validate_personality() {
+    case "$1" in
+        strict|balanced|mentoring) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+load_vibe_line() {
+    local personality="$1" role="$2"
+    local profile_file="${SCRIPT_DIR}/profiles/${personality}.json"
+    if [[ ! -f "$profile_file" ]]; then
+        echo "Error: Personality profile not found: ${profile_file}"
+        exit 1
+    fi
+
+    local vibe_line
+    vibe_line="$(grep -E "^[[:space:]]*\"${role}\"[[:space:]]*:" "$profile_file" | head -1 | sed -E 's/^[[:space:]]*"[^"]+"[[:space:]]*:[[:space:]]*"(.*)"[[:space:]]*,?[[:space:]]*$/\1/' | sed 's/\\"/"/g')"
+    if [[ -z "$vibe_line" ]]; then
+        echo "Error: Missing ${role} vibe in ${profile_file}"
+        exit 1
+    fi
+
+    printf '%s' "$vibe_line"
+}
+
+personality_role_for_path() {
+    local path="$1"
+    local name
+    name="$(basename "$path")"
+    if [[ "$name" == "SKILL.md" ]]; then
+        name="$(basename "$(dirname "$path")")"
+    else
+        name="${name%.md}"
+    fi
+
+    case "$name" in
+        bridge-architect|00-architect) echo "architect" ;;
+        bridge-coder|00-code) echo "coder" ;;
+        bridge-debugger|00-debug) echo "debugger" ;;
+        bridge-auditor|00-audit|bridge-gate-audit) echo "auditor" ;;
+        bridge-evaluator|00-evaluate|bridge-eval-generate) echo "evaluator" ;;
+        bridge-advisor) echo "advisor" ;;
+        bridge-brainstorm) echo "brainstorm" ;;
+        bridge-start|bridge-resume|00-orchestrator|bridge-slice-plan|bridge-session-management) echo "orchestrator" ;;
+        *) return 1 ;;
+    esac
+}
+
+insert_personality_block() {
+    local path="$1" vibe="$2"
+    local marker_start="<!-- bridge:personality -->"
+    local marker_end="<!-- /bridge:personality -->"
+    local block="${marker_start}
+**Personality:** ${vibe}
+${marker_end}"
+    local tmp_file
+    tmp_file="$(mktemp)"
+
+    if grep -Fq "$marker_start" "$path"; then
+        awk -v start="$marker_start" -v end="$marker_end" -v block="$block" '
+            BEGIN { replacing = 0; inserted = 0 }
+            index($0, start) > 0 {
+                if (!inserted) {
+                    print block
+                    inserted = 1
+                }
+                replacing = 1
+                next
+            }
+            replacing && index($0, end) > 0 {
+                replacing = 0
+                next
+            }
+            !replacing { print }
+        ' "$path" > "$tmp_file"
+    else
+        local inserted=false
+        local closing_frontmatter=""
+        if [[ "$(head -1 "$path")" == "---" ]]; then
+            closing_frontmatter="$(grep -n '^---$' "$path" | sed -n '2p' | cut -d: -f1 || true)"
+        fi
+
+        if [[ -n "$closing_frontmatter" ]]; then
+            awk -v line="$closing_frontmatter" -v block="$block" '
+                { print }
+                NR == line {
+                    print ""
+                    print block
+                }
+            ' "$path" > "$tmp_file"
+            inserted=true
+        else
+            local first_heading=""
+            first_heading="$(grep -n '^# ' "$path" | head -1 | cut -d: -f1 || true)"
+            if [[ -n "$first_heading" ]]; then
+                awk -v line="$first_heading" -v block="$block" '
+                    { print }
+                    NR == line {
+                        print ""
+                        print block
+                    }
+                ' "$path" > "$tmp_file"
+                inserted=true
+            fi
+        fi
+
+        if [[ "$inserted" == false ]]; then
+            {
+                printf '%s\n\n' "$block"
+                cat "$path"
+            } > "$tmp_file"
+        fi
+    fi
+
+    mv "$tmp_file" "$path"
+}
+
+apply_personality() {
+    local target_dir="$1" personality="$2"
+    [[ "$personality" == "balanced" ]] && return 0
+
+    local rel_path role vibe patched=0
+    local candidates=(
+        "CLAUDE.md"
+        "AGENTS.md"
+        ".roo/rules-orchestrator/00-orchestrator.md"
+        ".roo/rules-architect/00-architect.md"
+        ".roo/rules-code/00-code.md"
+        ".roo/rules-debug/00-debug.md"
+        ".roo/rules-audit/00-audit.md"
+        ".roo/rules-evaluate/00-evaluate.md"
+        ".roo/commands/bridge-start.md"
+        ".roo/commands/bridge-resume.md"
+        ".roo/commands/bridge-brainstorm.md"
+        ".roo/commands/bridge-advisor.md"
+        ".claude/agents/bridge-architect.md"
+        ".claude/agents/bridge-coder.md"
+        ".claude/agents/bridge-debugger.md"
+        ".claude/agents/bridge-auditor.md"
+        ".claude/agents/bridge-evaluator.md"
+        ".claude/commands/bridge-brainstorm.md"
+        ".claude/commands/bridge-advisor.md"
+        ".opencode/agents/bridge-architect.md"
+        ".opencode/agents/bridge-coder.md"
+        ".opencode/agents/bridge-debugger.md"
+        ".opencode/agents/bridge-auditor.md"
+        ".opencode/agents/bridge-evaluator.md"
+        ".opencode/commands/bridge-brainstorm.md"
+        ".opencode/commands/bridge-advisor.md"
+        ".agents/skills/bridge-brainstorm/SKILL.md"
+        ".agents/skills/bridge-advisor/SKILL.md"
+        ".agents/procedures/bridge-slice-plan.md"
+        ".agents/procedures/bridge-session-management.md"
+        ".agents/procedures/bridge-gate-audit.md"
+        ".agents/procedures/bridge-eval-generate.md"
+    )
+
+    for rel_path in "${candidates[@]}"; do
+        local full_path="${target_dir}/${rel_path}"
+        [[ -f "$full_path" ]] || continue
+
+        if [[ "$rel_path" == "CLAUDE.md" || "$rel_path" == "AGENTS.md" ]]; then
+            role="orchestrator"
+        else
+            role="$(personality_role_for_path "$full_path" || true)"
+            [[ -n "$role" ]] || continue
+        fi
+
+        vibe="$(load_vibe_line "$personality" "$role")"
+        insert_personality_block "$full_path" "$vibe"
+        patched=$((patched + 1))
+    done
+
+    if [[ "$patched" -gt 0 ]]; then
+        info "Applied ${personality} personality to ${patched} files"
+    else
+        warn "No personality targets found for ${personality}"
+    fi
 }
 
 print_next_steps() {
@@ -196,12 +375,13 @@ print_next_steps() {
 # COMMAND: new — Create a new project
 # ============================================================
 cmd_new() {
-    local PROJECT_NAME="" PACK="" OUTPUT_DIR=""
+    local PROJECT_NAME="" PACK="" OUTPUT_DIR="" PERSONALITY="balanced"
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -n|--name)    PROJECT_NAME="$2"; shift 2 ;;
             -p|--pack)    PACK="$2"; shift 2 ;;
+            --personality) PERSONALITY="$2"; shift 2 ;;
             -o|--output)  OUTPUT_DIR="$2"; shift 2 ;;
             -r|--repo)    GITHUB_REPO="$2"; shift 2 ;;
             -v|--version) VERSION="$2"; shift 2 ;;
@@ -213,6 +393,7 @@ cmd_new() {
                 echo "Options:"
                 echo "  -n, --name NAME    Project name (required)"
                 echo "  -p, --pack PACK    Pack: full, standalone, claude-code, codex, opencode"
+                echo "      --personality  Personality: strict, balanced, mentoring (default: balanced)"
                 echo "  -o, --output DIR   Output parent directory (default: .)"
                 echo "  -r, --repo REPO    GitHub repo (default: $GITHUB_REPO)"
                 echo "  -v, --version TAG  Release tag (default: latest)"
@@ -228,6 +409,10 @@ cmd_new() {
     fi
     if ! validate_pack "$PACK"; then
         echo "Error: Invalid pack '$PACK'. Must be: full, standalone, claude-code, codex, opencode."
+        exit 1
+    fi
+    if ! validate_personality "$PERSONALITY"; then
+        echo "Error: Invalid personality '$PERSONALITY'. Must be: strict, balanced, mentoring."
         exit 1
     fi
     if [[ -z "$PROJECT_NAME" ]]; then
@@ -254,6 +439,7 @@ cmd_new() {
     echo "  Project:   $PROJECT_NAME"
     echo "  Slug:      $PROJECT_SLUG"
     echo "  Pack:      $PACK"
+    echo "  Personality: $PERSONALITY"
     echo "  Directory: $PROJECT_DIR"
     echo ""
 
@@ -262,6 +448,7 @@ cmd_new() {
 
     echo "Personalizing files..."
     replace_placeholder "$PROJECT_DIR" "$PROJECT_NAME"
+    apply_personality "$PROJECT_DIR" "$PERSONALITY"
 
     mkdir -p "$PROJECT_DIR/docs/contracts" "$PROJECT_DIR/tests/unit" \
              "$PROJECT_DIR/tests/integration" "$PROJECT_DIR/tests/e2e" \
@@ -359,12 +546,13 @@ install_dual_agent_overlay() {
 }
 
 cmd_add() {
-    local PROJECT_NAME="" PACK="" TARGET_DIR=""
+    local PROJECT_NAME="" PACK="" TARGET_DIR="" PERSONALITY="balanced"
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -n|--name)    PROJECT_NAME="$2"; shift 2 ;;
             -p|--pack)    PACK="$2"; shift 2 ;;
+            --personality) PERSONALITY="$2"; shift 2 ;;
             -t|--target)  TARGET_DIR="$2"; shift 2 ;;
             -r|--repo)    GITHUB_REPO="$2"; shift 2 ;;
             -v|--version) VERSION="$2"; shift 2 ;;
@@ -377,6 +565,7 @@ cmd_add() {
                 echo "Options:"
                 echo "  -n, --name NAME    Project name (required)"
                 echo "  -p, --pack PACK    Pack: full, standalone, claude-code, codex, opencode, dual-agent"
+                echo "      --personality  Personality: strict, balanced, mentoring (default: balanced)"
                 echo "  -t, --target DIR   Target project directory (default: .)"
                 echo "  -r, --repo REPO    GitHub repo (default: $GITHUB_REPO)"
                 echo "  -v, --version TAG  Release tag (default: latest)"
@@ -390,7 +579,11 @@ cmd_add() {
         [[ "$PACK" == "INVALID" ]] && { echo "Error: Invalid pack."; exit 1; }
     fi
     if ! validate_pack "$PACK" true; then
-        echo "Error: Invalid pack '$PACK'."
+        echo "Error: Invalid pack '$PACK'. Must be: full, standalone, claude-code, codex, opencode, dual-agent."
+        exit 1
+    fi
+    if ! validate_personality "$PERSONALITY"; then
+        echo "Error: Invalid personality '$PERSONALITY'. Must be: strict, balanced, mentoring."
         exit 1
     fi
     if [[ -z "$PROJECT_NAME" ]]; then
@@ -411,6 +604,7 @@ cmd_add() {
     header "Adding BRIDGE to existing project..."
     echo "  Project: $PROJECT_NAME"
     echo "  Pack:    $PACK"
+    echo "  Personality: $PERSONALITY"
     echo "  Target:  $TARGET_DIR"
     if [[ "$PACK" == "dual-agent" ]]; then
         echo "  Mode:    managed overlay (updates include per-file backups)"
@@ -422,7 +616,7 @@ cmd_add() {
     # Stage to temp dir
     local STAGING_DIR
     STAGING_DIR="$(mktemp -d)"
-    trap 'rm -rf "$STAGING_DIR"' EXIT
+    trap 'rm -rf "${STAGING_DIR:-}"' EXIT
 
     resolve_source "bridge-${PACK}" "$STAGING_DIR"
 
@@ -460,6 +654,8 @@ cmd_add() {
             INSTALLED+=("$rel")
         done < <(find "$STAGING_DIR" -type f -print0)
     fi
+
+    apply_personality "$TARGET_DIR" "$PERSONALITY"
 
     # Report
     echo ""
@@ -891,8 +1087,7 @@ main() {
         -h|--help|help)
             echo "Usage: $(basename "$0") <command> [OPTIONS]"
             echo ""
-            echo "BRIDGE — unified shell installer (backward compatibility)"
-            echo "Prefer the Go binary when available: bridge new | bridge add | ..."
+            echo "BRIDGE — unified shell installer"
             echo ""
             echo "Commands:"
             echo "  new            Create a new project"

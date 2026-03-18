@@ -1,4 +1,4 @@
-# Evaluation Feedback -- BRIDGE v3 Toolkit
+# Evaluation Feedback -- BRIDGE v2.2 Toolkit
 
 Evaluator: ___________________
 Date: ___________________
@@ -114,8 +114,8 @@ Platform tested (if Scenario 23): ___________________
 
 ### Automated Test Suite
 - [ ] Pass  [ ] Fail  [ ] Skip
-- Smoke checks passed: ___ / 45
-- E2E assertions passed: ___ / 114
+- Smoke checks passed: ___ / 56
+- E2E assertions passed: ___ / 123
 - Notes: ___
 
 ---
@@ -145,85 +145,9 @@ Platform tested (if Scenario 23): ___________________
 
 ---
 
-## Go TUI Binary (Scenarios 24-30) -- v3
+## Personality Overlay (Scenario 24)
 
-### Binary Build and Help (Scenario 24)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### bridge new -- Claude Code (Scenario 25)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### bridge new -- Codex (Scenario 26)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### bridge new with Personality (Scenario 27)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### bridge new with Specializations (Scenario 28)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### bridge add -- Existing Project (Scenario 29)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### Interactive TUI (Scenario 30)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
----
-
-## Customization (Scenarios 31-32) -- v3
-
-### Personality Swap (Scenario 31)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### Add/Remove Specializations (Scenario 32)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
----
-
-## Data Quality (Scenarios 33-34) -- v3
-
-### Specialization Content Quality (Scenario 33)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### Personality Profile Quality (Scenario 34)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
----
-
-## Cross-Platform and Error Handling (Scenarios 35-37) -- v3
-
-### Cross-Platform Build (Scenario 35)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### bridge new Error Handling (Scenario 36)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### .bridge.json Config Tracking (Scenario 37)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
----
-
-## Agent & Template Integrity (Scenarios 38-39) -- v3
-
-### Agent HUMAN: Block Instructions (Scenario 38)
-- [ ] Pass  [ ] Fail  [ ] Skip
-- Notes: ___
-
-### Project .claude/ Integrity (Scenario 39)
+### Shell Personality Install
 - [ ] Pass  [ ] Fail  [ ] Skip
 - Notes: ___
 
@@ -240,12 +164,10 @@ Platform tested (if Scenario 23): ___________________
 
 | Category | Rating | Notes |
 |----------|--------|-------|
-| Setup experience (setup.sh) | ___ | |
-| Go binary experience (bridge) | ___ | |
+| Setup experience | ___ | |
+| Personality overlay | ___ | |
 | Command clarity | ___ | |
 | Pack consistency | ___ | |
-| Personality system | ___ | |
-| Specialization system | ___ | |
 | Documentation quality | ___ | |
 | Methodology coherence | ___ | |
 | DX (developer experience) | ___ | |

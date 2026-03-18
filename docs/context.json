@@ -1,7 +1,7 @@
 {
   "schema": "context.v1",
-  "project": "BRIDGE Toolkit",
-  "last_updated": "2026-03-14",
+  "project": "BRIDGE v2.2 Toolkit",
+  "last_updated": "2026-03-18",
   "feature_status": {
     "F01": "done",
     "F02": "done",
@@ -18,10 +18,7 @@
     "F13": "done",
     "F14": "done",
     "F15": "done",
-    "F16": "review",
-    "F17": "review",
-    "F18": "review",
-    "F19": "review"
+    "F16": "review"
   },
   "slice_history": [
     {
@@ -113,24 +110,29 @@
       "goal": "Add a single eval-scenario validator script and sync the eval docs to current pack reality",
       "status": "done",
       "notes": "Added tests/e2e/validate-eval-scenarios.sh to run scenarios 1-23 from docs/gates-evals/eval-scenarios.md in order, including guided TTY handoff for the interactive setup.sh cases and the live-agent scenario. Synced eval-scenarios.md to the current 9-archive release set and canonical full-pack orchestrator path, and documented the feedback loop in reference/BRIDGE-v2.1-methodology.md so Scenario 17 is executable."
+    },
+    {
+      "id": "S15",
+      "goal": "Remove the rejected Go installer branch and restore a shell-first installer surface with personality overlays",
+      "status": "done",
+      "notes": "Removed the Go CLI/goreleaser tree and leftover binary archive, deleted the install-time specialization catalog, standardized the shell surface on bridge.sh only, added personality overlays to bridge.sh new/add, fixed cmd_add cleanup so bridge.sh add exits 0, and added shell-personality coverage to test.sh plus validate-eval-scenarios.sh. Validation passes: bash test.sh (56 passed, 0 failed), bash tests/e2e/validate-eval-scenarios.sh --skip-interactive --skip-live (127 passed, 0 failed, 3 skipped)."
     }
   ],
   "current_slice": "S15",
   "handoff": {
-    "stopped_at": "All discrepancies resolved. requirements.json F16-F19 statuses updated to review. validate-eval-scenarios.sh extended with v3 scenarios 24-37. Full validator passes 222/222 (4 skips: TTY/live). Awaiting human eval feedback.",
-    "next_immediate": "Human evaluates v3 features using docs/gates-evals/eval-scenarios.md and fills docs/gates-evals/feedback-template.md. After feedback: /bridge-feedback to triage.",
+    "stopped_at": "Slice S15 applied (2026-03-18) — the rejected Go installer / v3 branch is gone. bridge.sh is the only installer entrypoint, and install-time personalities are the only new setup-time behavior.",
+    "next_immediate": "Run the remaining manual evaluation scenarios that need a real terminal (Scenarios 6, 7, and 23 in docs/gates-evals/eval-scenarios.md), sanity-check Scenario 24, then fill docs/gates-evals/feedback-template.md and run /bridge-feedback with the results.",
     "watch_out": [
-      "Do not reintroduce `SKILL.md` files under `.agents/skills/` for internal procedures, or they will appear in Codex `$` discovery",
-      "Do not add `profiles.bridge.web_search` back to config defaults unless verified against the current Codex config schema",
-      "Do not reintroduce deleted `bridge-claude-code/project` or `bridge-claude-code/plugin` paths into generated docs or tests — the root `bridge-claude-code/.claude` layout is the canonical source",
-      "In multi-repo packs, repo topology lives in docs/requirements.json `workspace.repos`; runtime execution state lives in docs/context.json `repo_commands` and `repo_state`",
-      "shellcheck is still not installed locally, so shell-script linting was skipped in the 2026-03-10 gate",
-      "Scenarios 6, 7, 23, and 30 in tests/e2e/validate-eval-scenarios.sh require a real TTY; Scenario 23 also requires a supported live CLI such as Claude, Codex, or OpenCode"
+      "Do not reintroduce a compiled installer, Go CLI, goreleaser config, or binary setup artifacts for BRIDGE",
+      "Do not ask users to choose domain specializations during install; if specialist add-ons return later, they belong in requirements/start/resume, not bridge.sh new/add",
+      "bridge.sh is the only installer surface; do not reintroduce setup.sh, add-bridge.sh, install-orchestrators.sh, or package.sh",
+      "shellcheck is still not installed locally, so shell-script linting remains skipped",
+      "Scenarios 6 and 7 in tests/e2e/validate-eval-scenarios.sh require a real TTY; Scenario 23 requires a supported live CLI such as Claude, Codex, or OpenCode"
     ]
   },
   "next_slice": null,
   "quality_gates": {
-    "last_run": "2026-03-14",
+    "last_run": "2026-03-18",
     "status": "pass"
   },
   "gate_history": [
@@ -159,50 +161,21 @@
       "notes": "Post-restructure validation rerun after canonicalizing the Claude pack layout and aligning multi-repo docs/templates. 45/45 smoke checks pass, 114/114 E2E assertions pass, and generated gate/eval artifacts now match the current 9 release archives. Remaining non-blocking warning: shellcheck not installed."
     },
     {
-      "date": "2026-03-12",
-      "result": "fail",
-      "features": ["F16", "F17", "F18", "F19"],
-      "blocking_issues": 3,
-      "warnings": 5,
-      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
-      "notes": "BRIDGE v3 gate audit. Go binary builds and cross-compiles (linux/amd64, darwin/arm64, windows/amd64). bridge new works correctly. 7 specializations and 3 personality profiles are well-structured. 3 blocking issues: (B01) customize --personality fails when binary is not co-located with profiles/ directory, (B02) personality patching skips advisor and brainstorm roles (2 of 8 defined roles), (B03) Codex agent file pattern missing from personality patcher. 5 warnings: stale feature statuses, low test coverage, 4 ATs not verified, shellcheck not installed, no v3 eval scenarios."
-    },
-    {
-      "date": "2026-03-12",
-      "result": "fail",
-      "features": ["F16", "F17", "F18", "F19"],
-      "blocking_issues": 1,
-      "warnings": 6,
-      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
-      "notes": "Retest after B01/B02/B03 fixes. All 3 previous blockers resolved: resolveDataDir() searches 4 locations (B01), agentMappings has 7 entries with stem keywords (B02), patterns cover 7 globs across all pack types (B03). New blocker B04: bridge new and bridge add store personality in .bridge.json but never call ApplyPersonality() -- vibe lines not injected during project creation, violating AT16. 16 Go tests pass, 45 smoke tests pass, 82 E2E assertions pass. Cross-compile verified for 4 targets."
-    },
-    {
-      "date": "2026-03-13",
+      "date": "2026-03-18",
       "result": "pass",
-      "features": ["F16", "F17", "F18", "F19"],
+      "features": ["F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10", "F11", "F12", "F13", "F14", "F15", "F16"],
       "blocking_issues": 0,
-      "warnings": 6,
-      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
-      "notes": "All 4 previous blockers (B01-B04) verified resolved. B04 fix confirmed: new.go and add.go now call ApplyPersonality() and AddSpecialization() after pack extraction. 16 Go tests pass, 45 smoke tests pass, 82 E2E assertions pass. Cross-compile verified for 5 targets (linux/amd64, linux/arm64, darwin/amd64, darwin/arm64, windows/amd64). 6 warnings: stale feature statuses, low test coverage, 3 ATs not verified (AT20/AT21/AT22 require TTY/runtime), shellcheck not installed, no v3 eval scenarios, Codex agent-level personality limited."
-    },
-    {
-      "date": "2026-03-14",
-      "result": "pass",
-      "features": ["F16", "F17", "F18", "F19"],
-      "blocking_issues": 0,
-      "warnings": 4,
-      "coverage": "config:83.3%, customize:48.6%, pack:25.8%",
-      "notes": "Post-change verification gate. W01 and W05 confirmed resolved (feature statuses aligned, v3 eval scenarios 24-37 added). All 5 agent files have HUMAN: block instructions. CLAUDE.md has post-subagent HUMAN: block rule. No stale files in project .claude/. All 9 archives present. 16 Go tests pass, 45 smoke tests pass, 184 E2E assertions pass (5 suites), 222 eval validator assertions pass (4 skips: TTY/live). Cross-compile verified for 5 targets. 4 remaining warnings: W02 (low coverage), W03 (AT20/AT21/AT22 not verified), W04 (shellcheck), W06 (Codex personality)."
+      "warnings": 2,
+      "notes": "Shell-first rollback gate after rejecting the Go/v3 branch. bridge.sh new/add/pack verified as the only installer surface, Go/specialization leftovers removed, and install-time personalities validated. bash test.sh passes 56/56 top-level checks with 123/123 E2E assertions across 5 suites; validate-eval-scenarios.sh --skip-interactive --skip-live passes 127 assertions with 3 expected skips. Remaining warnings: shellcheck not installed; interactive/live scenarios still require manual verification."
     }
   ],
   "commands_to_run": {
     "test": "bash test.sh",
-    "e2e": "for f in tests/e2e/test-setup-packs.sh tests/e2e/test-pack-consistency.sh tests/e2e/test-advanced-packs.sh tests/e2e/test-workflow-content.sh tests/e2e/test-v3-binary.sh; do bash \"$f\"; done",
-    "e2e_v3": "bash tests/e2e/test-v3-binary.sh",
+    "e2e": "for f in tests/e2e/test-setup-packs.sh tests/e2e/test-pack-consistency.sh tests/e2e/test-advanced-packs.sh tests/e2e/test-workflow-content.sh tests/e2e/test-shell-personality.sh; do bash \"$f\"; done",
     "eval_validator": "bash tests/e2e/validate-eval-scenarios.sh --skip-interactive --skip-live",
     "eval_validator_full": "bash tests/e2e/validate-eval-scenarios.sh",
-    "package": "./package.sh",
-    "verify_commands": "for pack in bridge-full bridge-standalone bridge-claude-code bridge-codex bridge-opencode; do echo \"=== $pack ===\"; find $pack -name '*.md' | grep -c command; done",
+    "package": "./bridge.sh pack",
+    "verify_shell_entrypoint": "sed -n '1,80p' bridge.sh",
     "verify_feedback_loop": "grep -rl 'ISSUES REPORTED' bridge-full/ bridge-standalone/ bridge-claude-code/ bridge-codex/ bridge-opencode/ | sort"
   },
   "eval_history": [
@@ -223,20 +196,19 @@
       "notes": "Refreshed evaluation pack after the Claude pack flattening and multi-repo doc cleanup. 23 manual scenarios now target the canonical root `bridge-claude-code` layout and 9 release archives. E2E suite results: test-setup-packs.sh (32 assertions), test-pack-consistency.sh (24 assertions), test-advanced-packs.sh (37 assertions), test-workflow-content.sh (21 assertions). All 114 assertions pass."
     },
     {
-      "date": "2026-03-13",
-      "scenarios_generated": 14,
-      "e2e_tests_generated": 1,
-      "e2e_test_assertions": 70,
+      "date": "2026-03-17",
+      "scenarios_generated": 24,
+      "e2e_tests_generated": 5,
+      "e2e_test_assertions": 123,
+      "feedback_received": "2026-03-17",
+      "issues_found": {
+        "high": 1,
+        "medium": 0,
+        "low": 0
+      },
+      "action": "iterate",
       "awaiting_feedback": true,
-      "notes": "v3 evaluation pack for F16-F19. 14 new manual scenarios (24-37) covering Go TUI binary (bridge new, add, customize, error handling), domain specializations (7 specs, content quality), personality packs (3 profiles, vibe injection, personality swap), cross-platform distribution (goreleaser, 5 cross-compile targets), and .bridge.json lifecycle tracking. 1 new E2E test script: test-v3-binary.sh (70 assertions). All 70 assertions pass. Cumulative totals: 37 scenarios, 5 E2E test scripts, 184 assertions."
-    },
-    {
-      "date": "2026-03-14",
-      "scenarios_generated": 2,
-      "e2e_tests_generated": 0,
-      "e2e_test_assertions": 0,
-      "awaiting_feedback": true,
-      "notes": "Added 2 new scenarios (38-39) for agent HUMAN: block instructions and project .claude/ integrity verification. Updated validate-eval-scenarios.sh with 29 new assertions (251 total, 4 TTY/live skips). Updated feedback-template.md with sections for scenarios 38-39. Cumulative totals: 39 scenarios, 5 E2E test scripts, 184 E2E assertions, 251 eval validator assertions."
+      "notes": "High-severity feedback rejected the Go installer / install-time specialization direction. S15 reset BRIDGE to a shell-first installer surface, removed Go and specialization leftovers, added install-time personalities to bridge.sh new/add, and refreshed the eval pack with Scenario 24 for shell personalities. Current validation: bash test.sh passes 56 top-level checks, and validate-eval-scenarios.sh --skip-interactive --skip-live passes 127 assertions with 3 skips."
     }
   ],
   "discrepancies": [
@@ -281,6 +253,13 @@
       "description": "Multi-repo docs mixed topology and runtime state by treating repo paths as coming from context.json and leaving a stale `commands_to_run` block in context templates",
       "affected": ["F15"],
       "resolution": "resolved in S13 — repo paths now consistently come from requirements.json `workspace.repos`, and multi-repo context templates keep only runtime state (`repo_commands`, `repo_state`, handoff/history)"
+    },
+    {
+      "id": "D07",
+      "date": "2026-03-17",
+      "description": "Project docs and artifacts still described the rejected Go/v3 installer branch after the codebase moved back to a shell-first setup flow",
+      "affected": ["F05", "F10", "F16"],
+      "resolution": "resolved in S15 — removed Go sources/artifacts and install-time specialization leftovers, then regenerated the gate/eval/context docs around the shell-first installer plus personality overlays"
     }
   ]
 }

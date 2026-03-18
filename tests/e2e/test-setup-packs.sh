@@ -3,7 +3,7 @@ set -euo pipefail
 
 # ============================================================
 # BRIDGE v2.1 -- E2E Tests: Setup Script Pack Creation
-# Tests AT01-AT04, AT11 (setup.sh creates working projects)
+# Tests AT01-AT04, AT11 (bridge.sh new creates working projects)
 # Maps to: UF01 (Greenfield Project), F01-F05, F11
 # ============================================================
 
@@ -25,13 +25,13 @@ trap 'rm -rf "$TMPDIR_BASE"' EXIT
 # ============================================================
 # Test: Full Pack (AT01)
 # ============================================================
-section "AT01: setup.sh --pack full"
+section "AT01: bridge.sh new --pack full"
 
 OUT="${TMPDIR_BASE}/full"
 mkdir -p "$OUT"
 
-if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Full Test" --pack full -o "$OUT" >/dev/null 2>&1; then
-  pass "setup.sh --pack full exits 0"
+if bash "${BRIDGE_ROOT}/bridge.sh" new --name "E2E Full Test" --pack full -o "$OUT" >/dev/null 2>&1; then
+  pass "bridge.sh new --pack full exits 0"
   PROJECT="${OUT}/e2e-full-test"
 
   # 15 commands
@@ -69,19 +69,19 @@ if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Full Test" --pack full -o "$OUT" >
   [[ -d "${PROJECT}/tests/e2e" ]] && pass "tests/e2e/ directory created" || fail "tests/e2e/ missing"
   [[ -d "${PROJECT}/src" ]] && pass "src/ directory created" || fail "src/ missing"
 else
-  fail "setup.sh --pack full exited with error"
+  fail "bridge.sh new --pack full exited with error"
 fi
 
 # ============================================================
 # Test: Claude Code Pack (AT03)
 # ============================================================
-section "AT03: setup.sh --pack claude-code"
+section "AT03: bridge.sh new --pack claude-code"
 
 OUT="${TMPDIR_BASE}/claude-code"
 mkdir -p "$OUT"
 
-if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Claude Test" --pack claude-code -o "$OUT" >/dev/null 2>&1; then
-  pass "setup.sh --pack claude-code exits 0"
+if bash "${BRIDGE_ROOT}/bridge.sh" new --name "E2E Claude Test" --pack claude-code -o "$OUT" >/dev/null 2>&1; then
+  pass "bridge.sh new --pack claude-code exits 0"
   PROJECT="${OUT}/e2e-claude-test"
 
   # CLAUDE.md with project name
@@ -110,19 +110,19 @@ if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Claude Test" --pack claude-code -o
     pass "All placeholders replaced"
   fi
 else
-  fail "setup.sh --pack claude-code exited with error"
+  fail "bridge.sh new --pack claude-code exited with error"
 fi
 
 # ============================================================
 # Test: Codex Pack (AT04)
 # ============================================================
-section "AT04: setup.sh --pack codex"
+section "AT04: bridge.sh new --pack codex"
 
 OUT="${TMPDIR_BASE}/codex"
 mkdir -p "$OUT"
 
-if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Codex Test" --pack codex -o "$OUT" >/dev/null 2>&1; then
-  pass "setup.sh --pack codex exits 0"
+if bash "${BRIDGE_ROOT}/bridge.sh" new --name "E2E Codex Test" --pack codex -o "$OUT" >/dev/null 2>&1; then
+  pass "bridge.sh new --pack codex exits 0"
   PROJECT="${OUT}/e2e-codex-test"
 
   # AGENTS.md
@@ -150,19 +150,19 @@ if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Codex Test" --pack codex -o "$OUT"
     pass "All placeholders replaced"
   fi
 else
-  fail "setup.sh --pack codex exited with error"
+  fail "bridge.sh new --pack codex exited with error"
 fi
 
 # ============================================================
 # Test: Standalone Pack (AT02)
 # ============================================================
-section "AT02: setup.sh --pack standalone"
+section "AT02: bridge.sh new --pack standalone"
 
 OUT="${TMPDIR_BASE}/standalone"
 mkdir -p "$OUT"
 
-if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Standalone Test" --pack standalone -o "$OUT" >/dev/null 2>&1; then
-  pass "setup.sh --pack standalone exits 0"
+if bash "${BRIDGE_ROOT}/bridge.sh" new --name "E2E Standalone Test" --pack standalone -o "$OUT" >/dev/null 2>&1; then
+  pass "bridge.sh new --pack standalone exits 0"
   PROJECT="${OUT}/e2e-standalone-test"
 
   # 15 commands
@@ -191,19 +191,19 @@ if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E Standalone Test" --pack standalone
     pass "All placeholders replaced"
   fi
 else
-  fail "setup.sh --pack standalone exited with error"
+  fail "bridge.sh new --pack standalone exited with error"
 fi
 
 # ============================================================
 # Test: OpenCode Pack (AT11)
 # ============================================================
-section "AT11: setup.sh --pack opencode"
+section "AT11: bridge.sh new --pack opencode"
 
 OUT="${TMPDIR_BASE}/opencode"
 mkdir -p "$OUT"
 
-if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E OpenCode Test" --pack opencode -o "$OUT" >/dev/null 2>&1; then
-  pass "setup.sh --pack opencode exits 0"
+if bash "${BRIDGE_ROOT}/bridge.sh" new --name "E2E OpenCode Test" --pack opencode -o "$OUT" >/dev/null 2>&1; then
+  pass "bridge.sh new --pack opencode exits 0"
   PROJECT="${OUT}/e2e-opencode-test"
 
   # AGENTS.md
@@ -232,7 +232,7 @@ if bash "${BRIDGE_ROOT}/setup.sh" --name "E2E OpenCode Test" --pack opencode -o 
     pass "All placeholders replaced"
   fi
 else
-  fail "setup.sh --pack opencode exited with error"
+  fail "bridge.sh new --pack opencode exited with error"
 fi
 
 # ============================================================

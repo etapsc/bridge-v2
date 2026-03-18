@@ -18,7 +18,7 @@ Both modes are valid. The orchestrator-driven flow is simpler; command-driven gi
 ### Setup
 
 ```bash
-./setup.sh --name "My Project" --pack full
+./bridge.sh new --name "My Project" --pack full
 ```
 
 Installs into your project:
@@ -91,7 +91,7 @@ The orchestrator mode delegates to other modes during `/bridge-start`. Each mode
 ### Setup
 
 ```bash
-./setup.sh --name "My Project" --pack standalone
+./bridge.sh new --name "My Project" --pack standalone
 ```
 
 Installs into your project:
@@ -124,7 +124,7 @@ The workflows (greenfield, existing project, session continuity) are identical t
 ### Setup
 
 ```bash
-./setup.sh --name "My Project" --pack claude-code
+./bridge.sh new --name "My Project" --pack claude-code
 ```
 
 Installs into your project:
@@ -199,7 +199,7 @@ Each subagent gets isolated context — only the relevant JSON slices and file p
 ### Setup
 
 ```bash
-./setup.sh --name "My Project" --pack codex
+./bridge.sh new --name "My Project" --pack codex
 ```
 
 Installs into your project:

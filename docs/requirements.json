@@ -1,10 +1,10 @@
 {
   "schema": "bridge.v2",
   "project": {
-    "name": "BRIDGE Toolkit",
-    "description": "Distributable methodology toolkit for AI-assisted software development. Provides structured workflows (Brainstorm → Requirements → Implementation Design → Develop → Gate → Evaluate) across multiple AI coding platforms. v3 adds an interactive Go TUI binary, domain specializations, and personality packs.",
+    "name": "BRIDGE v2.2 Toolkit",
+    "description": "Distributable methodology toolkit for AI-assisted software development. Provides structured workflows (Brainstorm → Requirements → Implementation Design → Develop → Gate → Evaluate) across multiple AI coding platforms. v2.2 keeps a shell-first installer surface and adds install-time personality overlays.",
     "type": "developer-tooling",
-    "version": "3.0"
+    "version": "2.2"
   },
   "scope": {
     "in_scope": [
@@ -12,35 +12,32 @@
       "Advanced orchestrator packs: Controller and Multi-Repo",
       "15 slash commands consistent across all packs",
       "6 procedure skills per pack (adapted to pack architecture)",
-      "Go TUI binary (bridge) replacing all shell scripts: new, add, orchestrator, customize, pack",
-      "Domain specialization skills: frontend, backend, api, data, infra, mobile, security",
-      "Personality packs: strict, balanced, mentoring — project-wide agent tone overlay",
+      "Unified shell installer (`bridge.sh`) for new, add, orchestrator, and pack workflows",
+      "Install-time personality overlays: strict, balanced, mentoring",
       "reference/BRIDGE-v2.1-methodology.md comprehensive methodology doc",
       "README.md with installation and usage instructions",
-      "docs/ templates: requirements.json, context.json, decisions.md, human-playbook.md",
-      "Cross-platform distribution: Linux, macOS, Windows binaries via goreleaser"
+      "docs/ templates: requirements.json, context.json, decisions.md, human-playbook.md"
     ],
     "out_of_scope": [
       "GUI or web interface",
-      "Auto-update mechanism (beyond bridge update to refresh cache)",
-      "IDE plugins or extensions beyond supported platforms",
-      "Language-specific specializations (models already know language idioms)"
+      "Package manager distribution (npm, pip, brew)",
+      "Auto-update mechanism",
+      "Compiled installer or TUI binary"
     ],
     "non_goals": [
       "Replace the AI coding agent itself — BRIDGE is a methodology layer, not an agent",
       "Support every possible AI coding tool — focus on RooCode, Claude Code, Codex, OpenCode",
-      "Become a 100-agent catalog — stay lean with 5 core agents augmented by composable specializations"
+      "Ask users to choose domain specializations before brainstorming or requirements exist"
     ]
   },
   "constraints": {
     "technical": [
-      "Go binary must cross-compile for linux/amd64, linux/arm64, darwin/amd64, darwin/arm64, windows/amd64",
-      "TUI uses Charm.sh ecosystem: bubbletea, huh, lipgloss",
-      "Thin binary — packs downloaded from GitHub Releases, cached in ~/.bridge/cache/",
-      "All packs self-contained after bridge new/add runs",
-      "{{PROJECT_NAME}} placeholder replaced at init time",
-      "Pack archives remain tar.gz format",
-      "Shell scripts (setup.sh, add-bridge.sh, install-orchestrators.sh) kept for backward compatibility but no longer primary interface"
+      "Shell scripts must be bash-compatible",
+      "No runtime dependencies beyond tar, gzip, sed, grep, awk, find, and bash",
+      "All packs self-contained after bridge.sh new runs",
+      "{{PROJECT_NAME}} placeholder replaced at init time by the shell installer",
+      "Distribution via tar.gz only (no zip)",
+      "bridge.sh is the only installer entrypoint; do not reintroduce wrapper scripts or a compiled installer"
     ],
     "conventions": [
       "Stable IDs: Fxx (features), ATxx (acceptance tests), Sxx (slices), UFxx (user flows), Rxx (risks)",
@@ -76,9 +73,9 @@
       "status": "done"
     },
     "F05": {
-      "title": "Interactive Setup Script",
+      "title": "Shell Installers",
       "priority": "must",
-      "description": "setup.sh supporting --name, --pack, -o flags. Extracts chosen pack tar.gz, replaces {{PROJECT_NAME}}, creates docs/ with templates. Supports all 5 packs.",
+      "description": "bridge.sh covers new, add, orchestrator, and pack workflows as the single installer entrypoint.",
       "status": "done"
     },
     "F06": {
@@ -102,13 +99,13 @@
     "F09": {
       "title": "Post-Delivery Feedback Loop",
       "priority": "must",
-      "description": "Orchestrator correctly classifies user responses after slice delivery: ISSUES REPORTED (default) → fix loop on current slice, APPROVED → proceed to gate/eval/next, STOP → wrap up. Prevents premature advancement to next slice when user reports issues.",
+      "description": "Orchestrator correctly classifies user responses after slice delivery: ISSUES REPORTED (default) → fix loop on current slice, APPROVED → proceed to gate/eval/next, STOP → wrap up.",
       "status": "done"
     },
     "F10": {
       "title": "Packaging Script",
       "priority": "should",
-      "description": "package.sh that rebuilds all release tar.gz archives from source folders, including core packs and advanced orchestrator packs.",
+      "description": "bridge.sh pack rebuilds all release tar.gz archives from source folders, including core packs and advanced orchestrator packs.",
       "status": "done"
     },
     "F11": {
@@ -132,66 +129,38 @@
     "F14": {
       "title": "Controller Pack",
       "priority": "should",
-      "description": "Portfolio-level orchestrator for managing multiple BRIDGE projects. CLAUDE.md + .claude/commands/ (3 commands: bridge-status, bridge-init-project, bridge-sync) + .claude/rules/controller.md + docs/portfolio.json + reference/controller-guide.md. Discovers child projects via .bridgeinclude markers, maintains portfolio state, scaffolds BRIDGE into child projects.",
+      "description": "Portfolio-level orchestrator for managing multiple BRIDGE projects. CLAUDE.md + .claude/commands/ (3 commands: bridge-status, bridge-init-project, bridge-sync) + .claude/rules/controller.md + docs/portfolio.json + reference/controller-guide.md.",
       "status": "done"
     },
     "F15": {
       "title": "Multi-Repo Pack",
       "priority": "should",
-      "description": "Cross-repo workspace orchestrator with two variants (claude-code and codex). 12 commands including 4 cross-repo specific (bridge-cross-design, bridge-cross-review, bridge-cross-sync, bridge-repo-status) plus adapted standard workflow commands. Manages coordinated branching, contracts, and two-phase gates across repos.",
+      "description": "Cross-repo workspace orchestrator with two variants (claude-code and codex). 12 commands including 4 cross-repo specific (bridge-cross-design, bridge-cross-review, bridge-cross-sync, bridge-repo-status) plus adapted standard workflow commands.",
       "status": "done"
     },
     "F16": {
-      "title": "Go TUI Binary",
+      "title": "Install-Time Personality Overlays",
       "priority": "must",
-      "description": "Single bridge binary built in Go with Charm.sh TUI. Subcommands: new (create project), add (add to existing), orchestrator (install controller/multi-repo), customize (modify personality/specs), pack (build archives). Interactive TUI when run without flags, flag mode for CI. Thin binary downloads packs from GitHub Releases and caches in ~/.bridge/cache/.",
-      "status": "review"
-    },
-    "F17": {
-      "title": "Domain Specializations",
-      "priority": "must",
-      "description": "Composable domain skill files (frontend, backend, api, data, infra, mobile, security) containing stack-specific checklists, anti-patterns, and conventions. Selected during setup or added post-install via bridge customize. Copied into project skill directory. Multiple can be active simultaneously.",
-      "status": "review"
-    },
-    "F18": {
-      "title": "Personality Packs",
-      "priority": "must",
-      "description": "Three project-wide behavioral profiles (strict, balanced, mentoring) applied as thin overlays to all agents, roles, and orchestrator. Personality vibe lines injected between markers in agent files. Selected during setup, changeable post-install via bridge customize. Affects all 5 agents plus advisor, brainstorm roles, and orchestrator tone.",
-      "status": "review"
-    },
-    "F19": {
-      "title": "Cross-Platform Distribution",
-      "priority": "should",
-      "description": "goreleaser config for automated multi-platform builds. GitHub Release artifacts for linux/amd64, linux/arm64, darwin/amd64, darwin/arm64, windows/amd64. Homebrew tap formula. Install one-liner for Linux/macOS.",
+      "description": "bridge.sh new/add accept `--personality strict|balanced|mentoring`. Non-default personalities inject marked vibe lines into orchestrator files, advisor/brainstorm prompts, and role definitions during install.",
       "status": "review"
     }
   },
   "acceptance_tests": {
-    "AT01": "setup.sh --pack full --name TestProject creates working project with .roo/ structure and {{PROJECT_NAME}} replaced",
-    "AT02": "setup.sh --pack standalone --name TestProject creates project with self-contained commands",
-    "AT03": "setup.sh --pack claude-code --name TestProject creates project with CLAUDE.md and .claude/ structure",
-    "AT04": "setup.sh --pack codex --name TestProject creates project with AGENTS.md and .agents/ structure",
+    "AT01": "bridge.sh new --pack full --name TestProject creates working project with .roo/ structure and {{PROJECT_NAME}} replaced",
+    "AT02": "bridge.sh new --pack standalone --name TestProject creates project with self-contained commands",
+    "AT03": "bridge.sh new --pack claude-code --name TestProject creates project with CLAUDE.md and .claude/ structure",
+    "AT04": "bridge.sh new --pack codex --name TestProject creates project with AGENTS.md and .agents/ structure",
     "AT05": "All 15 commands present and functional in each pack",
     "AT06": "bridge-scope and bridge-feature commands work against an existing codebase with existing requirements.json",
     "AT07": "Orchestrator stays in current slice fix loop when user reports issues after slice delivery (does not ask about next slice)",
     "AT08": "Orchestrator advances to next slice only on explicit user approval",
     "AT09": "Post-delivery feedback loop present in: orchestrator rules, slice-plan skill, CLAUDE.md, AGENTS.md, standalone start/resume commands",
-    "AT10": "package.sh rebuilds all release tar.gz archives from source folders",
-    "AT11": "setup.sh --pack opencode --name TestProject creates project with AGENTS.md and .opencode/ structure",
+    "AT10": "bridge.sh pack rebuilds all release tar.gz archives from source folders",
+    "AT11": "bridge.sh new --pack opencode --name TestProject creates project with AGENTS.md and .opencode/ structure",
     "AT12": "bridge-controller pack contains CLAUDE.md, 3 commands (bridge-status, bridge-init-project, bridge-sync), controller rules, portfolio.json template, and reference guide",
     "AT13": "bridge-multi-repo pack contains both claude-code and codex variants, each with 12 commands/skills, multi-repo rules, workspace docs templates, and reference playbook",
-    "AT14": "bridge new --pack claude-code --name TestProject creates working project with correct structure and {{PROJECT_NAME}} replaced (same result as setup.sh)",
-    "AT15": "bridge add --pack claude-code --name TestProject --target ./existing-dir adds BRIDGE files without overwriting protected dirs",
-    "AT16": "bridge new --pack claude-code --personality strict injects strict vibe lines into all agent definitions",
-    "AT17": "bridge customize --personality mentoring swaps personality in an existing project, preserving all other content",
-    "AT18": "bridge customize --add-spec frontend backend copies specialization skill files into project",
-    "AT19": "bridge customize --remove-spec frontend removes specialization skill from project and updates .bridge.json",
-    "AT20": "bridge (no args) opens interactive TUI with selectable menu, pack chooser, personality picker, and spec toggles",
-    "AT21": "bridge pack builds all release archives (same output as package.sh)",
-    "AT22": "bridge orchestrator --type multi-repo --platform claude-code produces same result as install-orchestrators.sh",
-    "AT23": ".bridge.json tracks active personality, specializations, pack type, and version",
-    "AT24": "Specialization skill files contain domain-specific checklists and are valid SKILL.md format for all pack types",
-    "AT25": "Binary cross-compiles for linux/amd64, darwin/arm64, and windows/amd64"
+    "AT14": "bridge.sh new --pack claude-code --personality strict --name TestProject injects strict personality lines into CLAUDE.md, bridge-architect.md, and bridge-brainstorm.md",
+    "AT15": "bridge.sh add --pack claude-code --personality mentoring --target ./existing-dir preserves existing project files while injecting mentoring personality lines into installed BRIDGE files"
   },
   "user_flows": {
     "UF01": {
@@ -219,12 +188,8 @@
       "steps": ["bridge-scope → bridge-cross-design → bridge-start → (cross-repo slices) → bridge-gate (two-phase) → bridge-cross-review"]
     },
     "UF07": {
-      "title": "TUI-Guided New Project",
-      "steps": ["bridge → select 'New project' → pick pack → pick personality → toggle specs → enter name → project created"]
-    },
-    "UF08": {
-      "title": "Post-Install Customization",
-      "steps": ["bridge customize → change personality or add/remove specs → agent files patched → .bridge.json updated"]
+      "title": "Personality-Aware Install",
+      "steps": ["bridge.sh new → choose pack → choose personality → install BRIDGE files with tone overlay"]
     }
   },
   "risks": {
@@ -238,78 +203,26 @@
       "description": "Pack divergence — commands/skills drift out of sync across 5 packs",
       "likelihood": "medium",
       "impact": "medium",
-      "mitigation": "Single source of truth for command list; package.sh for consistent rebuilds"
+      "mitigation": "Single source of truth for command list; bridge.sh pack for consistent rebuilds"
     },
     "R03": {
-      "description": "Personality patching corrupts agent files if markers are missing or malformed",
+      "description": "Personality patching corrupts installed markdown files if marker insertion or replacement breaks structure",
       "likelihood": "medium",
-      "impact": "high",
-      "mitigation": "Marker-based patching with validation; backup before patch; dry-run flag"
-    },
-    "R04": {
-      "description": "Go binary size bloat if packs are embedded",
-      "likelihood": "low",
-      "impact": "low",
-      "mitigation": "Thin binary strategy — download and cache packs at runtime, not embedded"
+      "impact": "medium",
+      "mitigation": "Marker-based personality blocks, targeted file list, and shell E2E coverage for strict + mentoring installs"
     }
   },
   "execution": {
     "recommended_slices": [
       {
         "id": "S15",
-        "goal": "Go project scaffolding — module, CLI skeleton with subcommands, CI build",
-        "features": ["F16"],
-        "acceptance_tests": ["AT25"]
-      },
-      {
-        "id": "S16",
-        "goal": "Implement bridge new — replace setup.sh with Go equivalent",
-        "features": ["F16"],
-        "acceptance_tests": ["AT14"]
-      },
-      {
-        "id": "S17",
-        "goal": "Implement bridge add — replace add-bridge.sh with Go equivalent",
-        "features": ["F16"],
-        "acceptance_tests": ["AT15"]
-      },
-      {
-        "id": "S18",
-        "goal": "Create specialization skill files and personality profiles",
-        "features": ["F17", "F18"],
-        "acceptance_tests": ["AT24"]
-      },
-      {
-        "id": "S19",
-        "goal": "Add personality markers to all pack agent files and implement bridge customize",
-        "features": ["F16", "F17", "F18"],
-        "acceptance_tests": ["AT16", "AT17", "AT18", "AT19", "AT23"]
-      },
-      {
-        "id": "S20",
-        "goal": "Interactive TUI mode for all subcommands",
-        "features": ["F16"],
-        "acceptance_tests": ["AT20"]
-      },
-      {
-        "id": "S21",
-        "goal": "Implement bridge orchestrator and bridge pack subcommands",
-        "features": ["F16"],
-        "acceptance_tests": ["AT21", "AT22"]
-      },
-      {
-        "id": "S22",
-        "goal": "goreleaser config and cross-platform distribution",
-        "features": ["F19"],
-        "acceptance_tests": ["AT25"]
+        "goal": "Remove the abandoned Go CLI path and restore a shell-first installer surface with personality overlays",
+        "features": ["F05", "F10", "F16"],
+        "acceptance_tests": ["AT10", "AT14", "AT15"]
       }
     ],
     "open_questions": [
-      "Should specializations be versioned independently from the core packs?",
-      "Should bridge customize support user-defined specializations beyond shipped ones?",
-      "Should .bridge.json track installed pack version to enable bridge update?",
-      "Should personality affect methodology reference doc tone, or only agent definitions?",
-      "Should bridge auto-detect current pack type by looking for CLAUDE.md/AGENTS.md/.roomodes?"
+      "Should /bridge-requirements recommend relevant specialist add-ons from an internal catalog, with /bridge-start and /bridge-resume auto-loading them for matching slices instead of asking during install?"
     ]
   }
 }
