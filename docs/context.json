@@ -18,7 +18,10 @@
     "F13": "done",
     "F14": "done",
     "F15": "done",
-    "F16": "review"
+    "F16": "review",
+    "F17": "planned",
+    "F18": "planned",
+    "F19": "planned"
   },
   "slice_history": [
     {
@@ -118,19 +121,21 @@
       "notes": "Removed the Go CLI/goreleaser tree and leftover binary archive, deleted the install-time specialization catalog, standardized the shell surface on bridge.sh only, added personality overlays to bridge.sh new/add, fixed cmd_add cleanup so bridge.sh add exits 0, and added shell-personality coverage to test.sh plus validate-eval-scenarios.sh. Validation passes: bash test.sh (56 passed, 0 failed), bash tests/e2e/validate-eval-scenarios.sh --skip-interactive --skip-live (127 passed, 0 failed, 3 skipped)."
     }
   ],
-  "current_slice": "S15",
+  "current_slice": null,
   "handoff": {
-    "stopped_at": "Slice S15 applied (2026-03-18) — the rejected Go installer / v3 branch is gone. bridge.sh is the only installer entrypoint, and install-time personalities are the only new setup-time behavior.",
-    "next_immediate": "Run the remaining manual evaluation scenarios that need a real terminal (Scenarios 6, 7, and 23 in docs/gates-evals/eval-scenarios.md), sanity-check Scenario 24, then fill docs/gates-evals/feedback-template.md and run /bridge-feedback with the results.",
+    "stopped_at": "Slice S15 is approved and committed (2026-03-18, 2c1d5a6). Follow-up planning now covers cross-pack personality validation plus post-requirements specialist auto-selection and a future pluggable specialist catalog.",
+    "next_immediate": "When implementation resumes, start with S16 to extend Codex/OpenCode personality validation coverage. After that, tackle S17 (specialist auto-selection in requirements/start/resume) and S18 (pluggable specialist catalog design).",
     "watch_out": [
       "Do not reintroduce a compiled installer, Go CLI, goreleaser config, or binary setup artifacts for BRIDGE",
       "Do not ask users to choose domain specializations during install; if specialist add-ons return later, they belong in requirements/start/resume, not bridge.sh new/add",
       "bridge.sh is the only installer surface; do not reintroduce setup.sh, add-bridge.sh, install-orchestrators.sh, or package.sh",
+      "Specialist auto-selection must happen after problem context exists and must stay transparent and overridable to the human operator",
+      "Future specialist extensibility should be catalog-driven; avoid hardcoding one-off names or pack-specific selection branches where a manifest can carry the metadata instead",
       "shellcheck is still not installed locally, so shell-script linting remains skipped",
       "Scenarios 6 and 7 in tests/e2e/validate-eval-scenarios.sh require a real TTY; Scenario 23 requires a supported live CLI such as Claude, Codex, or OpenCode"
     ]
   },
-  "next_slice": null,
+  "next_slice": "S16",
   "quality_gates": {
     "last_run": "2026-03-18",
     "status": "pass"

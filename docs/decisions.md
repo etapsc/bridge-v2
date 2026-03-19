@@ -139,3 +139,41 @@ Additionally, `bridge-slice-plan/SKILL.md` exists in 3 packs and all must be upd
 **Decision:** Multi-repo repo paths are sourced from `docs/requirements.json` `workspace.repos[].path`. `docs/context.json` in multi-repo packs stores runtime state only (`repo_commands`, `repo_state`, handoff/history) and no longer carries a stale `commands_to_run` block.
 
 **Rationale:** The prior docs mixed topology data with runtime state, which made the Claude Code and Codex multi-repo instructions disagree about where repo paths live. Keeping topology in requirements and runtime execution state in context matches the shipped schema and reduces drift.
+
+---
+
+## 2026-03-18: Specialists Are Chosen After Requirements, Not During Install
+
+**Decision:** Specialist add-ons are a post-requirements concern, not an install-time choice. BRIDGE should infer likely specialists only after brainstorming, scope, or requirements provide enough context to justify them.
+
+**Rationale:** The user cannot know which specialists are relevant before the project idea is explored. Asking for specialist selection in `bridge.sh new` or `bridge.sh add` front-loads a decision before the necessary information exists. The right place for that decision is after requirements begin to describe the real problem.
+
+**Planned workflow direction:**
+- `/bridge-requirements` recommends candidate specialist add-ons from a catalog, with rationale
+- `/bridge-start` and `/bridge-resume` auto-load the specialists that match the current slice or active context
+- The human can confirm or override the recommendation when needed
+
+**Non-goal:** Reintroduce install-time specialist prompts.
+
+---
+
+## 2026-03-18: Specialist Extensibility Must Be Catalog-Driven
+
+**Decision:** Future specialties should be added through catalog metadata plus specialist content, not by hardcoding names into the installer surface.
+
+**Rationale:** The current discussion assumes more specialties may appear later. If every new specialty requires core installer changes, the system will become brittle and difficult to maintain. A manifest/catalog approach keeps specialist growth data-driven and makes validation possible before runtime.
+
+**Planned implications:**
+- Define a specialist catalog format that carries metadata, matching hints, and pack-loading expectations
+- Keep selection logic generic enough to read catalog entries rather than branching per specialist name
+- Treat external or optional specialist additions as catalog entries that can be validated before use
+
+---
+
+## 2026-03-18: Personality Validation Should Cover All Supported CLI Packs
+
+**Decision:** Automated personality-overlay validation should cover Codex and OpenCode CLI packs in addition to the existing Claude Code checks.
+
+**Rationale:** The overlay engine patches different file layouts across Claude Code, Codex, and OpenCode. Claude-only checks are sufficient to validate the core mechanism, but they are not sufficient to protect against drift in the other supported CLI pack surfaces.
+
+**Planned scope:** Add shell/E2E coverage for `bridge.sh new --pack codex --personality ...` and `bridge.sh new --pack opencode --personality ...`, focusing on their real entry files (`AGENTS.md`, selected skill/procedure files, and role files where applicable).

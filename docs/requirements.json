@@ -143,6 +143,24 @@
       "priority": "must",
       "description": "bridge.sh new/add accept `--personality strict|balanced|mentoring`. Non-default personalities inject marked vibe lines into orchestrator files, advisor/brainstorm prompts, and role definitions during install.",
       "status": "review"
+    },
+    "F17": {
+      "title": "Cross-Pack Personality Validation Coverage",
+      "priority": "should",
+      "description": "Automated shell/E2E coverage verifies personality overlays for Codex and OpenCode CLI packs in addition to the existing Claude Code path, so pack-specific marker insertion does not drift silently.",
+      "status": "planned"
+    },
+    "F18": {
+      "title": "Specialist Auto-Selection",
+      "priority": "should",
+      "description": "After brainstorming or requirements exist, BRIDGE recommends relevant specialist add-ons from a catalog and bridge-start / bridge-resume auto-load the ones that match the current slice context. Users are not asked to choose specialists during install.",
+      "status": "planned"
+    },
+    "F19": {
+      "title": "Pluggable Specialist Catalog",
+      "priority": "should",
+      "description": "Specialists are described by catalog metadata and loading rules so new specialties can be added later without hardcoding each one into the installer surface or selection logic.",
+      "status": "planned"
     }
   },
   "acceptance_tests": {
@@ -160,7 +178,12 @@
     "AT12": "bridge-controller pack contains CLAUDE.md, 3 commands (bridge-status, bridge-init-project, bridge-sync), controller rules, portfolio.json template, and reference guide",
     "AT13": "bridge-multi-repo pack contains both claude-code and codex variants, each with 12 commands/skills, multi-repo rules, workspace docs templates, and reference playbook",
     "AT14": "bridge.sh new --pack claude-code --personality strict --name TestProject injects strict personality lines into CLAUDE.md, bridge-architect.md, and bridge-brainstorm.md",
-    "AT15": "bridge.sh add --pack claude-code --personality mentoring --target ./existing-dir preserves existing project files while injecting mentoring personality lines into installed BRIDGE files"
+    "AT15": "bridge.sh add --pack claude-code --personality mentoring --target ./existing-dir preserves existing project files while injecting mentoring personality lines into installed BRIDGE files",
+    "AT16": "bridge.sh new --pack codex --personality strict --name TestProject injects strict personality lines into AGENTS.md and the Codex brainstorm/procedure surfaces selected by the overlay engine",
+    "AT17": "bridge.sh new --pack opencode --personality mentoring --name TestProject injects mentoring personality lines into AGENTS.md and at least one OpenCode role file",
+    "AT18": "bridge-requirements recommends relevant specialist add-ons from a catalog after idea/requirements context exists, without asking for specialist choice during install",
+    "AT19": "bridge-start and bridge-resume auto-load the specialists attached to the current slice/context and explain why they were selected",
+    "AT20": "A new specialist can be added through catalog metadata and content files without changing bridge.sh or hardcoding installer-time selection logic"
   },
   "user_flows": {
     "UF01": {
@@ -190,6 +213,10 @@
     "UF07": {
       "title": "Personality-Aware Install",
       "steps": ["bridge.sh new → choose pack → choose personality → install BRIDGE files with tone overlay"]
+    },
+    "UF08": {
+      "title": "Adaptive Specialist Flow",
+      "steps": ["brainstorm or scope → requirements identify likely specialist add-ons → start/resume auto-load specialists for the active slice → human can confirm or override"]
     }
   },
   "risks": {
@@ -210,6 +237,24 @@
       "likelihood": "medium",
       "impact": "medium",
       "mitigation": "Marker-based personality blocks, targeted file list, and shell E2E coverage for strict + mentoring installs"
+    },
+    "R04": {
+      "description": "Personality overlay support drifts between Claude Code, Codex, and OpenCode because only one pack path is exercised regularly",
+      "likelihood": "medium",
+      "impact": "medium",
+      "mitigation": "Add Codex and OpenCode personality checks to the shell E2E suite and eval validator, not just Claude Code"
+    },
+    "R05": {
+      "description": "Specialist auto-selection chooses irrelevant add-ons or misses needed ones, causing noisy or incomplete guidance",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Require transparent recommendation rationale in requirements/start/resume flows and keep human override available"
+    },
+    "R06": {
+      "description": "A future pluggable specialist catalog becomes ad hoc or incompatible across packs",
+      "likelihood": "medium",
+      "impact": "medium",
+      "mitigation": "Define catalog metadata/manifest expectations and validation rules before adding external or optional specialist packs"
     }
   },
   "execution": {
@@ -219,10 +264,30 @@
         "goal": "Remove the abandoned Go CLI path and restore a shell-first installer surface with personality overlays",
         "features": ["F05", "F10", "F16"],
         "acceptance_tests": ["AT10", "AT14", "AT15"]
+      },
+      {
+        "id": "S16",
+        "goal": "Expand personality overlay validation coverage to Codex and OpenCode CLI packs",
+        "features": ["F04", "F11", "F16", "F17"],
+        "acceptance_tests": ["AT16", "AT17"]
+      },
+      {
+        "id": "S17",
+        "goal": "Add post-requirements specialist recommendation and auto-selection to start/resume flows",
+        "features": ["F18"],
+        "acceptance_tests": ["AT18", "AT19"]
+      },
+      {
+        "id": "S18",
+        "goal": "Define a pluggable specialist catalog so future specialties can be added without hardcoded installer logic",
+        "features": ["F19"],
+        "acceptance_tests": ["AT20"]
       }
     ],
     "open_questions": [
-      "Should /bridge-requirements recommend relevant specialist add-ons from an internal catalog, with /bridge-start and /bridge-resume auto-loading them for matching slices instead of asking during install?"
+      "What specialist metadata should bridge-requirements persist so bridge-start and bridge-resume can auto-load the right add-ons deterministically?",
+      "How explicit should the human override be when auto-selection recommends or loads a specialist that may not fit the slice?",
+      "What manifest/catalog format should future pluggable specialists implement so new entries can be validated without hardcoding their names into selection logic?"
     ]
   }
 }
